@@ -39,7 +39,7 @@
           cargo-edit
           tailwindcss
           tailwindcss-language-server
-          pkgs-config
+          pkg-config
           openssl
         ];
 
@@ -57,7 +57,7 @@
           inherit buildInputs nativeBuildInputs;
 
           shellHook = ''
-            echo "🏋️  Bodybuilding Tracker Development Environment"
+            echo "🏋️ WOPlanner Development Environment"
             echo "Rust version: $(rustc --version)"
             echo "Cargo version: $(cargo --version)"
             echo ""
