@@ -1,0 +1,23 @@
+{% if users.len() == 0 %}
+  <p class="text-gray-500 text-center py-8">
+  Noch keine User vorhanden. Füge den ersten User hinzu!
+  </p>
+{% else %}
+  <div class="space-y-2">
+    {% for user in users %}
+    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+      <div>
+        <span class="font-medium text-gray-800">{{ user.name }}</span>
+        <span class="text-sm text-gray-500 ml-2">({{ user.created_at.format("%d.%m.%Y") }})</span>
+      </div>
+            
+      <button hx-post="/users/{{ user.id }}/select"
+              hx-target="#toast-container"
+              hx-swap="afterbegin"
+              class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+          Auswählen
+      </button>
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}
