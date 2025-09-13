@@ -1,3 +1,6 @@
+mod handlers;
+mod models;
+
 use axum::{Router, response::Json, routing::get};
 use serde_json::{Value, json};
 use std::net::SocketAddr;
