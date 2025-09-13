@@ -1,12 +1,14 @@
 use crate::models::User;
+use askama::Template;
 use axum::{
     Form, Router,
-    extract::State,
-    response::Html,
+    extract::{Path, State},
+    response::{Html, IntoResponse},
     routing::{get, post},
 };
 use serde::Deserialize;
 use std::sync::{Arc, Mutex};
+use uuid::Uuid;
 
 pub type UserStore = Arc<Mutex<Vec<User>>>;
 
@@ -15,66 +17,30 @@ pub struct CreateUserForm {
     pub name: String,
 }
 
-pub async fn list_users(State(store): State<UserStore>) -> Html<String> {
+#[derive(Template)]
+#[template(path = "users/list.html")]
+pub struct UserListTemplate {
+    pub users: Vec<User>,
+}
+
+#[derive(Template)]
+#[template(path = "users/user_list_partial.html")]
+pub struct UserListPartialTemplate {
+    pub users: Vec<User>,
+}
+
+pub async fn list_users(State(store): State<UserStore>) -> impl IntoResponse {
     let users = store.lock().unwrap();
-
-    let mut html = String::from(
-        r#"
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <title>WOPlanner - User</title>
-          <meta charset="UTF-8">
-        </head>
-        <body>
-            <h1> Wer trainiert heute? 💪</h1>
-            <div class="user-list">
-        "#,
-    );
-
-    if users.is_empty() {
-        html.push_str("<p>Noch kein User vorhanden.</p>");
-    } else {
-        html.push_str("<ul>");
-        for user in users.iter() {
-            html.push_str(&format!(
-                r#"<li>
-                <strong>{}</strong>
-                <small>(ID: {})</small>
-                <button onclick="selectUser('{}')">Auswählen</button>
-               </li>"#,
-                user.name, user.id, user.id
-            ));
-        }
-        html.push_str("</ul>");
-    }
-
-    html.push_str(
-        r#"
-        </div>
-        <hr>
-        <h2>Neuen User hinzufuegen</h2>
-        <form method="POST" action="/users">
-            <input type="text" name="name" placeholder="Name eingeben" required>
-            <button type="submit">User hinzufuegen</button>
-        </form>
-        <script>
-            function selectUser(userId) {
-                alert('User ' + userId + ' ausgewaehlt! (TODO: session setzen)');
-            }
-        </script>
-        </body>
-        </html>
-        "#,
-    );
-
-    Html(html)
+    let template = UserListTemplate {
+        users: users.clone(),
+    };
+    Html(template.render().unwrap())
 }
 
 pub async fn create_user(
     State(store): State<UserStore>,
     Form(form_data): Form<CreateUserForm>,
-) -> Html<String> {
+) -> impl IntoResponse {
     let new_user = User::new(form_data.name);
 
     {
@@ -83,25 +49,42 @@ pub async fn create_user(
         println!("user addes successfully. total: {}", users.len());
     }
 
-    Html(
-        r#"
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta http-equiv="refresh" content="0; url=/users">
-            <title>Redirecting...</title>
-        </head>
-        <body>
-            <p>User wurde hinzugefuegt! <a href="/users">Zurueck zur Liste</a></p>
-        </body>
-        </html>
-        "#
-        .to_string(),
-    )
+    let users = store.lock().unwrap();
+    let template = UserListPartialTemplate {
+        users: users.clone(),
+    };
+    Html(template.render().unwrap())
+}
+
+pub async fn select_user(
+    Path(user_id): Path<Uuid>,
+    State(store): State<UserStore>,
+) -> Html<String> {
+    let users = store.lock().unwrap();
+    let user = users.iter().find(|u| u.id == user_id);
+
+    match user {
+        Some(user) => {
+            println!("user selected: {}", user.name);
+            Html(format!(
+                r#"<div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                    ✅ {} ausgewählt!
+                </div>"#,
+                user.name
+            ))
+        }
+        None => Html(
+            r#"<div class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md">
+                ❌ User nicht gefunden!
+            </div>"#
+                .to_string(),
+        ),
+    }
 }
 
 pub fn router() -> Router<UserStore> {
     Router::new()
         .route("/users", get(list_users))
         .route("/users", post(create_user))
+        .route("/users/{id}/select", post(select_user))
 }

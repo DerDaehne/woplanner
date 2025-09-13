@@ -8,6 +8,7 @@ use std::{
     net::SocketAddr,
     sync::{Arc, Mutex},
 };
+use tower_http::services::ServeDir;
 
 async fn hello() -> &'static str {
     "Hello, Bodybuilder!"
@@ -26,6 +27,7 @@ async fn main() {
         .route("/", get(hello))
         .route("/health", get(health_check))
         .merge(users_router())
+        .nest_service("/static", ServeDir::new("static"))
         .with_state(user_store);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
