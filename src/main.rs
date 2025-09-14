@@ -45,6 +45,7 @@ async fn main() {
         .expect("Failed to migrate sessions");
 
     let session_layer = SessionManagerLayer::new(session_store)
+        .with_secure(false)
         .with_expiry(Expiry::OnInactivity(Duration::hours(24)));
 
     let app = Router::new()
