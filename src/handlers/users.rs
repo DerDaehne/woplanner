@@ -3,6 +3,7 @@ use askama::Template;
 use axum::{
     Form, Router,
     extract::{Path, State},
+    http::{HeaderMap, HeaderValue},
     response::{Html, IntoResponse},
     routing::{get, post},
 };
@@ -25,6 +26,12 @@ pub struct UserListTemplate {
 #[template(path = "users/user_list_partial.html")]
 pub struct UserListPartialTemplate {
     pub users: Vec<User>,
+}
+
+#[derive(Template)]
+#[template(path = "dashboard.html")]
+pub struct DashboardTemplate {
+    pub user: User,
 }
 
 pub async fn list_users(State(database_pool): State<SqlitePool>) -> impl IntoResponse {
@@ -66,7 +73,7 @@ pub async fn select_user(
     Path(user_id): Path<String>,
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> Html<String> {
+) -> impl IntoResponse {
     let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
         .fetch_optional(&database_pool)
         .await
@@ -79,23 +86,39 @@ pub async fn select_user(
                 .await
                 .expect("Failed to insert user into session.");
             println!("user selected: {}", user.name);
-            Html(format!(
-                r#"<div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
-                    ✅ {} ausgewählt!
+
+            let mut headers = HeaderMap::new();
+            headers.insert("HX-Redirect", HeaderValue::from_static("/dashboard"));
+
+            (
+                headers,
+                Html(format!(
+                    r#"<div class="bg-green-500 text-white px-4 py-2 rounded-md shadow-md">
+                    ✅ {} ausgewählt! Weiterleitung...
                 </div>"#,
-                user.name
-            ))
+                    user.name
+                )),
+            )
         }
-        None => Html(
-            r#"<div class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md">
-                ❌ User nicht gefunden!
-            </div>"#
-                .to_string(),
-        ),
+        None => {
+            let headers = HeaderMap::new();
+            (
+                headers,
+                Html(
+                    r#"<div class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md">
+                    ❌ User nicht gefunden!
+                </div>"#
+                        .to_string(),
+                ),
+            )
+        }
     }
 }
 
-pub async fn dashboard(State(database_pool): State<SqlitePool>, session: Session) -> Html<String> {
+pub async fn dashboard(
+    State(database_pool): State<SqlitePool>,
+    session: Session,
+) -> impl IntoResponse {
     match session.get::<String>("current_user_id").await {
         Ok(Some(user_id)) => {
             let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
@@ -104,12 +127,10 @@ pub async fn dashboard(State(database_pool): State<SqlitePool>, session: Session
                 .expect("Error fetching current user.");
 
             match user {
-                Some(user) => Html(format!(
-                    r#"<h1>Willkommen zurück, {}! 💪</h1>
-                    <p>Du bist eingeloggt und bereit zum Training!</p>
-                    <a href="/users" class="bg-blue-500 text-white px-4 py-2 rounded">User wechseln</a>"#,
-                    user.name
-                )),
+                Some(user) => {
+                    let template = DashboardTemplate { user };
+                    Html(template.render().unwrap())
+                }
                 None => Html(
                     r#"<p>Session ungültig. <a href="/users">Bitte neu anmelden</a></p>"#
                         .to_string(),
@@ -122,10 +143,21 @@ pub async fn dashboard(State(database_pool): State<SqlitePool>, session: Session
     }
 }
 
+pub async fn logout(session: Session) -> impl IntoResponse {
+    session.flush().await.expect("Failed to flush session");
+    let mut headers = HeaderMap::new();
+    headers.insert("HX-Redirect", HeaderValue::from_static("/users"));
+    (
+        headers,
+        Html(r#"<meta http-equiv="refresh" content="0; url=/users">"#.to_string()),
+    )
+}
+
 pub fn router() -> Router<SqlitePool> {
     Router::new()
         .route("/users", get(list_users))
         .route("/users", post(create_user))
         .route("/users/{id}/select", post(select_user))
         .route("/dashboard", get(dashboard))
+        .route("/logout", post(logout))
 }
