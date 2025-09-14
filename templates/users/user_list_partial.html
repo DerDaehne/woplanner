@@ -8,7 +8,7 @@
     <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
       <div>
         <span class="font-medium text-gray-800">{{ user.name }}</span>
-        <span class="text-sm text-gray-500 ml-2">({{ user.created_at.format("%d.%m.%Y") }})</span>
+        <span class="text-sm text-gray-500 ml-2">({{ user.created_at }})</span>
       </div>
             
       <button hx-post="/users/{{ user.id }}/select"

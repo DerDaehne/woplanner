@@ -7,10 +7,7 @@ use axum::{
     routing::{get, post},
 };
 use serde::Deserialize;
-use std::sync::{Arc, Mutex};
-use uuid::Uuid;
-
-pub type UserStore = Arc<Mutex<Vec<User>>>;
+use sqlx::SqlitePool;
 
 #[derive(Debug, Deserialize)]
 pub struct CreateUserForm {
@@ -29,27 +26,35 @@ pub struct UserListPartialTemplate {
     pub users: Vec<User>,
 }
 
-pub async fn list_users(State(store): State<UserStore>) -> impl IntoResponse {
-    let users = store.lock().unwrap();
-    let template = UserListTemplate {
-        users: users.clone(),
-    };
+pub async fn list_users(State(database_pool): State<SqlitePool>) -> impl IntoResponse {
+    let users = sqlx::query_as!(User, "select * from users;")
+        .fetch_all(&database_pool)
+        .await
+        .unwrap_or(Vec::new());
+    let template = UserListTemplate { users };
     Html(template.render().unwrap())
 }
 
 pub async fn create_user(
-    State(store): State<UserStore>,
+    State(database_pool): State<SqlitePool>,
     Form(form_data): Form<CreateUserForm>,
 ) -> impl IntoResponse {
     let new_user = User::new(form_data.name);
+    sqlx::query_as!(
+        User,
+        "INSERT INTO users (id, name, created_at) VALUES (?, ?, ?)",
+        new_user.id,
+        new_user.name,
+        new_user.created_at
+    )
+    .execute(&database_pool)
+    .await
+    .expect("error creating user");
 
-    {
-        let mut users = store.lock().unwrap();
-        users.push(new_user);
-        println!("user addes successfully. total: {}", users.len());
-    }
-
-    let users = store.lock().unwrap();
+    let users = sqlx::query_as!(User, "SELECT * from users")
+        .fetch_all(&database_pool)
+        .await
+        .expect("error fetching user list");
     let template = UserListPartialTemplate {
         users: users.clone(),
     };
@@ -57,11 +62,16 @@ pub async fn create_user(
 }
 
 pub async fn select_user(
-    Path(user_id): Path<Uuid>,
-    State(store): State<UserStore>,
+    Path(user_id): Path<String>,
+    State(database_pool): State<SqlitePool>,
 ) -> Html<String> {
-    let users = store.lock().unwrap();
-    let user = users.iter().find(|u| u.id == user_id);
+    let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
+        .fetch_optional(&database_pool)
+        .await
+        .expect("error selecting user");
+
+    println!("{}", user_id);
+    println!("{:?}", user);
 
     match user {
         Some(user) => {
@@ -82,7 +92,7 @@ pub async fn select_user(
     }
 }
 
-pub fn router() -> Router<UserStore> {
+pub fn router() -> Router<SqlitePool> {
     Router::new()
         .route("/users", get(list_users))
         .route("/users", post(create_user))

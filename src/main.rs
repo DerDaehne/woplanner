@@ -1,13 +1,11 @@
+mod database;
 mod handlers;
 mod models;
 
 use axum::{Router, response::Json, routing::get};
-use handlers::users::{UserStore, router as users_router};
+use handlers::users::router as users_router;
 use serde_json::{Value, json};
-use std::{
-    net::SocketAddr,
-    sync::{Arc, Mutex},
-};
+use std::net::SocketAddr;
 use tower_http::services::ServeDir;
 
 async fn hello() -> &'static str {
@@ -21,14 +19,18 @@ async fn health_check() -> Json<Value> {
 #[tokio::main]
 async fn main() {
     // initialize main user store
-    let user_store: UserStore = Arc::new(Mutex::new(Vec::new()));
+    let database_url =
+        std::env::var("DATABASE_URL").unwrap_or_else(|_| "sqlite:./.sqlite".to_string());
+    let database_pool = database::create_database_pool(&database_url)
+        .await
+        .expect("error: can't connect to database!");
 
     let app = Router::new()
         .route("/", get(hello))
         .route("/health", get(health_check))
         .merge(users_router())
         .nest_service("/static", ServeDir::new("static"))
-        .with_state(user_store);
+        .with_state(database_pool);
 
     let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
     println!("WOPlanner listening on http://{}", addr);
