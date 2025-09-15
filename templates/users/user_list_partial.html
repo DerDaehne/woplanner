@@ -1,24 +1,27 @@
 {% if users.len() == 0 %}
   <div class="text-center py-12">
-    <div class="text-6xl mb-4">🏋️</div>
-    <p class="text-gray-400 text-lg mb-2">No users yet!</p>
+    <div class="text-8xl mb-6 float-element">🏋️</div>
+    <p class="text-gray-300 text-xl mb-3">No users yet!</p>
     <p class="text-gray-500 text-sm">Create your first profile below to get started</p>
   </div>
 {% else %}
   <div class="space-y-4">
     {% for user in users %}
-    <div class="glass rounded-xl p-6 hover:bg-gray-700/30 transition-all duration-300 border border-gray-700/30 hover:border-gray-600/50 group">
+    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
           <!-- User Avatar -->
-          <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-full flex items-center justify-center font-bold text-white text-lg">
+          <div class="w-16 h-16 bg-gradient-to-br from-netflix-red via-red-600 to-red-800 rounded-2xl flex items-center justify-center font-bold text-white text-2xl shadow-lg float-element">
             {{ user.name.chars().next().unwrap_or('U') }}
           </div>
           
           <!-- User Info -->
           <div>
-            <div class="font-semibold text-white text-lg group-hover:text-gray-100 transition-colors">
+            <div class="font-semibold text-white text-xl group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
               {{ user.name }}
+            </div>
+            <div class="text-sm text-gray-400 font-medium">
+              Athlete Profile
             </div>
           </div>
         </div>
@@ -27,7 +30,7 @@
         <button hx-post="/users/{{ user.id }}/select"
                 hx-target="#toast-container"
                 hx-swap="afterbegin"
-                class="bg-netflix-red hover:bg-netflix-red-dark px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-red-500/25 group-hover:shadow-red-500/40">
+                class="btn-primary px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300">
           <span class="mr-2">🚀</span>
           Select
         </button>

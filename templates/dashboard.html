@@ -5,17 +5,17 @@
 {% block content %}
 <div class="max-w-6xl mx-auto animate-fade-in">
   <!-- Welcome Hero Section -->
-  <div class="glass-card rounded-2xl p-8 mb-8 border border-red-900/20 animate-slide-up">
+  <div class="glass-card rounded-3xl p-8 mb-8 transition-all duration-300">
     <div class="flex flex-col md:flex-row md:items-center justify-between">
       <div>
-        <h1 class="text-4xl font-bold mb-3 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+        <h1 class="text-4xl font-bold mb-3 bg-gradient-to-r from-white via-gray-100 to-netflix-red bg-clip-text text-transparent">
           Welcome back, {{ user.name }}
         </h1>
-        <p class="text-gray-400 text-lg">Ready to crush your next workout?</p>
+        <p class="text-gray-300 text-lg">Ready to crush your next workout?</p>
       </div>
       
-      <div class="mt-6 md:mt-0">
-        <button class="bg-netflix-red hover:bg-netflix-red-dark px-8 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-red-500/25">
+      <div class="mt-6 md:mt-0 float-element">
+        <button class="btn-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 text-white">
           <span class="text-xl mr-2">🔥</span>
           Start Training
         </button>
@@ -27,44 +27,44 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
     
     <!-- Current Streak -->
-    <div class="glass-card rounded-xl p-6 hover:bg-gray-800/50 transition-all duration-300">
+    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="text-3xl">🔥</div>
+        <div class="text-4xl float-element">🔥</div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-netflix-red">7</div>
-          <div class="text-xs text-gray-500">DAYS</div>
+          <div class="text-3xl font-bold bg-gradient-to-r from-netflix-red to-red-400 bg-clip-text text-transparent">7</div>
+          <div class="text-xs text-gray-400 font-medium">DAYS</div>
         </div>
       </div>
       <h3 class="text-lg font-semibold text-white mb-1">Current Streak</h3>
-      <p class="text-gray-400 text-sm">Keep the momentum going!</p>
+      <p class="text-gray-300 text-sm">Keep the momentum going!</p>
     </div>
 
     <!-- This Week -->
-    <div class="glass-card rounded-xl p-6 hover:bg-gray-800/50 transition-all duration-300">
+    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="text-3xl">📊</div>
+        <div class="text-4xl float-element">📊</div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-green-500">2/3</div>
-          <div class="text-xs text-gray-500">WORKOUTS</div>
+          <div class="text-3xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">2/3</div>
+          <div class="text-xs text-gray-400 font-medium">WORKOUTS</div>
         </div>
       </div>
-      <h3 class="text-lg font-semibold text-white mb-1">This Week</h3>
-      <div class="w-full bg-gray-700 rounded-full h-2">
-        <div class="bg-green-500 h-2 rounded-full transition-all duration-500" style="width: 67%"></div>
+      <h3 class="text-lg font-semibold text-white mb-2">This Week</h3>
+      <div class="w-full bg-gray-800/50 rounded-full h-3 overflow-hidden">
+        <div class="bg-gradient-to-r from-green-500 to-emerald-400 h-3 rounded-full transition-all duration-1000" style="width: 67%"></div>
       </div>
     </div>
 
     <!-- Last Session -->
-    <div class="glass-card rounded-xl p-6 hover:bg-gray-800/50 transition-all duration-300">
+    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
       <div class="flex items-center justify-between mb-4">
-        <div class="text-3xl">⏰</div>
+        <div class="text-4xl float-element">⏰</div>
         <div class="text-right">
-          <div class="text-2xl font-bold text-blue-500">Yesterday</div>
-          <div class="text-xs text-gray-500">LAST WORKOUT</div>
+          <div class="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Yesterday</div>
+          <div class="text-xs text-gray-400 font-medium">LAST WORKOUT</div>
         </div>
       </div>
       <h3 class="text-lg font-semibold text-white mb-1">Push Day</h3>
-      <p class="text-gray-400 text-sm">Chest, Shoulders, Triceps</p>
+      <p class="text-gray-300 text-sm">Chest, Shoulders, Triceps</p>
     </div>
 
   </div>
@@ -73,104 +73,100 @@
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
     
     <!-- Next Workout Card -->
-    <div class="glass-card rounded-xl p-8 border border-netflix-red/20 hover:border-netflix-red/40 transition-all duration-300">
+    <div class="glass-card rounded-3xl p-8 transition-all duration-300">
       <div class="text-center">
         <div class="text-6xl mb-4">💪</div>
-        <h2 class="text-2xl font-bold text-white mb-2">Next Workout</h2>
-        <div class="text-xl text-netflix-red font-semibold mb-2">Pull Day</div>
-        <p class="text-gray-400 mb-6">Back, Biceps, Rear Delts</p>
+        <h2 class="text-2xl font-bold text-white mb-2">Start Training</h2>
+        <div class="text-xl text-netflix-red font-semibold mb-2">Choose Your Workout</div>
+        <p class="text-gray-400 mb-6">Select exercises and start training</p>
         
         <div class="space-y-3 mb-6">
           <div class="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-            <span class="text-gray-300">Estimated Duration</span>
-            <span class="text-white font-semibold">60 min</span>
+            <span class="text-gray-300">Available Exercises</span>
+            <span class="text-white font-semibold">{{ exercises.len() }}</span>
           </div>
           <div class="flex justify-between items-center p-3 bg-gray-800/50 rounded-lg">
-            <span class="text-gray-300">Exercises</span>
-            <span class="text-white font-semibold">6 movements</span>
+            <span class="text-gray-300">Ready to Train</span>
+            <span class="text-green-500 font-semibold">Yes</span>
           </div>
         </div>
         
-        <button class="w-full bg-netflix-red hover:bg-netflix-red-dark py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105">
-          Begin Workout
-        </button>
+        <a href="/exercises" class="block w-full btn-primary py-4 rounded-2xl font-semibold transition-all duration-300 text-white text-center">
+          Browse Exercises
+        </a>
       </div>
     </div>
 
-    <!-- Recent Progress -->
-    <div class="glass-card rounded-xl p-8">
+    <!-- Exercise Library Preview -->
+    <div class="glass-card rounded-3xl p-8">
       <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-        <span class="text-2xl mr-3">📈</span>
-        Recent Progress
+        <span class="text-2xl mr-3">📚</span>
+        Exercise Library
       </h2>
       
-      <div class="space-y-4">
-        <div class="p-4 bg-gray-800/30 rounded-lg">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-semibold text-white">Bench Press</span>
-            <span class="text-green-500 font-bold">+5kg</span>
+      {% if exercises.len() > 0 %}
+        <div class="space-y-3 mb-6">
+          {% for exercise in exercises %}
+          <div class="p-3 bg-gray-800/30 rounded-lg flex items-center justify-between">
+            <div>
+              <div class="font-semibold text-white text-sm">{{ exercise.name }}</div>
+              <div class="text-xs text-gray-400">Click to view details</div>
+            </div>
+            <div class="w-8 h-8 bg-gradient-to-br from-netflix-red to-red-700 rounded-lg flex items-center justify-center font-bold text-white text-xs">
+              {{ exercise.name.chars().next().unwrap_or('E') }}
+            </div>
           </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full transition-all duration-700" style="width: 85%"></div>
+          {% endfor %}
+          
+          {% if exercises.len() > 3 %}
+          <div class="text-center text-gray-400 text-sm pt-2">
+            +{{ exercises.len() - 3 }} more exercises
           </div>
-          <div class="text-sm text-gray-400 mt-1">85kg → 90kg</div>
+          {% endif %}
         </div>
-        
-        <div class="p-4 bg-gray-800/30 rounded-lg">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-semibold text-white">Squats</span>
-            <span class="text-green-500 font-bold">+2.5kg</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full transition-all duration-700" style="width: 78%"></div>
-          </div>
-          <div class="text-sm text-gray-400 mt-1">100kg → 102.5kg</div>
+      {% else %}
+        <div class="text-center py-6">
+          <div class="text-4xl mb-3">💪</div>
+          <p class="text-gray-400 mb-4">No exercises yet</p>
         </div>
-
-        <div class="p-4 bg-gray-800/30 rounded-lg">
-          <div class="flex justify-between items-center mb-2">
-            <span class="font-semibold text-white">Deadlift</span>
-            <span class="text-yellow-500 font-bold">Same</span>
-          </div>
-          <div class="w-full bg-gray-700 rounded-full h-2">
-            <div class="bg-yellow-500 h-2 rounded-full transition-all duration-700" style="width: 90%"></div>
-          </div>
-          <div class="text-sm text-gray-400 mt-1">Maintaining 120kg</div>
-        </div>
-      </div>
+      {% endif %}
+      
+      <a href="/exercises" class="block w-full btn-secondary py-3 rounded-2xl font-semibold text-white text-center transition-all duration-300">
+        View All Exercises
+      </a>
     </div>
 
   </div>
 
   <!-- Quick Actions -->
-  <div class="glass-card rounded-xl p-8">
-    <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
-      <span class="text-2xl mr-3">⚡</span>
+  <div class="glass-card rounded-3xl p-8">
+    <h2 class="text-2xl font-bold text-white mb-8 flex items-center">
+      <span class="text-3xl mr-3 float-element">⚡</span>
       Quick Actions
     </h2>
     
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <button class="glass rounded-xl p-6 hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 text-center group">
-        <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📝</div>
-        <div class="font-semibold text-white mb-1">Plan Workout</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <button class="glass rounded-2xl p-8 btn-secondary transition-all duration-300 text-center group">
+        <div class="text-4xl mb-4 group-hover:scale-105 transition-transform duration-300 float-element">📝</div>
+        <div class="font-semibold text-white mb-2">Plan Workout</div>
         <div class="text-xs text-gray-400">Create custom routine</div>
       </button>
       
-      <button class="glass rounded-xl p-6 hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 text-center group">
-        <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">⚖️</div>
-        <div class="font-semibold text-white mb-1">Track Weight</div>
-        <div class="text-xs text-gray-400">Log body weight</div>
-      </button>
+      <a href="/exercises" class="glass rounded-2xl p-8 btn-secondary transition-all duration-300 text-center group block">
+        <div class="text-4xl mb-4 group-hover:scale-105 transition-transform duration-300 float-element">📚</div>
+        <div class="font-semibold text-white mb-2">Exercise Library</div>
+        <div class="text-xs text-gray-400">Browse all exercises</div>
+      </a>
       
-      <button class="glass rounded-xl p-6 hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 text-center group">
-        <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">📊</div>
-        <div class="font-semibold text-white mb-1">Statistics</div>
+      <button class="glass rounded-2xl p-8 btn-secondary transition-all duration-300 text-center group">
+        <div class="text-4xl mb-4 group-hover:scale-105 transition-transform duration-300 float-element">📊</div>
+        <div class="font-semibold text-white mb-2">Statistics</div>
         <div class="text-xs text-gray-400">View progress charts</div>
       </button>
       
-      <button class="glass rounded-xl p-6 hover:bg-gray-700/50 transition-all duration-300 hover:scale-105 text-center group">
-        <div class="text-3xl mb-3 group-hover:scale-110 transition-transform">⚙️</div>
-        <div class="font-semibold text-white mb-1">Settings</div>
+      <button class="glass rounded-2xl p-8 btn-secondary transition-all duration-300 text-center group">
+        <div class="text-4xl mb-4 group-hover:scale-105 transition-transform duration-300 float-element">⚙️</div>
+        <div class="font-semibold text-white mb-2">Settings</div>
         <div class="text-xs text-gray-400">Customize app</div>
       </button>
     </div>

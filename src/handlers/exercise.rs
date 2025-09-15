@@ -21,6 +21,7 @@ pub struct CreateExerciseForm {
 pub struct ExerciseListTemplate {
     pub exercises: Vec<Exercise>,
     pub current_user: Option<User>,
+    pub is_dashboard: bool,
 }
 
 #[derive(Template)]
@@ -55,6 +56,7 @@ pub async fn list_exercises(
     let template = ExerciseListTemplate {
         exercises,
         current_user,
+        is_dashboard: false,
     };
 
     Html(template.render().unwrap())
@@ -62,7 +64,7 @@ pub async fn list_exercises(
 
 pub async fn create_exercise(
     State(database_pool): State<SqlitePool>,
-    Form(form_data): Form<Exercise>,
+    Form(form_data): Form<CreateExerciseForm>,
 ) -> impl IntoResponse {
     let new_exercise = Exercise::new(form_data.name, form_data.instructions);
 

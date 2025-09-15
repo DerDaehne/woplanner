@@ -1,4 +1,4 @@
-use crate::models::User;
+use crate::models::{Exercise, User};
 use askama::Template;
 use axum::{
     Form, Router,
@@ -21,6 +21,7 @@ pub struct CreateUserForm {
 pub struct UserListTemplate {
     pub users: Vec<User>,
     pub current_user: Option<User>,
+    pub is_dashboard: bool,
 }
 
 #[derive(Template)]
@@ -34,6 +35,8 @@ pub struct UserListPartialTemplate {
 pub struct DashboardTemplate {
     pub user: User,
     pub current_user: Option<User>,
+    pub exercises: Vec<Exercise>,
+    pub is_dashboard: bool,
 }
 
 async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
@@ -62,6 +65,7 @@ pub async fn list_users(
     let template = UserListTemplate {
         users,
         current_user,
+        is_dashboard: false,
     };
     Html(template.render().unwrap())
 }
@@ -151,9 +155,17 @@ pub async fn dashboard(
 
             match user {
                 Some(user) => {
+                    let exercises =
+                        sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name LIMIT 3")
+                            .fetch_all(&database_pool)
+                            .await
+                            .unwrap_or(Vec::new());
+
                     let template = DashboardTemplate {
                         user: user.clone(),
                         current_user: Some(user),
+                        exercises,
+                        is_dashboard: true,
                     };
                     Html(template.render().unwrap())
                 }
