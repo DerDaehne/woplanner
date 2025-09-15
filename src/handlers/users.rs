@@ -20,6 +20,7 @@ pub struct CreateUserForm {
 #[template(path = "users/list.html")]
 pub struct UserListTemplate {
     pub users: Vec<User>,
+    pub current_user: Option<User>,
 }
 
 #[derive(Template)]
@@ -32,14 +33,36 @@ pub struct UserListPartialTemplate {
 #[template(path = "dashboard.html")]
 pub struct DashboardTemplate {
     pub user: User,
+    pub current_user: Option<User>,
 }
 
-pub async fn list_users(State(database_pool): State<SqlitePool>) -> impl IntoResponse {
+async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
+    if let Ok(Some(user_id)) = session.get::<String>("current_user_id").await {
+        sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
+            .fetch_optional(database_pool)
+            .await
+            .ok()
+            .flatten()
+    } else {
+        None
+    }
+}
+
+pub async fn list_users(
+    State(database_pool): State<SqlitePool>,
+    session: Session,
+) -> impl IntoResponse {
     let users = sqlx::query_as!(User, "select * from users;")
         .fetch_all(&database_pool)
         .await
         .unwrap_or(Vec::new());
-    let template = UserListTemplate { users };
+
+    let current_user = get_current_user(&session, &database_pool).await;
+
+    let template = UserListTemplate {
+        users,
+        current_user,
+    };
     Html(template.render().unwrap())
 }
 
@@ -128,7 +151,10 @@ pub async fn dashboard(
 
             match user {
                 Some(user) => {
-                    let template = DashboardTemplate { user };
+                    let template = DashboardTemplate {
+                        user: user.clone(),
+                        current_user: Some(user),
+                    };
                     Html(template.render().unwrap())
                 }
                 None => Html(

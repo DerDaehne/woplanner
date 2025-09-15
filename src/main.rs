@@ -7,6 +7,7 @@ use axum::{
     response::{Html, Json},
     routing::get,
 };
+use handlers::exercise::router as exercise_router;
 use handlers::users::router as users_router;
 use serde_json::{Value, json};
 use std::net::SocketAddr;
@@ -52,6 +53,7 @@ async fn main() {
         .route("/", get(root))
         .route("/health", get(health_check))
         .merge(users_router())
+        .merge(exercise_router())
         .nest_service("/static", ServeDir::new("static"))
         .layer(session_layer)
         .with_state(database_pool);

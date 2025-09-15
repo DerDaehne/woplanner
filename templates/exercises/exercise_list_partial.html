@@ -1,0 +1,51 @@
+{% if exercises.len() == 0 %}
+  <div class="text-center py-12">
+    <div class="text-6xl mb-4">💪</div>
+    <p class="text-gray-400 text-lg mb-2">No exercises yet!</p>
+    <p class="text-gray-500 text-sm">Add your first exercise below to build your library</p>
+  </div>
+{% else %}
+  <div class="space-y-4">
+    {% for exercise in exercises %}
+    <div class="glass rounded-xl p-6 hover:bg-gray-700/30 transition-all duration-300 border border-gray-700/30 hover:border-gray-600/50 group">
+      <div class="flex flex-col space-y-4">
+        <!-- Exercise Header -->
+        <div class="flex items-start justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-netflix-red to-red-700 rounded-lg flex items-center justify-center font-bold text-white text-sm">
+              {{ exercise.name.chars().next().unwrap_or('E') }}
+            </div>
+            <div>
+              <h3 class="font-semibold text-white text-lg group-hover:text-gray-100 transition-colors">
+                {{ exercise.name }}
+              </h3>
+              <div class="text-sm text-gray-400">
+                Added {{ exercise.created_at }}
+              </div>
+            </div>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="flex space-x-2">
+            <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors">
+              Edit
+            </button>
+            <button class="bg-netflix-red hover:bg-netflix-red-dark px-4 py-2 rounded-lg text-white text-sm font-medium transition-colors">
+              Use in Workout
+            </button>
+          </div>
+        </div>
+        
+        <!-- Instructions -->
+        <div class="bg-gray-800/30 rounded-lg p-4">
+          <h4 class="text-sm font-medium text-gray-300 mb-2">Instructions:</h4>
+          <p class="text-gray-200 text-sm leading-relaxed">
+            {{ exercise.instructions }}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
