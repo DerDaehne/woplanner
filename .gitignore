@@ -1,8 +1,6 @@
 Cargo.lock
 *.db
 *.db-*
-/static/css/
-/static/*.css
 result
 result-*
 .env

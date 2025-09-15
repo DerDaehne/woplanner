@@ -20,6 +20,8 @@
 
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="/static/css/style.css">
     
     <!-- Dark Theme Tailwind Config -->
     <script>
@@ -47,212 +49,6 @@
       }
     </script>
 
-    <style>
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-      @keyframes slideUp {
-        from { transform: translateY(10px); opacity: 0; }
-        to { transform: translateY(0); opacity: 1; }
-      }
-      @keyframes glow {
-        0%, 100% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.3); }
-        50% { box-shadow: 0 0 30px rgba(229, 9, 20, 0.5); }
-      }
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-3px); }
-      }
-      
-      /* Enhanced Glassmorphism - Refined */
-      .glass {
-        background: rgba(255, 255, 255, 0.04);
-        backdrop-filter: blur(20px) saturate(1.8);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-      }
-      
-      .glass-card {
-        background: rgba(255, 255, 255, 0.06);
-        backdrop-filter: blur(25px) saturate(2);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 
-          0 8px 32px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      }
-      
-      .glass-card:hover {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.18);
-      }
-      
-      /* Refined Glass Buttons */
-      .btn-primary {
-        background: rgba(229, 9, 20, 0.25);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 
-          0 4px 16px rgba(229, 9, 20, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-      }
-      
-      .btn-primary:hover {
-        background: rgba(229, 9, 20, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 
-          0 6px 20px rgba(229, 9, 20, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.4),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-        transform: translateY(-1px);
-      }
-      
-      .btn-secondary {
-        background: rgba(255, 255, 255, 0.08);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        box-shadow: 
-          0 4px 16px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-      }
-      
-      .btn-secondary:hover {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 
-          0 6px 20px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25),
-          inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-        transform: translateY(-1px);
-      }
-      
-      /* Floating Elements - Reduced Animation */
-      .float-element {
-        animation: float 6s ease-in-out infinite;
-      }
-      
-      /* Enhanced Input Styles */
-      .input-glass {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        box-shadow: 
-          inset 0 2px 8px rgba(0, 0, 0, 0.2),
-          0 1px 0 rgba(255, 255, 255, 0.1);
-      }
-      
-      .input-glass:focus {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(229, 9, 20, 0.4);
-        box-shadow: 
-          inset 0 2px 8px rgba(0, 0, 0, 0.3),
-          0 0 20px rgba(229, 9, 20, 0.2),
-          0 1px 0 rgba(255, 255, 255, 0.15);
-      }
-      
-      /* Floating Dock Navigation */
-      .dock {
-        position: fixed;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px) saturate(2);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 24px;
-        padding: 12px 20px;
-        box-shadow: 
-          0 20px 40px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        z-index: 1000;
-      }
-      
-      .dock-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 12px;
-        border-radius: 16px;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        min-width: 60px;
-      }
-      
-      .dock-item:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: translateY(-2px);
-      }
-      
-      .dock-icon {
-        font-size: 24px;
-        margin-bottom: 4px;
-        transition: transform 0.2s ease;
-      }
-      
-      .dock-item:hover .dock-icon {
-        transform: scale(1.1);
-      }
-      
-      .dock-label {
-        font-size: 10px;
-        color: rgba(255, 255, 255, 0.8);
-        font-weight: 500;
-        text-align: center;
-      }
-      
-      /* Back Button Bubble */
-      .back-bubble {
-        position: fixed;
-        bottom: 20px;
-        left: 20px;
-        width: 50px;
-        height: 50px;
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 
-          0 10px 30px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        z-index: 1000;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        color: white;
-      }
-      
-      .back-bubble:hover {
-        background: rgba(255, 255, 255, 0.15);
-        transform: translateY(-2px);
-        box-shadow: 
-          0 15px 40px rgba(0, 0, 0, 0.4),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25);
-      }
-      
-      .back-bubble .dock-icon {
-        font-size: 20px;
-        margin: 0;
-      }
-      
-      /* User Avatar in Dock */
-      .dock-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 12px;
-        background: linear-gradient(135deg, #e50914, #b20710);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 14px;
-        font-weight: bold;
-        color: white;
-        margin-bottom: 4px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-    </style>
   </head>
 
   <body class="bg-netflix-black text-white min-h-screen font-sans">
@@ -304,41 +100,39 @@
     <!-- Floating Dock Navigation (nur wenn eingeloggt) -->
     {% match current_user %}
       {% when Some with (user) %}
-        <!-- Main Dock -->
+        <!-- Integrated Dock with Back Button -->
         <nav class="dock">
-          <div class="flex items-center space-x-2">
-            <!-- Exercise Library -->
-            <a href="/exercises" class="dock-item">
-              <div class="dock-icon">📚</div>
-              <div class="dock-label">Exercises</div>
+          <!-- Back Button (nur wenn nicht auf Dashboard) -->
+          {% if is_dashboard == false %}
+            <a href="/dashboard" class="back-button">
+              <div class="dock-icon">←</div>
             </a>
-            
-            <!-- Workouts -->
-            <a href="/workouts" class="dock-item">
-              <div class="dock-icon">💪</div>
-              <div class="dock-label">Workouts</div>
-            </a>
-            
-            <!-- Measurements -->
-            <a href="/measurements" class="dock-item">
-              <div class="dock-icon">📏</div>
-              <div class="dock-label">Measurements</div>
-            </a>
-            
-            <!-- Settings/Profile -->
-            <a href="/settings" class="dock-item">
-              <div class="dock-avatar">{{ user.name.chars().next().unwrap_or('U') }}</div>
-              <div class="dock-label">Settings</div>
-            </a>
-          </div>
-        </nav>
-        
-        <!-- Back to Dashboard Button (nur wenn nicht auf Dashboard) -->
-        {% if is_dashboard == false %}
-          <a href="/dashboard" class="back-bubble">
-            <div class="dock-icon">←</div>
+          {% endif %}
+          
+          <!-- Exercise Library -->
+          <a href="/exercises" class="dock-item">
+            <div class="dock-icon">📚</div>
+            <div class="dock-label">Exercises</div>
           </a>
-        {% endif %}
+          
+          <!-- Workouts -->
+          <a href="/workouts" class="dock-item">
+            <div class="dock-icon">💪</div>
+            <div class="dock-label">Workouts</div>
+          </a>
+          
+          <!-- Measurements -->
+          <a href="/measurements" class="dock-item">
+            <div class="dock-icon">📏</div>
+            <div class="dock-label">Measurements</div>
+          </a>
+          
+          <!-- Settings/Profile -->
+          <a href="/settings" class="dock-item">
+            <div class="dock-avatar">{{ user.name.chars().next().unwrap_or('U') }}</div>
+            <div class="dock-label">Settings</div>
+          </a>
+        </nav>
       {% when None %}
         <!-- Kein Dock wenn nicht eingeloggt -->
       {% endmatch %}
