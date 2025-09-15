@@ -1,22 +1,37 @@
 {% if users.len() == 0 %}
-  <p class="text-gray-500 text-center py-8">
-  Noch keine User vorhanden. Füge den ersten User hinzu!
-  </p>
+  <div class="text-center py-12">
+    <div class="text-6xl mb-4">🏋️</div>
+    <p class="text-gray-400 text-lg mb-2">No users yet!</p>
+    <p class="text-gray-500 text-sm">Create your first profile below to get started</p>
+  </div>
 {% else %}
-  <div class="space-y-2">
+  <div class="space-y-4">
     {% for user in users %}
-    <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
-      <div>
-        <span class="font-medium text-gray-800">{{ user.name }}</span>
-        <span class="text-sm text-gray-500 ml-2">({{ user.created_at }})</span>
+    <div class="glass rounded-xl p-6 hover:bg-gray-700/30 transition-all duration-300 border border-gray-700/30 hover:border-gray-600/50 group">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <!-- User Avatar -->
+          <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-full flex items-center justify-center font-bold text-white text-lg">
+            {{ user.name.chars().next().unwrap_or('U') }}
+          </div>
+          
+          <!-- User Info -->
+          <div>
+            <div class="font-semibold text-white text-lg group-hover:text-gray-100 transition-colors">
+              {{ user.name }}
+            </div>
+          </div>
+        </div>
+              
+        <!-- Select Button -->
+        <button hx-post="/users/{{ user.id }}/select"
+                hx-target="#toast-container"
+                hx-swap="afterbegin"
+                class="bg-netflix-red hover:bg-netflix-red-dark px-6 py-3 rounded-xl font-semibold text-white transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-red-500/25 group-hover:shadow-red-500/40">
+          <span class="mr-2">🚀</span>
+          Select
+        </button>
       </div>
-            
-      <button hx-post="/users/{{ user.id }}/select"
-              hx-target="#toast-container"
-              hx-swap="afterbegin"
-              class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
-          Auswählen
-      </button>
     </div>
     {% endfor %}
   </div>
