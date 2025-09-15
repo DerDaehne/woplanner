@@ -15,6 +15,11 @@
   50% { transform: translateY(-3px); }
 }
 
+body {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
 /* Enhanced Glassmorphism - Refined */
 .glass {
   background: rgba(255, 255, 255, 0.04);
@@ -103,6 +108,7 @@
 
 /* Floating Dock Navigation - Corrected */
 .dock {
+  bottom: calc(16px + env(safe-area-inset-bottom));
   position: fixed;
   bottom: 16px;
   left: 50%;
