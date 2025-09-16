@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}Workouts - WOPlanner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto animate-fade-in">
+  <!-- Hero Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+      Your Workouts
+    </h1>
+    <p class="text-xl text-gray-400">Create and manage your training routines</p>
+  </div>
+
+  <!-- Workouts List Container -->
+  <div id="workout-list" class="glass-card rounded-3xl p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6 text-white flex items-center">
+      <span class="text-3xl mr-3 float-element">🏋️</span>
+      Available Workouts
+    </h2>
+    {% include "workouts/workout_list_partial.html" %}
+  </div>
+
+  <!-- Create New Workout -->
+  <div class="glass-card rounded-3xl p-8">
+    <h2 class="text-2xl font-semibold mb-6 text-white flex items-center">
+      <span class="text-3xl mr-3 float-element">➕</span>
+      Create New Workout
+    </h2>
+
+    <form hx-post="/workouts"
+          hx-target="#workout-list"
+          hx-swap="innerHTML"
+          hx-on::after-request="this.reset()"
+          class="space-y-6">
+      
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-300 mb-3">
+          Workout Name
+        </label>
+        <input type="text"
+               id="name"
+               name="name"
+               placeholder="e.g. Push Day, Leg Day, Upper Body"
+               required
+               class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300">
+      </div>
+      
+      <div>
+        <label for="description" class="block text-sm font-medium text-gray-300 mb-3">
+          Description (optional)
+        </label>
+        <textarea 
+               id="description"
+               name="description"
+               rows="3"
+               placeholder="What muscle groups does this workout target?"
+               class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 resize-none"></textarea>
+      </div>
+      
+      <button type="submit"
+              class="w-full btn-primary py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300">
+        <span class="mr-2">🚀</span>
+        Create Workout
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

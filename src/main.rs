@@ -9,6 +9,7 @@ use axum::{
 };
 use handlers::exercise::router as exercise_router;
 use handlers::users::router as users_router;
+use handlers::workouts::router as workout_router;
 use serde_json::{Value, json};
 use std::net::SocketAddr;
 use tower_http::services::ServeDir;
@@ -54,6 +55,7 @@ async fn main() {
         .route("/health", get(health_check))
         .merge(users_router())
         .merge(exercise_router())
+        .merge(workout_router())
         .nest_service("/static", ServeDir::new("static"))
         .layer(session_layer)
         .with_state(database_pool);

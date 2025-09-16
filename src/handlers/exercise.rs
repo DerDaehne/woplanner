@@ -2,7 +2,7 @@ use crate::models::{Exercise, User};
 use askama::Template;
 use axum::{
     Form, Router,
-    extract::{Path, State},
+    extract::State,
     response::{Html, IntoResponse},
     routing::{get, post},
 };

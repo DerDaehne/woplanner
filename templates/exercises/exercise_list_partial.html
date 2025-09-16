@@ -5,45 +5,46 @@
     <p class="text-gray-500 text-sm">Add your first exercise below to build your library</p>
   </div>
 {% else %}
-  <div class="space-y-4">
+  <div class="space-y-3">
     {% for exercise in exercises %}
-    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
-      <div class="flex flex-col space-y-4">
-        <!-- Exercise Header -->
-        <div class="flex items-start justify-between">
-          <div class="flex items-center space-x-3">
-            <div class="w-12 h-12 bg-gradient-to-br from-netflix-red to-red-700 rounded-xl flex items-center justify-center font-bold text-white text-lg">
-              {{ exercise.name.chars().next().unwrap_or('E') }}
-            </div>
-            <div>
-              <h3 class="font-semibold text-white text-lg">
-                {{ exercise.name }}
-              </h3>
-              <div class="text-sm text-gray-400">
-                Added {{ exercise.created_at }}
-              </div>
-            </div>
-          </div>
-          
-          <!-- Action Buttons -->
-          <div class="flex space-x-2">
-            <button class="btn-secondary px-4 py-2 rounded-xl text-white text-sm font-medium transition-all duration-300">
-              Edit
-            </button>
-            <button class="btn-primary px-4 py-2 rounded-xl text-white text-sm font-medium transition-all duration-300">
-              Use in Workout
-            </button>
-          </div>
+    <div class="group glass-card rounded-2xl p-4 sm:p-5 transition-all duration-300 hover:scale-[1.02]">
+      <!-- Main Content Row -->
+      <div class="flex items-start justify-between gap-4">
+        <!-- Left: Title & Date -->
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-white text-lg mb-1 truncate">
+            {{ exercise.name }}
+          </h3>
+          <span class="text-xs text-gray-500">
+            Added {{ exercise.created_at.split('T').next().unwrap_or(&exercise.created_at) }}
+          </span>
         </div>
         
-        <!-- Instructions -->
-        <div class="glass rounded-xl p-4">
-          <h4 class="text-sm font-medium text-gray-300 mb-2">Instructions:</h4>
-          <p class="text-gray-200 text-sm leading-relaxed">
-            {{ exercise.instructions }}
-          </p>
+        <!-- Right: Action Buttons -->
+        <div class="flex items-center gap-2 flex-shrink-0">
+          <button class="p-2 glass rounded-xl hover:bg-white/10 transition-all duration-200 group">
+            <svg class="w-5 h-5 text-gray-400 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+            </svg>
+          </button>
+          <button class="px-4 py-2 btn-primary rounded-xl text-white text-sm font-medium transition-all duration-300">
+            Add to Workout
+          </button>
         </div>
       </div>
+      
+      <!-- Instructions - Expandable -->
+      <details class="mt-3 group/details">
+        <summary class="cursor-pointer text-sm text-gray-400 hover:text-gray-300 transition-colors flex items-center gap-1">
+          <svg class="w-4 h-4 transition-transform group-open/details:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+          View instructions
+        </summary>
+        <div class="mt-2 pl-5 text-sm text-gray-300 border-l-2 border-gray-700/50">
+          {{ exercise.instructions }}
+        </div>
+      </details>
     </div>
     {% endfor %}
   </div>

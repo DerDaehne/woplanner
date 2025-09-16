@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}{{ workout.name }} - WOPlanner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto animate-fade-in">
+  <!-- Workout Header -->
+  <div class="glass-card rounded-3xl p-8 mb-8">
+    <div class="flex flex-col md:flex-row md:items-center justify-between">
+      <div>
+        <h1 class="text-4xl font-bold mb-3 bg-gradient-to-r from-white via-gray-100 to-netflix-red bg-clip-text text-transparent">
+          {{ workout.name }}
+        </h1>
+        {% match workout.description %}
+          {% when Some with (desc) %}
+            <p class="text-gray-300 text-lg">{{ desc }}</p>
+          {% when None %}
+        {% endmatch %}
+      </div>
+      
+      <div class="mt-6 md:mt-0 flex space-x-3">
+        <!-- Toggle Active Status -->
+        <form hx-post="/workouts/{{ workout.id }}/toggle" hx-swap="none">
+          <button type="submit" 
+                  class="btn-secondary px-6 py-3 rounded-xl font-medium transition-all duration-300 text-white">
+            {% if workout.is_active.unwrap_or(true) %}
+              <span class="mr-2">⏸️</span> Deactivate
+            {% else %}
+              <span class="mr-2">▶️</span> Activate
+            {% endif %}
+          </button>
+        </form>
+        
+        <button class="btn-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 text-white">
+          <span class="text-xl mr-2">🔥</span>
+          Start Training
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Schedule Settings -->
+  <div class="glass-card rounded-3xl p-6 mb-8">
+    <h3 class="text-lg font-semibold mb-4 text-white flex items-center">
+      <span class="text-xl mr-2">📅</span>
+      Schedule Settings
+    </h3>
+    
+    <form hx-post="/workouts/{{ workout.id }}/schedule" 
+          hx-swap="none"
+          class="flex flex-col sm:flex-row gap-4">
+      <select name="schedule_type" 
+              class="flex-1 px-4 py-3 input-glass rounded-xl text-white">
+        <option value="manual" {% if workout.schedule_type == "manual" %}selected{% endif %}>Manual</option>
+        <option value="rotation" {% if workout.schedule_type == "rotation" %}selected{% endif %}>In Rotation</option>
+        <option value="weekly" {% if workout.schedule_type == "weekly" %}selected{% endif %}>Weekly</option>
+        <option value="disabled" {% if workout.schedule_type == "disabled" %}selected{% endif %}>Disabled</option>
+      </select>
+      
+      <select name="schedule_day" 
+              class="px-4 py-3 input-glass rounded-xl text-white">
+        <option value="">No specific day</option>
+        <option value="0" {% if workout.schedule_day == Some(0) %}selected{% endif %}>Sunday</option>
+        <option value="1" {% if workout.schedule_day == Some(1) %}selected{% endif %}>Monday</option>
+        <option value="2" {% if workout.schedule_day == Some(2) %}selected{% endif %}>Tuesday</option>
+        <option value="3" {% if workout.schedule_day == Some(3) %}selected{% endif %}>Wednesday</option>
+        <option value="4" {% if workout.schedule_day == Some(4) %}selected{% endif %}>Thursday</option>
+        <option value="5" {% if workout.schedule_day == Some(5) %}selected{% endif %}>Friday</option>
+        <option value="6" {% if workout.schedule_day == Some(6) %}selected{% endif %}>Saturday</option>
+      </select>
+      
+      <button type="submit" 
+              class="btn-primary px-6 py-3 rounded-xl font-medium text-white">
+        Update Schedule
+      </button>
+    </form>
+  </div>
+
+  <!-- Exercises in Workout -->
+  <div class="glass-card rounded-3xl p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6 text-white flex items-center">
+      <span class="text-3xl mr-3 float-element">💪</span>
+      Exercises ({{ exercises.len() }})
+    </h2>
+
+    {% if exercises.len() == 0 %}
+      <div class="text-center py-12">
+        <div class="text-6xl mb-4 float-element">🏋️</div>
+        <p class="text-gray-300 text-xl mb-3">No exercises yet!</p>
+        <p class="text-gray-500 text-sm">Add exercises below to build your workout</p>
+      </div>
+    {% else %}
+      <div class="space-y-4">
+        {% for exercise in exercises %}
+        <div class="glass rounded-2xl p-6 transition-all duration-300">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <!-- Exercise Number & Name -->
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-netflix-red to-red-700 rounded-lg flex items-center justify-center font-bold text-white">
+                  {{ exercise.position }}
+                </div>
+                <h3 class="text-xl font-semibold text-white">{{ exercise.exercise_name }}</h3>
+              </div>
+              
+              <!-- Target Stats -->
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div class="glass rounded-lg p-3">
+                  <div class="text-xs text-gray-400 mb-1">Sets</div>
+                  <div class="text-2xl font-bold text-white">{{ exercise.target_sets }}</div>
+                </div>
+                <div class="glass rounded-lg p-3">
+                  <div class="text-xs text-gray-400 mb-1">Weight</div>
+                  <div class="text-2xl font-bold text-white">
+                    {% match exercise.target_weight %}
+                      {% when Some with (weight) %}
+                        {{ weight }} kg
+                      {% when None %}
+                        Bodyweight
+                    {% endmatch %}
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Notes if any -->
+              {% match exercise.notes %}
+                {% when Some with (notes) %}
+                  <div class="text-sm text-gray-400 italic bg-gray-800/30 rounded-lg p-3">
+                    💡 {{ notes }}
+                  </div>
+                {% when None %}
+              {% endmatch %}
+              
+              <!-- Instructions -->
+              <details class="group mt-3">
+                <summary class="cursor-pointer text-sm text-gray-400 hover:text-white transition-colors">
+                  View instructions
+                </summary>
+                <p class="text-gray-300 text-sm mt-2 pl-4 border-l-2 border-gray-600">
+                  {{ exercise.exercise_instructions }}
+                </p>
+              </details>
+            </div>
+            
+            <!-- Actions -->
+            <div class="ml-4">
+              <button class="btn-secondary p-2 rounded-lg text-white">
+                <span>✏️</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- Add Exercise Form -->
+  <div class="glass-card rounded-3xl p-8">
+    <h3 class="text-xl font-semibold mb-6 text-white flex items-center">
+      <span class="text-2xl mr-3">➕</span>
+      Add Exercise
+    </h3>
+    
+    <form hx-post="/workouts/{{ workout.id }}/exercises"
+          hx-swap="none"
+          class="space-y-4">
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Exercise
+          </label>
+          <select name="exercise_id" required
+                  class="w-full px-4 py-3 input-glass rounded-xl text-white">
+            <option value="">Select exercise...</option>
+            {% for exercise in available_exercises %}
+              <option value="{{ exercise.id }}">{{ exercise.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Sets
+          </label>
+          <input type="number" 
+                 name="target_sets" 
+                 value="3" 
+                 min="1" 
+                 max="10"
+                 required
+                 class="w-full px-4 py-3 input-glass rounded-xl text-white">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Weight (kg) - leave empty for bodyweight
+          </label>
+          <input type="number" 
+                 name="target_weight" 
+                 step="0.5"
+                 min="0"
+                 placeholder="Optional"
+                 class="w-full px-4 py-3 input-glass rounded-xl text-white">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium text-gray-300 mb-2">
+            Notes
+          </label>
+          <input type="text" 
+                 name="notes"
+                 placeholder="e.g. To failure, Drop set, etc."
+                 class="w-full px-4 py-3 input-glass rounded-xl text-white">
+        </div>
+      </div>
+      
+      <button type="submit"
+              class="w-full btn-primary py-3 px-6 rounded-xl font-semibold text-white">
+        Add to Workout
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

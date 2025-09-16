@@ -5,37 +5,68 @@
     <p class="text-gray-500 text-sm">Create your first profile below to get started</p>
   </div>
 {% else %}
-  <div class="space-y-4">
+  <!-- Grid layout for users - responsive -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
     {% for user in users %}
-    <div class="glass-card rounded-2xl p-6 transition-all duration-300">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-4">
-          <!-- User Avatar -->
-          <div class="w-16 h-16 bg-gradient-to-br from-netflix-red via-red-600 to-red-800 rounded-2xl flex items-center justify-center font-bold text-white text-2xl shadow-lg float-element">
+    <button hx-post="/users/{{ user.id }}/select"
+            hx-target="#toast-container"
+            hx-swap="afterbegin"
+            class="group relative glass-card rounded-2xl p-6 transition-all duration-300 hover:scale-[1.05] hover:bg-white/10 text-left">
+      
+      <!-- Glow effect on hover -->
+      <div class="absolute inset-0 bg-gradient-to-br from-netflix-red/0 to-red-600/0 group-hover:from-netflix-red/10 group-hover:to-red-600/10 rounded-2xl transition-all duration-300"></div>
+      
+      <!-- Content -->
+      <div class="relative flex flex-col items-center text-center space-y-3">
+        <!-- User Avatar - Dock-inspired -->
+        <div class="relative">
+          <div class="w-20 h-20 bg-gradient-to-br from-netflix-red/20 to-red-800/20 backdrop-blur-xl rounded-2xl flex items-center justify-center font-bold text-white text-3xl border border-white/10 group-hover:border-white/20 transition-all duration-300">
             {{ user.name.chars().next().unwrap_or('U') }}
           </div>
-          
-          <!-- User Info -->
-          <div>
-            <div class="font-semibold text-white text-xl group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-gray-300 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300">
-              {{ user.name }}
-            </div>
-            <div class="text-sm text-gray-400 font-medium">
-              Athlete Profile
-            </div>
+          <!-- Floating badge effect -->
+          <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500/20 backdrop-blur rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <svg class="w-3 h-3 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5l-1.293 1.293a1 1 0 101.414 1.414l2-2a1 1 0 000-1.414z" clip-rule="evenodd"></path>
+            </svg>
           </div>
         </div>
-              
-        <!-- Select Button -->
-        <button hx-post="/users/{{ user.id }}/select"
-                hx-target="#toast-container"
-                hx-swap="afterbegin"
-                class="btn-primary px-8 py-4 rounded-2xl font-semibold text-white transition-all duration-300">
-          <span class="mr-2">🚀</span>
-          Select
-        </button>
+        
+        <!-- User Name -->
+        <div>
+          <div class="font-semibold text-white text-lg group-hover:text-netflix-red transition-colors duration-300">
+            {{ user.name }}
+          </div>
+          <div class="text-xs text-gray-500 mt-0.5">
+            Tap to select
+          </div>
+        </div>
+        
+        <!-- Hover indicator -->
+        <div class="absolute inset-x-0 bottom-2 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <div class="flex items-center gap-1 text-xs text-netflix-red">
+            <span>Select</span>
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </button>
+    {% endfor %}
+    
+    <!-- Add New User Card - matching style -->
+    <div class="group relative glass-card rounded-2xl p-6 border-2 border-dashed border-gray-600 hover:border-netflix-red/50 transition-all duration-300">
+      <div class="flex flex-col items-center text-center space-y-3 opacity-60 group-hover:opacity-100 transition-opacity">
+        <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl">
+          ➕
+        </div>
+        <div>
+          <div class="font-medium text-gray-400 text-sm">
+            Add New User
+          </div>
+        </div>
       </div>
     </div>
-    {% endfor %}
   </div>
 {% endif %}
+
