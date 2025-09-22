@@ -170,9 +170,25 @@
           </div>
         </div>
         
-        <button class="w-full btn-primary py-4 px-6 rounded-2xl font-bold text-white text-lg">
-          🏁 Finish Training
-        </button>
+        <!-- Finish Training Form -->
+        <form hx-post="/live-training/{{ active_workout_view.active_workout.id }}/finish"
+              hx-swap="none"
+              class="space-y-4">
+          
+          <!-- Optional Notes Input -->
+          <div>
+            <input type="text" 
+                   name="notes"
+                   placeholder="How did the training feel? (optional)"
+                   class="w-full px-4 py-3 input-glass rounded-xl text-white placeholder-gray-500">
+          </div>
+          
+          <!-- Finish Training Button -->
+          <button type="submit"
+                  class="w-full btn-primary py-4 px-6 rounded-2xl font-bold text-white text-lg">
+            🏁 Finish Training
+          </button>
+        </form>
         
         <button class="w-full btn-secondary py-3 px-6 rounded-2xl font-medium text-white">
           📊 View Summary

@@ -24,6 +24,20 @@ pub struct CompletedSet {
     pub created_at: String,
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize, FromRow)]
+pub struct CompletedWorkout {
+    pub id: String,
+    pub user_id: String,
+    pub workout_id: String,
+    pub started_at: String,
+    pub completed_at: String,
+    pub total_duration_minutes: i32,
+    pub total_sets: i32,
+    pub total_volume_kg: f32,
+    pub notes: Option<String>,
+    pub created_at: String,
+}
+
 // view modeL: exercise info
 #[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
 pub struct WorkoutExerciseDetail {
@@ -55,6 +69,52 @@ pub struct CompletedSetDetail {
     pub completed_at: String,
     pub exercise_name: String,
     pub exercise_instructions: String,
+}
+
+impl CompletedWorkout {
+    pub fn new(
+        active_workout: ActiveWorkout,
+        total_sets: i32,
+        total_volume_kg: f32,
+        notes: Option<String>,
+    ) -> Self {
+        let now = chrono::Utc::now().to_rfc3339();
+        let started = chrono::DateTime::parse_from_rfc3339(&active_workout.started_at)
+            .unwrap_or_else(|_| chrono::Utc::now().into());
+        let duration_minutes = chrono::Utc::now()
+            .signed_duration_since(started)
+            .num_minutes() as i32;
+
+        Self {
+            id: active_workout.id,
+            user_id: active_workout.user_id,
+            workout_id: active_workout.workout_id,
+            started_at: active_workout.started_at,
+            completed_at: now.clone(),
+            total_duration_minutes: duration_minutes,
+            total_sets,
+            total_volume_kg,
+            notes,
+            created_at: now,
+        }
+    }
+
+    pub fn duration_display(&self) -> String {
+        let mins = self.total_duration_minutes;
+        if mins < 60 {
+            format!("{}m", mins)
+        } else {
+            format!("{}h {}m", mins / 60, mins % 60)
+        }
+    }
+
+    pub fn average_volume_per_set(&self) -> f32 {
+        if self.total_sets > 0 {
+            self.total_volume_kg / self.total_sets as f32
+        } else {
+            0.0
+        }
+    }
 }
 
 impl ActiveWorkout {
@@ -133,5 +193,10 @@ pub struct CompleteSetForm {
     pub exercise_id: String,
     pub weight: Option<f32>,
     pub reps: i32,
+    pub notes: Option<String>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct FinishTrainingForm {
     pub notes: Option<String>,
 }

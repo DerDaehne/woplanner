@@ -1,6 +1,6 @@
 use crate::models::{
     ActiveWorkout, ActiveWorkoutView, CompleteSetForm, CompletedSet, CompletedSetDetail,
-    StartWorkoutForm, User, Workout, WorkoutExerciseDetail,
+    CompletedWorkout, FinishTrainingForm, StartWorkoutForm, User, Workout, WorkoutExerciseDetail,
 };
 use askama::Template;
 use axum::{
@@ -298,9 +298,82 @@ pub async fn complete_set(
     (headers, Html("Set completed".to_string())).into_response()
 }
 
+pub async fn finish_training(
+    Path(active_workout_id): Path<String>,
+    State(database_pool): State<SqlitePool>,
+    Form(form): Form<FinishTrainingForm>,
+) -> impl IntoResponse {
+    let active_workout = match sqlx::query_as!(
+        ActiveWorkout,
+        "SELECT * FROM active_workouts WHERE id = ?",
+        active_workout_id
+    )
+    .fetch_optional(&database_pool)
+    .await
+    {
+        Ok(Some(workout)) => workout,
+        _ => return Html("Active workout not found".to_string()).into_response(),
+    };
+
+    let total_sets = sqlx::query_scalar!(
+        "SELECT COUNT(*) FROM completed_sets WHERE active_workout_id = ?",
+        active_workout_id
+    )
+    .fetch_one(&database_pool)
+    .await
+    .unwrap_or(0) as i32;
+
+    let total_volume_kg = sqlx::query_scalar!(
+        r#"SELECT COALESCE(SUM(weight * reps), 0.0) as "total_volume!: f32"
+            FROM completed_sets
+            WHERE active_workout_id = ? AND weight IS NOT NULL"#,
+        active_workout_id
+    )
+    .fetch_one(&database_pool)
+    .await
+    .unwrap_or(0.0);
+
+    let completed_workout =
+        CompletedWorkout::new(active_workout, total_sets, total_volume_kg, form.notes);
+
+    sqlx::query!(
+    r#"INSERT INTO completed_workouts
+        (id, user_id, workout_id, started_at, completed_at, total_duration_minutes, total_sets, total_volume_kg, notes, created_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"#,
+        completed_workout.id,
+        completed_workout.user_id,
+        completed_workout.workout_id,
+        completed_workout.started_at,
+        completed_workout.completed_at,
+        completed_workout.total_duration_minutes,
+        completed_workout.total_sets,
+        completed_workout.total_volume_kg,
+        completed_workout.notes,
+        completed_workout.created_at
+    ).execute(&database_pool).await.expect("Failed to save completed workout!");
+
+    sqlx::query!(
+        "DELETE FROM active_workouts WHERE id = ?",
+        active_workout_id
+    )
+    .execute(&database_pool)
+    .await
+    .expect("Failed to delete active workout");
+
+    let mut headers = HeaderMap::new();
+    headers.insert("HX-Redirect", HeaderValue::from_static("/dashboard"));
+
+    (
+        headers,
+        Html("Training completed successfully!".to_string()),
+    )
+        .into_response()
+}
+
 pub fn router() -> Router<SqlitePool> {
     Router::new()
         .route("/start-training", post(start_training))
         .route("/live-training/{id}", get(show_live_training))
         .route("/live-training/{id}/complete-set", post(complete_set))
+        .route("/live-training/{id}/finish", post(finish_training))
 }
