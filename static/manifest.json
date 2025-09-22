@@ -4,12 +4,14 @@
   "description": "Track your workouts and build strength progressively",
   "start_url": "/",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#0a0a0a",
   "theme_color": "#e50914",
   "orientation": "portrait-primary",
   "scope": "/",
   "lang": "en",
   "categories": ["health", "fitness", "productivity"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "/static/icon-96x96.png",
@@ -35,5 +37,27 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Training",
+      "short_name": "Train",
+      "description": "Begin a new workout session",
+      "url": "/workouts",
+      "icons": [
+        {
+          "src": "/static/icon-96x96.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "screenshots": [],
+  "edge_side_panel": {
+    "preferred_width": 412
+  },
+  "launch_handler": {
+    "client_mode": "navigation-existing"
+  }
 }

@@ -1,4 +1,4 @@
-use crate::models::{Exercise, User};
+use crate::models::{ActiveWorkout, CompletedWorkout, Exercise, User};
 use askama::Template;
 use axum::{
     Form, Router,
@@ -36,7 +36,19 @@ pub struct DashboardTemplate {
     pub user: User,
     pub current_user: Option<User>,
     pub exercises: Vec<Exercise>,
+    pub recent_workouts: Vec<CompletedWorkout>,
+    pub active_workout: Option<ActiveWorkout>,
+    pub stats: DashboardStats,
     pub is_dashboard: bool,
+}
+
+#[derive(Debug, Clone)]
+pub struct DashboardStats {
+    pub current_streak: i32,
+    pub workouts_this_week: i32,
+    pub total_workouts: i32,
+    pub last_workout: Option<String>,
+    pub total_volume_kg: f32,
 }
 
 async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
@@ -155,6 +167,91 @@ pub async fn dashboard(
 
             match user {
                 Some(user) => {
+                    let recent_workouts = sqlx::query_as!(
+                        CompletedWorkout,
+                        r#"SELECT
+                            id,
+                            user_id,
+                            workout_id,
+                            started_at,
+                            completed_at,
+                            total_duration_minutes as "total_duration_minutes: i32",
+                            total_sets as "total_sets: i32",
+                            total_volume_kg as "total_volume_kg: f32",
+                            notes,
+                            created_at
+                            FROM completed_workouts
+                            WHERE user_id = ?
+                            ORDER BY completed_at DESC LIMIT 3"#,
+                        user.id
+                    )
+                    .fetch_all(&database_pool)
+                    .await
+                    .unwrap_or(Vec::new());
+
+                    let active_workout = sqlx::query_as!(
+                        ActiveWorkout,
+                        "SELECT * FROM active_workouts WHERE user_id = ? LIMIT 1",
+                        user.id
+                    )
+                    .fetch_optional(&database_pool)
+                    .await
+                    .unwrap_or(None);
+
+                    let total_workouts = sqlx::query_scalar!(
+                        "SELECT COUNT(*) FROM completed_workouts WHERE user_id = ?",
+                        user.id
+                    )
+                    .fetch_one(&database_pool)
+                    .await
+                    .unwrap_or(0) as i32;
+
+                    let total_volume_kg = sqlx::query_scalar!(
+                        r#"SELECT COALESCE(SUM(total_volume_kg), 0.0) as "total!: f32" 
+                           FROM completed_workouts WHERE user_id = ?"#,
+                        user.id
+                    )
+                    .fetch_one(&database_pool)
+                    .await
+                    .unwrap_or(0.0);
+
+                    let workouts_this_week = sqlx::query_scalar!(
+                        "SELECT COUNT(*) FROM completed_workouts 
+                         WHERE user_id = ? 
+                         AND datetime(completed_at) >= datetime('now', '-7 days')",
+                        user.id
+                    )
+                    .fetch_one(&database_pool)
+                    .await
+                    .unwrap_or(0) as i32;
+
+                    let current_streak = if workouts_this_week > 0 {
+                        workouts_this_week
+                    } else {
+                        0
+                    };
+
+                    let last_workout = recent_workouts.first().map(|w| {
+                        let completed = chrono::DateTime::parse_from_rfc3339(&w.completed_at)
+                            .unwrap_or_else(|_| chrono::Utc::now().into());
+                        let now = chrono::Utc::now();
+                        let diff = now.signed_duration_since(completed).num_days();
+
+                        match diff {
+                            0 => "Today".to_string(),
+                            1 => "Yesterday".to_string(),
+                            n => format!("{} days ago", n),
+                        }
+                    });
+
+                    let stats = DashboardStats {
+                        current_streak,
+                        workouts_this_week,
+                        total_workouts,
+                        last_workout,
+                        total_volume_kg,
+                    };
+
                     let exercises =
                         sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name LIMIT 3")
                             .fetch_all(&database_pool)
@@ -165,19 +262,20 @@ pub async fn dashboard(
                         user: user.clone(),
                         current_user: Some(user),
                         exercises,
+                        recent_workouts,
+                        active_workout,
+                        stats,
                         is_dashboard: true,
                     };
                     Html(template.render().unwrap())
                 }
                 None => Html(
-                    r#"<p>Session ungültig. <a href="/users">Bitte neu anmelden</a></p>"#
+                    r#"<p>Session invalid. <a href="/users">Please log in again</a></p>"#
                         .to_string(),
                 ),
             }
         }
-        _ => Html(
-            r#"<p>Du bist nicht angemeldet. <a href="/users">Jetzt anmelden</a></p>"#.to_string(),
-        ),
+        _ => Html(r#"<p>You are not logged in. <a href="/users">Log in now</a></p>"#.to_string()),
     }
 }
 

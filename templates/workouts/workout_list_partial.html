@@ -60,9 +60,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
             </svg>
           </a>
-          <button class="px-4 py-2 btn-primary rounded-xl text-white text-sm font-medium transition-all duration-300">
-            Start
+        <!-- Start Training Button -->
+        <form hx-post="/start-training" hx-swap="none">
+          <input type="hidden" name="workout_id" value="{{ workout.id }}">
+          <button type="submit" 
+                  class="btn-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 text-white">
+            start
           </button>
+        </form>
         </div>
       </div>
       
