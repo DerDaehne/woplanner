@@ -66,18 +66,6 @@ pub struct WorkoutWithExercises {
     pub exercises: Vec<WorkoutExercise>,
 }
 
-// view modeL: exercise info
-#[derive(Debug, Clone, Serialize, Deserialize, FromRow)]
-pub struct WorkoutExerciseDetail {
-    pub position: i32,
-    pub target_sets: i32,
-    pub target_weight: Option<f32>,
-    pub notes: Option<String>,
-    pub exercise_id: String,
-    pub exercise_name: String,
-    pub exercise_instructions: String,
-}
-
 impl Workout {
     pub fn new(user_id: String, name: String, description: Option<String>) -> Self {
         let now = chrono::Utc::now().to_rfc3339();

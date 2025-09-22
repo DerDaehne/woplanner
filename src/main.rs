@@ -8,6 +8,7 @@ use axum::{
     routing::get,
 };
 use handlers::exercise::router as exercise_router;
+use handlers::live_training::router as live_training_router;
 use handlers::users::router as users_router;
 use handlers::workouts::router as workout_router;
 use serde_json::{Value, json};
@@ -56,6 +57,7 @@ async fn main() {
         .merge(users_router())
         .merge(exercise_router())
         .merge(workout_router())
+        .merge(live_training_router())
         .nest_service("/static", ServeDir::new("static"))
         .layer(session_layer)
         .with_state(database_pool);

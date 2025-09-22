@@ -30,6 +30,16 @@
             {% endif %}
           </button>
         </form>
+
+        <!-- Start Training Button -->
+        <form hx-post="/start-training" hx-swap="none">
+          <input type="hidden" name="workout_id" value="{{ workout.id }}">
+          <button type="submit" 
+                  class="btn-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 text-white">
+            <span class="text-xl mr-2">🔥</span>
+            Start Training
+          </button>
+        </form>
         
         <button class="btn-primary px-8 py-4 rounded-2xl font-semibold transition-all duration-300 text-white">
           <span class="text-xl mr-2">🔥</span>
