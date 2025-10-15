@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COUNT(*) FROM completed_workouts \n                         WHERE user_id = ? \n                         AND datetime(completed_at) >= datetime('now', '-7 days')",
+  "describe": {
+    "columns": [
+      {
+        "name": "COUNT(*)",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "4bb1609f34f3798dc836ca9bd0a033f16ad49fcabbddd93816b95b043e0471e7"
+}

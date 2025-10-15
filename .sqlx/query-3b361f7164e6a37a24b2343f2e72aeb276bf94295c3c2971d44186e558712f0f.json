@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(weight * reps), 0.0) as \"total_volume!: f32\"\n            FROM completed_sets\n            WHERE active_workout_id = ? AND weight IS NOT NULL",
+  "describe": {
+    "columns": [
+      {
+        "name": "total_volume!: f32",
+        "ordinal": 0,
+        "type_info": "Float"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "3b361f7164e6a37a24b2343f2e72aeb276bf94295c3c2971d44186e558712f0f"
+}

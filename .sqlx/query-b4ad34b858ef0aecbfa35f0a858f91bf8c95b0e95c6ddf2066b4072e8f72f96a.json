@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE workouts SET is_active = ?, updated_at = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "b4ad34b858ef0aecbfa35f0a858f91bf8c95b0e95c6ddf2066b4072e8f72f96a"
+}

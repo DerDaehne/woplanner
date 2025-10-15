@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n            we.position as \"position: i32\",\n            we.target_sets as \"target_sets: i32\",\n            we.target_weight as \"target_weight: f32\",\n            we.notes,\n            e.id as exercise_id,\n            e.name as exercise_name,\n            e.instructions as exercise_instructions,\n            e.video_url as exercise_video_url\n           FROM workout_exercises we\n           INNER JOIN exercises e ON we.exercise_id = e.id\n           WHERE we.workout_id = ?\n           ORDER BY we.position ASC",
+  "describe": {
+    "columns": [
+      {
+        "name": "position: i32",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "target_sets: i32",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "target_weight: f32",
+        "ordinal": 2,
+        "type_info": "Float"
+      },
+      {
+        "name": "notes",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_id",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_name",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_instructions",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_video_url",
+        "ordinal": 7,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "6c340b77e876d255e4aa6e6276c48f2b86a7a38d94e6aa5215c7f7436489c09d"
+}

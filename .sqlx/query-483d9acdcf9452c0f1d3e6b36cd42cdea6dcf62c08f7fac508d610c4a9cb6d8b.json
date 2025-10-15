@@ -1,0 +1,62 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n                cs.id,\n                cs.set_number as \"set_number: i32\",\n                cs.weight as \"weight: f32\",\n                cs.reps as \"reps: i32\",\n                cs.notes,\n                cs.completed_at,\n                e.name as exercise_name,\n                e.instructions as exercise_instructions\n               FROM completed_sets cs\n               INNER JOIN exercises e ON cs.exercise_id = e.id\n               WHERE cs.active_workout_id = ? AND cs.exercise_id = ?\n               ORDER BY cs.completed_at DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "set_number: i32",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "weight: f32",
+        "ordinal": 2,
+        "type_info": "Float"
+      },
+      {
+        "name": "reps: i32",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "notes",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "completed_at",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_name",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "exercise_instructions",
+        "ordinal": 7,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "483d9acdcf9452c0f1d3e6b36cd42cdea6dcf62c08f7fac508d610c4a9cb6d8b"
+}

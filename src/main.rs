@@ -62,7 +62,12 @@ async fn main() {
         .layer(session_layer)
         .with_state(database_pool);
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    let port = std::env::var("PORT")
+        .unwrap_or_else(|_| "3000".to_string())
+        .parse::<u16>()
+        .expect("PORT must be a valid u16");
+
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     println!("WOPlanner listening on http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();

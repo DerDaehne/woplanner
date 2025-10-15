@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(target_sets), 0) FROM workout_exercises WHERE workout_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "COALESCE(SUM(target_sets), 0)",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "847d26c4a7fee15aabcc9d69e281b0b7c5c0a81e0d1fd2d489bddd46ae1d7e61"
+}

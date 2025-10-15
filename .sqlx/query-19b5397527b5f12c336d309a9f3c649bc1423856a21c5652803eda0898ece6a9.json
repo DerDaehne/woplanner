@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n            id, user_id, name, description, is_active, schedule_type as \"schedule_type!: String\",\n            schedule_day as \"schedule_day: i32\", created_at, updated_at FROM workouts WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "user_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "description",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "is_active",
+        "ordinal": 4,
+        "type_info": "Bool"
+      },
+      {
+        "name": "schedule_type!: String",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "schedule_day: i32",
+        "ordinal": 6,
+        "type_info": "Integer"
+      },
+      {
+        "name": "created_at",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "updated_at",
+        "ordinal": 8,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "19b5397527b5f12c336d309a9f3c649bc1423856a21c5652803eda0898ece6a9"
+}

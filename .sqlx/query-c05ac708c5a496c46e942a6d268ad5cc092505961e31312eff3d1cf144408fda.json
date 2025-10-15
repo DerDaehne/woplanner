@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT is_active FROM workouts WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "is_active",
+        "ordinal": 0,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "c05ac708c5a496c46e942a6d268ad5cc092505961e31312eff3d1cf144408fda"
+}

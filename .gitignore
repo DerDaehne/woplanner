@@ -1,4 +1,5 @@
-Cargo.lock
+# Cargo.lock should be committed for binary projects (needed for Nix builds)
+# Cargo.lock
 *.db
 *.db-*
 result

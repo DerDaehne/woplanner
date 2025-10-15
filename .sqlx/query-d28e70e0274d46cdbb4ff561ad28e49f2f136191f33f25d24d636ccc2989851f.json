@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(SUM(total_volume_kg), 0.0) as \"total!: f32\" \n                           FROM completed_workouts WHERE user_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "total!: f32",
+        "ordinal": 0,
+        "type_info": "Float"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d28e70e0274d46cdbb4ff561ad28e49f2f136191f33f25d24d636ccc2989851f"
+}

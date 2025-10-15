@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(MAX(position), 0) FROM workout_exercises WHERE workout_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "COALESCE(MAX(position), 0)",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e86e739955d4dd6890b181d56a1232b0c772c755d0b952d8f3471ddb5c8f7897"
+}

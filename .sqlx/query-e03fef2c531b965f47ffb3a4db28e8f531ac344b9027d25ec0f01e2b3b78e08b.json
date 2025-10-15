@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COALESCE(MAX(set_number), 0) +1\n         FROM completed_sets\n         WHERE active_workout_id = ? AND exercise_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "COALESCE(MAX(set_number), 0) +1",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e03fef2c531b965f47ffb3a4db28e8f531ac344b9027d25ec0f01e2b3b78e08b"
+}
