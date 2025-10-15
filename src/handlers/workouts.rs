@@ -137,11 +137,12 @@ pub async fn show_workout(
             we.notes,
             e.id as exercise_id,
             e.name as exercise_name,
-            e.instructions as exercise_instructions
+            e.instructions as exercise_instructions,
+            e.video_url as exercise_video_url
         FROM workout_exercises we INNER JOIN exercises e ON we.exercise_id = e.id WHERE we.workout_id = ? ORDER BY we.position ASC "#, workout_id)
     .fetch_all(&database_pool).await.unwrap_or(Vec::new());
 
-    let available_exercises = sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name")
+    let available_exercises = sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name")
         .fetch_all(&database_pool)
         .await
         .unwrap_or(Vec::new());

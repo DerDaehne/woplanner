@@ -49,7 +49,7 @@
         <label for="instructions" class="block text-sm font-medium text-gray-300 mb-3">
           Instructions
         </label>
-        <textarea 
+        <textarea
                id="instructions"
                name="instructions"
                rows="4"
@@ -57,7 +57,19 @@
                required
                class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 resize-none"></textarea>
       </div>
-      
+
+      <div>
+        <label for="video_url" class="block text-sm font-medium text-gray-300 mb-3">
+          Video URL (optional)
+        </label>
+        <input type="url"
+               id="video_url"
+               name="video_url"
+               placeholder="https://www.youtube.com/watch?v=..."
+               class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300">
+        <p class="text-xs text-gray-400 mt-2">📹 Add a YouTube video link for visual instructions</p>
+      </div>
+
       <button type="submit"
               class="w-full btn-primary py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300">
         <span class="mr-2">🚀</span>

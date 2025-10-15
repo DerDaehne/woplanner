@@ -14,6 +14,7 @@ use tower_sessions::Session;
 pub struct CreateExerciseForm {
     pub name: String,
     pub instructions: String,
+    pub video_url: Option<String>,
 }
 
 #[derive(Template)]
@@ -46,7 +47,7 @@ pub async fn list_exercises(
     State(database_pool): State<SqlitePool>,
     session: Session,
 ) -> impl IntoResponse {
-    let exercises = sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name")
+    let exercises = sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name")
         .fetch_all(&database_pool)
         .await
         .unwrap_or(Vec::new());
@@ -66,20 +67,23 @@ pub async fn create_exercise(
     State(database_pool): State<SqlitePool>,
     Form(form_data): Form<CreateExerciseForm>,
 ) -> impl IntoResponse {
-    let new_exercise = Exercise::new(form_data.name, form_data.instructions);
+    // Normalize empty string to None for video_url
+    let video_url = form_data.video_url.filter(|url| !url.trim().is_empty());
+    let new_exercise = Exercise::new(form_data.name, form_data.instructions, video_url);
 
     sqlx::query!(
-        "INSERT INTO exercises (id, name, instructions, created_at) VALUES (?, ?, ?, ?)",
+        "INSERT INTO exercises (id, name, instructions, video_url, created_at) VALUES (?, ?, ?, ?, ?)",
         new_exercise.id,
         new_exercise.name,
         new_exercise.instructions,
+        new_exercise.video_url,
         new_exercise.created_at
     )
     .execute(&database_pool)
     .await
     .expect("error creating new exercise");
 
-    let exercises = sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name")
+    let exercises = sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name")
         .fetch_all(&database_pool)
         .await
         .expect("error fetching exercise list");

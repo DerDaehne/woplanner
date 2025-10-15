@@ -48,7 +48,8 @@ async fn determine_current_exercise(
             we.notes,
             e.id as exercise_id,
             e.name as exercise_name,
-            e.instructions as exercise_instructions
+            e.instructions as exercise_instructions,
+            e.video_url as exercise_video_url
            FROM workout_exercises we
            INNER JOIN exercises e ON we.exercise_id = e.id
            WHERE we.workout_id = ?

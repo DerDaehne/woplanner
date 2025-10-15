@@ -253,7 +253,7 @@ pub async fn dashboard(
                     };
 
                     let exercises =
-                        sqlx::query_as!(Exercise, "SELECT * FROM exercises ORDER BY name LIMIT 3")
+                        sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name LIMIT 3")
                             .fetch_all(&database_pool)
                             .await
                             .unwrap_or(Vec::new());
