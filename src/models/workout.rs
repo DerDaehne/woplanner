@@ -13,6 +13,7 @@ pub enum ScheduleType {
 }
 
 impl ScheduleType {
+    #[allow(dead_code)]
     pub fn to_string(&self) -> String {
         match self {
             ScheduleType::Manual => "manual".to_string(),
@@ -22,6 +23,7 @@ impl ScheduleType {
         }
     }
 
+    #[allow(dead_code)]
     pub fn from_str(s: &str) -> Self {
         match s {
             "weekly" => ScheduleType::Weekly,
@@ -82,10 +84,12 @@ impl Workout {
         }
     }
 
+    #[allow(dead_code)]
     pub fn touch(&mut self) {
         self.updated_at = chrono::Utc::now().to_rfc3339();
     }
 
+    #[allow(dead_code)]
     pub fn get_schedule_type(&self) -> ScheduleType {
         ScheduleType::from_str(&self.schedule_type)
     }
@@ -137,9 +141,10 @@ impl WorkoutExercise {
         }
     }
 
+    #[allow(dead_code)]
     pub fn weight_display(&self) -> String {
         match self.target_weight {
-            Some(weight) => format!("{:.1}; kg", weight),
+            Some(weight) => format!("{:.1} kg", weight),
             None => "Bodyweight".to_string(),
         }
     }
@@ -164,4 +169,258 @@ pub struct AddExerciseToWorkoutForm {
 pub struct UpdateWorkoutScheduleForm {
     pub schedule_type: String,
     pub schedule_day: Option<i32>,
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ScheduleType Tests
+    #[test]
+    fn test_schedule_type_to_string() {
+        assert_eq!(ScheduleType::Manual.to_string(), "manual");
+        assert_eq!(ScheduleType::Weekly.to_string(), "weekly");
+        assert_eq!(ScheduleType::Rotation.to_string(), "rotation");
+        assert_eq!(ScheduleType::Disabled.to_string(), "disabled");
+    }
+
+    #[test]
+    fn test_schedule_type_from_str() {
+        matches!(ScheduleType::from_str("manual"), ScheduleType::Manual);
+        matches!(ScheduleType::from_str("weekly"), ScheduleType::Weekly);
+        matches!(ScheduleType::from_str("rotation"), ScheduleType::Rotation);
+        matches!(ScheduleType::from_str("disabled"), ScheduleType::Disabled);
+    }
+
+    #[test]
+    fn test_schedule_type_from_str_invalid() {
+        // Invalid strings should default to Manual
+        matches!(ScheduleType::from_str("invalid"), ScheduleType::Manual);
+        matches!(ScheduleType::from_str(""), ScheduleType::Manual);
+        matches!(ScheduleType::from_str("WEEKLY"), ScheduleType::Manual);
+    }
+
+    // Workout Tests
+    #[test]
+    fn test_workout_day_name_all_days() {
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+
+        workout.schedule_day = Some(0);
+        assert_eq!(workout.day_name(), Some("Sonntag".to_string()));
+
+        workout.schedule_day = Some(1);
+        assert_eq!(workout.day_name(), Some("Montag".to_string()));
+
+        workout.schedule_day = Some(2);
+        assert_eq!(workout.day_name(), Some("Dienstag".to_string()));
+
+        workout.schedule_day = Some(3);
+        assert_eq!(workout.day_name(), Some("Mittwoch".to_string()));
+
+        workout.schedule_day = Some(4);
+        assert_eq!(workout.day_name(), Some("Donnerstag".to_string()));
+
+        workout.schedule_day = Some(5);
+        assert_eq!(workout.day_name(), Some("Freitag".to_string()));
+
+        workout.schedule_day = Some(6);
+        assert_eq!(workout.day_name(), Some("Samstag".to_string()));
+    }
+
+    #[test]
+    fn test_workout_day_name_invalid() {
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+
+        workout.schedule_day = Some(7);
+        assert_eq!(workout.day_name(), Some("Unknown".to_string()));
+
+        workout.schedule_day = Some(-1);
+        assert_eq!(workout.day_name(), Some("Unknown".to_string()));
+
+        workout.schedule_day = Some(100);
+        assert_eq!(workout.day_name(), Some("Unknown".to_string()));
+    }
+
+    #[test]
+    fn test_workout_day_name_none() {
+        let workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+
+        assert_eq!(workout.day_name(), None);
+    }
+
+    #[test]
+    fn test_workout_is_scheduled_today() {
+        let today = chrono::Utc::now().weekday().num_days_from_sunday() as i32;
+
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+        workout.schedule_type = "weekly".to_string();
+        workout.schedule_day = Some(today);
+
+        assert!(workout.is_scheduled_today());
+    }
+
+    #[test]
+    fn test_workout_is_not_scheduled_today_wrong_day() {
+        let today = chrono::Utc::now().weekday().num_days_from_sunday() as i32;
+        let different_day = (today + 1) % 7; // Next day
+
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+        workout.schedule_type = "weekly".to_string();
+        workout.schedule_day = Some(different_day);
+
+        assert!(!workout.is_scheduled_today());
+    }
+
+    #[test]
+    fn test_workout_is_not_scheduled_today_wrong_type() {
+        let today = chrono::Utc::now().weekday().num_days_from_sunday() as i32;
+
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+        workout.schedule_type = "manual".to_string();
+        workout.schedule_day = Some(today);
+
+        assert!(!workout.is_scheduled_today());
+    }
+
+    #[test]
+    fn test_workout_is_not_scheduled_today_no_day() {
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+        workout.schedule_type = "weekly".to_string();
+        workout.schedule_day = None;
+
+        assert!(!workout.is_scheduled_today());
+    }
+
+    #[test]
+    fn test_workout_get_schedule_type() {
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+
+        workout.schedule_type = "manual".to_string();
+        matches!(workout.get_schedule_type(), ScheduleType::Manual);
+
+        workout.schedule_type = "weekly".to_string();
+        matches!(workout.get_schedule_type(), ScheduleType::Weekly);
+
+        workout.schedule_type = "rotation".to_string();
+        matches!(workout.get_schedule_type(), ScheduleType::Rotation);
+
+        workout.schedule_type = "disabled".to_string();
+        matches!(workout.get_schedule_type(), ScheduleType::Disabled);
+    }
+
+    #[test]
+    fn test_workout_new_defaults() {
+        let workout = Workout::new(
+            "user-123".to_string(),
+            "My Workout".to_string(),
+            Some("Description".to_string()),
+        );
+
+        assert_eq!(workout.user_id, "user-123");
+        assert_eq!(workout.name, "My Workout");
+        assert_eq!(workout.description, Some("Description".to_string()));
+        assert_eq!(workout.is_active, Some(true));
+        assert_eq!(workout.schedule_type, "manual");
+        assert_eq!(workout.schedule_day, None);
+        assert!(!workout.id.is_empty());
+        assert!(!workout.created_at.is_empty());
+        assert!(!workout.updated_at.is_empty());
+    }
+
+    #[test]
+    fn test_workout_touch_updates_timestamp() {
+        let mut workout = Workout::new(
+            "user-id".to_string(),
+            "Test Workout".to_string(),
+            None,
+        );
+
+        let original_updated_at = workout.updated_at.clone();
+
+        // Sleep briefly to ensure timestamp difference
+        std::thread::sleep(std::time::Duration::from_millis(10));
+
+        workout.touch();
+
+        assert_ne!(workout.updated_at, original_updated_at);
+    }
+
+    // WorkoutExercise Tests
+    #[test]
+    fn test_workout_exercise_weight_display_with_weight() {
+        let exercise = WorkoutExercise::new(
+            "workout-id".to_string(),
+            "exercise-id".to_string(),
+            1,
+            3,
+            Some(100.0),
+        );
+
+        assert_eq!(exercise.weight_display(), "100.0 kg");
+    }
+
+    #[test]
+    fn test_workout_exercise_weight_display_bodyweight() {
+        let exercise = WorkoutExercise::new(
+            "workout-id".to_string(),
+            "exercise-id".to_string(),
+            1,
+            3,
+            None,
+        );
+
+        assert_eq!(exercise.weight_display(), "Bodyweight");
+    }
+
+    #[test]
+    fn test_workout_exercise_new_defaults() {
+        let exercise = WorkoutExercise::new(
+            "workout-123".to_string(),
+            "exercise-456".to_string(),
+            2,
+            5,
+            Some(80.5),
+        );
+
+        assert_eq!(exercise.workout_id, "workout-123");
+        assert_eq!(exercise.exercise_id, "exercise-456");
+        assert_eq!(exercise.position, 2);
+        assert_eq!(exercise.target_sets, 5);
+        assert_eq!(exercise.target_weight, Some(80.5));
+        assert_eq!(exercise.notes, None);
+        assert!(!exercise.id.is_empty());
+        assert!(!exercise.created_at.is_empty());
+    }
 }
