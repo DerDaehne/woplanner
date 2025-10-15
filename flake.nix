@@ -62,19 +62,27 @@
             echo "Cargo version: $(cargo --version)"
             echo ""
             echo "Available commands:"
-            echo "  cargo run           - Run the application"
-            echo "  cargo watch -x run  - Auto-restart on changes"
-            echo "  cargo test          - Run tests"
-            echo "  cargo clippy        - Run linter"
-            echo "  cargo fmt           - Format code"
-            echo "  tailwindcss --help  - TailwindCSS commands"
+            echo "  cargo run            - Run the application"
+            echo "  cargo build          - Build the application"
+            echo "  cargo watch -x run   - Auto-restart on changes"
+            echo "  cargo test           - Run tests"
+            echo "  cargo clippy         - Run linter"
+            echo "  cargo fmt            - Format code"
+            echo "  tailwindcss --help   - TailwindCSS commands"
             echo ""
-            
+            echo "Database:"
+            echo "  DATABASE_URL=${"\$DATABASE_URL"}"
+            echo "  SEED_DATABASE=${"\$SEED_DATABASE"} (set to 'false' to disable sample data)"
+            echo ""
+
             # Rust-Analyzer für bessere IDE-Unterstützung
             export RUST_SRC_PATH="${rustToolchain}/lib/rustlib/src/rust/library"
-            
+
             # Database URL (SQLite als Standard)
             export DATABASE_URL="sqlite:./bodybuilding.db"
+
+            # Enable seeds in development by default
+            export SEED_DATABASE="''${SEED_DATABASE:-true}"
           '';
         };
       });

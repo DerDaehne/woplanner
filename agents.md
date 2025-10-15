@@ -43,7 +43,8 @@ templates/               # Askama HTML templates
 ├── base.html           # Base layout with navigation
 └── feature/            # Feature-specific templates
 
-migrations/             # SQL migration files (chronological)
+migrations/             # SQL migration files (chronological, schema only)
+seeds/                  # Sample data for development and demos
 static/                 # CSS, PWA manifest, icons
 ```
 
@@ -178,6 +179,8 @@ users                       -- User accounts
 ### Creating a Migration
 ```sql
 -- migrations/YYYYMMDD_description.sql
+-- Migrations should ONLY contain schema changes (tables, indexes, constraints)
+-- NO sample data in migrations!
 CREATE TABLE IF NOT EXISTS table_name (
     id TEXT PRIMARY KEY NOT NULL,
     field TEXT NOT NULL,
@@ -186,6 +189,20 @@ CREATE TABLE IF NOT EXISTS table_name (
 
 CREATE INDEX IF NOT EXISTS idx_name ON table(field);
 ```
+
+### Creating Seeds (Sample Data)
+```sql
+-- seeds/XX_description.sql
+-- Seeds are for development and demos only
+-- Use INSERT OR IGNORE for idempotency
+INSERT OR IGNORE INTO table_name (id, field, created_at) VALUES
+    ('sample-id-001', 'Sample Value', '2024-12-03T10:00:00Z');
+```
+
+**Important:**
+- Seeds run automatically in development (`SEED_DATABASE=true`, default)
+- Disable for production: `SEED_DATABASE=false`
+- Seeds must be registered in `src/database.rs`
 
 ### Writing SQLx Queries
 ```rust
