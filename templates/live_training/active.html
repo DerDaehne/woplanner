@@ -159,6 +159,7 @@
                    name="weight"
                    step="0.5"
                    min="0"
+                   inputmode="decimal"
                    {% match exercise.target_weight %}
                      {% when Some with (weight) %}
                        value="{{ weight }}"
@@ -178,6 +179,8 @@
                    name="reps"
                    min="1"
                    required
+                   inputmode="numeric"
+                   pattern="[0-9]*"
                    placeholder="8"
                    class="w-full px-4 py-4 input-glass rounded-xl text-white text-center text-lg font-semibold">
           </div>
