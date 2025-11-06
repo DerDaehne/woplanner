@@ -146,11 +146,13 @@ pub async fn show_exercise_progression(
             cs.set_number as "set_number: i32",
             cs.exercise_id
            FROM completed_sets cs
-           INNER JOIN active_workouts aw ON cs.active_workout_id = aw.id
-           WHERE cs.exercise_id = ? AND aw.user_id = ?
+           LEFT JOIN active_workouts aw ON cs.active_workout_id = aw.id
+           LEFT JOIN completed_workouts cw ON cs.active_workout_id = cw.id
+           WHERE cs.exercise_id = ? AND (aw.user_id = ? OR cw.user_id = ?)
            ORDER BY cs.completed_at DESC
            LIMIT 50"#,
         exercise_id,
+        user_id,
         user_id
     )
     .fetch_all(&database_pool)

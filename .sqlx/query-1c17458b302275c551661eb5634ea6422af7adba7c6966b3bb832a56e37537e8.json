@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "SELECT\n            cs.completed_at as date,\n            cs.weight as \"weight: f32\",\n            cs.reps as \"reps: i32\",\n            cs.set_number as \"set_number: i32\",\n            cs.exercise_id\n           FROM completed_sets cs\n           INNER JOIN active_workouts aw ON cs.active_workout_id = aw.id\n           WHERE cs.exercise_id = ? AND aw.user_id = ?\n           ORDER BY cs.completed_at DESC\n           LIMIT 50",
+  "query": "SELECT\n            cs.completed_at as date,\n            cs.weight as \"weight: f32\",\n            cs.reps as \"reps: i32\",\n            cs.set_number as \"set_number: i32\",\n            cs.exercise_id\n           FROM completed_sets cs\n           LEFT JOIN active_workouts aw ON cs.active_workout_id = aw.id\n           LEFT JOIN completed_workouts cw ON cs.active_workout_id = cw.id\n           WHERE cs.exercise_id = ? AND (aw.user_id = ? OR cw.user_id = ?)\n           ORDER BY cs.completed_at DESC\n           LIMIT 50",
   "describe": {
     "columns": [
       {
@@ -30,7 +30,7 @@
       }
     ],
     "parameters": {
-      "Right": 2
+      "Right": 3
     },
     "nullable": [
       false,
@@ -40,5 +40,5 @@
       false
     ]
   },
-  "hash": "6c0b952d1255f4fc3c5ee6639e0cfae86a5d0eb02d93d8c2b2912238c5f162b0"
+  "hash": "1c17458b302275c551661eb5634ea6422af7adba7c6966b3bb832a56e37537e8"
 }
