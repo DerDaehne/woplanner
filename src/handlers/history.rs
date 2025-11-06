@@ -1,4 +1,4 @@
-use crate::models::{CompletedWorkout, User};
+use crate::models::User;
 use askama::Template;
 use axum::{
     Router,

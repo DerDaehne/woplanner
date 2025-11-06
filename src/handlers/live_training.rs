@@ -291,6 +291,9 @@ pub async fn complete_set(
         completed_set.created_at
     ).execute(&database_pool).await.expect("Failed to save completed set");
 
+    // TODO: PR detection will be implemented in next iteration
+    // check_and_update_prs(&database_pool, &user_id, &completed_set).await;
+
     let mut headers = HeaderMap::new();
     headers.insert(
         "HX-Redirect",
