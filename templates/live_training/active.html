@@ -144,7 +144,8 @@
       <form id="set-form"
             hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
             hx-swap="none"
-            class="space-y-4 mb-20">
+            class="space-y-4 mb-20"
+            onsubmit="handleWeightField(event)">
 
         <!-- Hidden exercise_id -->
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
@@ -203,6 +204,15 @@
       </form>
 
       <script>
+        // Handle empty weight field for bodyweight exercises
+        function handleWeightField(event) {
+          const weightInput = document.querySelector('input[name="weight"]');
+          if (weightInput && weightInput.value.trim() === '') {
+            // Remove the weight field from form submission if empty
+            weightInput.removeAttribute('name');
+          }
+        }
+
         let timerInterval = null;
         let remainingSeconds = 0;
         const DEFAULT_REST_TIME = 90; // 90 seconds default
