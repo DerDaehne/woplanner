@@ -187,5 +187,5 @@ pub fn router() -> Router<SqlitePool> {
     Router::new()
         .route("/exercises", get(list_exercises))
         .route("/exercises", post(create_exercise))
-        .route("/exercises/:id/progression", get(show_exercise_progression))
+        .route("/exercises/{id}/progression", get(show_exercise_progression))
 }
