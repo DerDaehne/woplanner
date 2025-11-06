@@ -1,0 +1,226 @@
+{% extends "base.html" %}
+
+{% block title %}{{ exercise.name }} - Progression - WOPlanner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto animate-fade-in px-4 py-6">
+
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center gap-3 mb-2">
+      <a href="/exercises" class="text-gray-400 hover:text-white">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+      </a>
+      <h1 class="text-2xl font-bold text-white">{{ exercise.name }}</h1>
+    </div>
+    <p class="text-sm text-gray-400 ml-9">Exercise Progression</p>
+  </div>
+
+  {% if progression_data.len() == 0 %}
+    <!-- No Data State -->
+    <div class="glass-card rounded-2xl p-8 text-center">
+      <div class="text-6xl mb-4">📊</div>
+      <h2 class="text-xl font-bold text-white mb-2">No Data Yet</h2>
+      <p class="text-gray-400">Complete some sets of this exercise to see your progression!</p>
+    </div>
+  {% else %}
+    <!-- Chart Tabs -->
+    <div class="glass-card rounded-2xl p-4 mb-6">
+      <div class="flex gap-2 mb-4">
+        <button onclick="showChart('weight')" id="btn-weight" class="btn-primary px-4 py-2 rounded-xl text-sm font-medium">
+          Weight
+        </button>
+        <button onclick="showChart('reps')" id="btn-reps" class="btn-secondary px-4 py-2 rounded-xl text-sm font-medium">
+          Reps
+        </button>
+        <button onclick="showChart('volume')" id="btn-volume" class="btn-secondary px-4 py-2 rounded-xl text-sm font-medium">
+          Volume
+        </button>
+      </div>
+
+      <!-- Chart Container -->
+      <div class="bg-gray-900/50 rounded-xl p-4" style="min-height: 300px;">
+        <canvas id="progressionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Personal Records Summary -->
+    <div class="glass-card rounded-2xl p-4 mb-6">
+      <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
+        <span class="mr-2">🏆</span>
+        Personal Records
+      </h3>
+      <div class="grid grid-cols-3 gap-4">
+        <div class="text-center p-3 glass rounded-xl">
+          <div class="text-xs text-gray-400 mb-1">Max Weight</div>
+          <div class="text-lg font-bold text-netflix-red" id="max-weight">-</div>
+        </div>
+        <div class="text-center p-3 glass rounded-xl">
+          <div class="text-xs text-gray-400 mb-1">Max Reps</div>
+          <div class="text-lg font-bold text-netflix-red" id="max-reps">-</div>
+        </div>
+        <div class="text-center p-3 glass rounded-xl">
+          <div class="text-xs text-gray-400 mb-1">Max Volume</div>
+          <div class="text-lg font-bold text-netflix-red" id="max-volume">-</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Sets Table -->
+    <div class="glass-card rounded-2xl p-4">
+      <h3 class="text-lg font-semibold text-white mb-4">Recent Sets</h3>
+      <div class="space-y-2">
+        {% for data in progression_data %}
+          <div class="flex items-center justify-between p-3 glass rounded-xl">
+            <div class="flex items-center gap-3">
+              <div class="w-8 h-8 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                <span class="text-blue-400 text-xs font-bold">{{ data.set_number }}</span>
+              </div>
+              <div>
+                <div class="font-medium text-white text-sm">
+                  {% match data.weight %}
+                    {% when Some with (weight) %}
+                      {{ weight }}kg × {{ data.reps }}
+                    {% when None %}
+                      Bodyweight × {{ data.reps }}
+                  {% endmatch %}
+                </div>
+                {% match data.volume %}
+                  {% when Some with (volume) %}
+                    <div class="text-xs text-gray-400">Volume: {{ volume }}kg</div>
+                  {% when None %}
+                {% endmatch %}
+              </div>
+            </div>
+            <div class="text-xs text-gray-500">
+              {{ data.date }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
+</div>
+
+<!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<script>
+  // Progression data from backend
+  const progressionData = {{ progression_data_json|safe }};
+
+  // Reverse to show chronologically (oldest first)
+  progressionData.reverse();
+
+  // Calculate PRs
+  const weights = progressionData.filter(d => d.weight !== null).map(d => d.weight);
+  const reps = progressionData.map(d => d.reps);
+  const volumes = progressionData.filter(d => d.volume !== null).map(d => d.volume);
+
+  if (weights.length > 0) {
+    document.getElementById('max-weight').textContent = Math.max(...weights) + 'kg';
+  }
+  document.getElementById('max-reps').textContent = Math.max(...reps);
+  if (volumes.length > 0) {
+    document.getElementById('max-volume').textContent = Math.max(...volumes).toFixed(1) + 'kg';
+  }
+
+  // Chart configuration
+  const ctx = document.getElementById('progressionChart').getContext('2d');
+  let currentChart = null;
+
+  const chartConfig = {
+    type: 'line',
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          padding: 12,
+          titleColor: '#fff',
+          bodyColor: '#fff',
+          borderColor: '#E50914',
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          ticks: { color: '#9ca3af' },
+          grid: { color: 'rgba(156, 163, 175, 0.1)' }
+        },
+        y: {
+          ticks: { color: '#9ca3af' },
+          grid: { color: 'rgba(156, 163, 175, 0.1)' },
+          beginAtZero: true
+        }
+      }
+    }
+  };
+
+  function showChart(type) {
+    // Update button states
+    document.querySelectorAll('button[id^="btn-"]').forEach(btn => {
+      btn.classList.remove('btn-primary');
+      btn.classList.add('btn-secondary');
+    });
+    document.getElementById('btn-' + type).classList.remove('btn-secondary');
+    document.getElementById('btn-' + type).classList.add('btn-primary');
+
+    // Destroy existing chart
+    if (currentChart) {
+      currentChart.destroy();
+    }
+
+    // Prepare data based on type
+    let labels = progressionData.map((d, i) => `Set ${i + 1}`);
+    let data, label, color;
+
+    if (type === 'weight') {
+      data = progressionData.map(d => d.weight);
+      label = 'Weight (kg)';
+      color = '#E50914';
+    } else if (type === 'reps') {
+      data = progressionData.map(d => d.reps);
+      label = 'Reps';
+      color = '#10b981';
+    } else if (type === 'volume') {
+      data = progressionData.map(d => d.volume);
+      label = 'Volume (kg)';
+      color = '#3b82f6';
+    }
+
+    // Create new chart
+    currentChart = new Chart(ctx, {
+      ...chartConfig,
+      data: {
+        labels: labels,
+        datasets: [{
+          label: label,
+          data: data,
+          borderColor: color,
+          backgroundColor: color + '20',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: color,
+          pointBorderColor: '#fff',
+          pointBorderWidth: 2
+        }]
+      }
+    });
+  }
+
+  // Show weight chart by default
+  showChart('weight');
+</script>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n            cs.completed_at as date,\n            cs.weight as \"weight: f32\",\n            cs.reps as \"reps: i32\",\n            cs.set_number as \"set_number: i32\",\n            cs.exercise_id\n           FROM completed_sets cs\n           INNER JOIN active_workouts aw ON cs.active_workout_id = aw.id\n           WHERE cs.exercise_id = ? AND aw.user_id = ?\n           ORDER BY cs.completed_at DESC\n           LIMIT 50",
+  "describe": {
+    "columns": [
+      {
+        "name": "date",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "weight: f32",
+        "ordinal": 1,
+        "type_info": "Float"
+      },
+      {
+        "name": "reps: i32",
+        "ordinal": 2,
+        "type_info": "Integer"
+      },
+      {
+        "name": "set_number: i32",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "exercise_id",
+        "ordinal": 4,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "6c0b952d1255f4fc3c5ee6639e0cfae86a5d0eb02d93d8c2b2912238c5f162b0"
+}
