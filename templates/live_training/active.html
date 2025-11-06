@@ -258,11 +258,21 @@
         // Listen for successful set completion
         document.getElementById('set-form').addEventListener('htmx:afterRequest', function(event) {
           if (event.detail.successful) {
-            // Start rest timer after successful set
-            startRestTimer();
-            // Trigger page reload to update sets list
-            setTimeout(() => window.location.reload(), 500);
+            // Reload page first, timer will start after reload
+            window.location.reload();
           }
+        });
+
+        // Check if we should start timer (after page reload from completing a set)
+        // We use sessionStorage to persist this across page reload
+        if (sessionStorage.getItem('justCompletedSet') === 'true') {
+          sessionStorage.removeItem('justCompletedSet');
+          startRestTimer();
+        }
+
+        // Set flag before form submission
+        document.getElementById('set-form').addEventListener('htmx:beforeRequest', function() {
+          sessionStorage.setItem('justCompletedSet', 'true');
         });
       </script>
 
