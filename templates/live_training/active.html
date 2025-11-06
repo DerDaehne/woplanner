@@ -126,22 +126,37 @@
         {% endif %}
       </div>
 
+      <!-- Rest Timer Display (Initially Hidden) -->
+      <div id="rest-timer" class="glass-card rounded-2xl p-6 mb-6 text-center hidden">
+        <div class="text-sm text-gray-400 mb-2">Rest Time</div>
+        <div id="timer-display" class="text-6xl font-bold text-netflix-red mb-4">0:00</div>
+        <div class="flex gap-3 justify-center">
+          <button onclick="skipRest()" class="btn-secondary px-6 py-2 rounded-xl text-sm font-medium">
+            Skip Rest
+          </button>
+          <button onclick="addTime(30)" class="glass px-6 py-2 rounded-xl text-sm font-medium hover:bg-white/10">
+            +30s
+          </button>
+        </div>
+      </div>
+
       <!-- Input Form: Weight + Reps -->
-      <form hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
+      <form id="set-form"
+            hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
             hx-swap="none"
             class="space-y-4 mb-20">
-        
+
         <!-- Hidden exercise_id -->
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
-        
+
         <div class="grid grid-cols-2 gap-4">
           <!-- Weight Input -->
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Weight (kg)
             </label>
-            <input type="number" 
-                   name="weight" 
+            <input type="number"
+                   name="weight"
                    step="0.5"
                    min="0"
                    {% match exercise.target_weight %}
@@ -153,37 +168,103 @@
                    {% endmatch %}
                    class="w-full px-4 py-4 input-glass rounded-xl text-white text-center text-lg font-semibold">
           </div>
-          
+
           <!-- Reps Input -->
           <div>
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Reps
             </label>
-            <input type="number" 
-                   name="reps" 
-                   min="1" 
+            <input type="number"
+                   name="reps"
+                   min="1"
                    required
                    placeholder="8"
                    class="w-full px-4 py-4 input-glass rounded-xl text-white text-center text-lg font-semibold">
           </div>
         </div>
-        
+
         <!-- Notes Input (Optional) -->
         <div>
-          <input type="text" 
+          <input type="text"
                  name="notes"
                  placeholder="Optional: How did it feel?"
                  class="w-full px-4 py-3 input-glass rounded-xl text-white placeholder-gray-500">
         </div>
-        
+
         <!-- Submit Button: Big and Prominent -->
         <button type="submit"
                 class="w-full btn-primary py-4 px-6 rounded-2xl font-bold text-white text-lg flex items-center justify-center gap-2">
           <span>Complete Set</span>
           <span class="text-xl">→</span>
         </button>
-        
+
       </form>
+
+      <script>
+        let timerInterval = null;
+        let remainingSeconds = 0;
+        const DEFAULT_REST_TIME = 90; // 90 seconds default
+
+        function startRestTimer(seconds = DEFAULT_REST_TIME) {
+          remainingSeconds = seconds;
+
+          // Show timer, hide form
+          document.getElementById('rest-timer').classList.remove('hidden');
+          document.getElementById('set-form').style.opacity = '0.4';
+          document.getElementById('set-form').style.pointerEvents = 'none';
+
+          updateTimerDisplay();
+
+          if (timerInterval) clearInterval(timerInterval);
+
+          timerInterval = setInterval(() => {
+            remainingSeconds--;
+            updateTimerDisplay();
+
+            if (remainingSeconds <= 0) {
+              finishRest();
+            }
+          }, 1000);
+        }
+
+        function updateTimerDisplay() {
+          const minutes = Math.floor(remainingSeconds / 60);
+          const seconds = remainingSeconds % 60;
+          document.getElementById('timer-display').textContent =
+            `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function skipRest() {
+          finishRest();
+        }
+
+        function addTime(seconds) {
+          remainingSeconds += seconds;
+          updateTimerDisplay();
+        }
+
+        function finishRest() {
+          if (timerInterval) clearInterval(timerInterval);
+          document.getElementById('rest-timer').classList.add('hidden');
+          document.getElementById('set-form').style.opacity = '1';
+          document.getElementById('set-form').style.pointerEvents = 'auto';
+
+          // Play completion sound (vibration on mobile)
+          if (navigator.vibrate) {
+            navigator.vibrate([200, 100, 200]);
+          }
+        }
+
+        // Listen for successful set completion
+        document.getElementById('set-form').addEventListener('htmx:afterRequest', function(event) {
+          if (event.detail.successful) {
+            // Start rest timer after successful set
+            startRestTimer();
+            // Trigger page reload to update sets list
+            setTimeout(() => window.location.reload(), 500);
+          }
+        });
+      </script>
 
     {% when None %}
       <!-- Workout Complete Actions -->
