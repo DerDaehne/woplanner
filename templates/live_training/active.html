@@ -155,11 +155,10 @@
             <label class="block text-sm font-medium text-gray-300 mb-2">
               Weight (kg)
             </label>
-            <input type="number"
+            <input type="text"
                    name="weight"
-                   step="0.5"
-                   min="0"
                    inputmode="decimal"
+                   pattern="[0-9]*\.?[0-9]*"
                    {% match exercise.target_weight %}
                      {% when Some with (weight) %}
                        value="{{ weight }}"
