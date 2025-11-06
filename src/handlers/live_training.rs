@@ -22,6 +22,7 @@ pub struct LiveTrainingTemplate {
     pub current_user: Option<User>,
     pub is_dashboard: bool,
     pub pr_notifications: Option<Vec<String>>,
+    pub overload_suggestion: Option<String>,
 }
 
 async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
@@ -105,6 +106,40 @@ async fn calculate_progress_percent(
     .unwrap_or(0) as f32;
 
     (completed_sets_count / total_planned_sets * 100.0).min(100.0)
+}
+
+/// Generate progressive overload suggestion based on completed set
+fn generate_overload_suggestion(completed_set: &CompletedSet, _current_weight: Option<f32>) -> Option<String> {
+    // Only provide suggestions for weighted exercises
+    let weight = match completed_set.weight {
+        Some(w) => w,
+        None => return None, // No suggestions for bodyweight exercises
+    };
+
+    if completed_set.reps > 12 {
+        // User is doing too many reps - suggest increasing weight
+        let suggested_weight = weight + 2.5; // Standard increment of 2.5kg
+        Some(format!(
+            "💪 Du schaffst mehr als 12 Wiederholungen! Versuche es beim nächsten Set mit {}kg für optimales Muskelwachstum.",
+            suggested_weight
+        ))
+    } else if completed_set.reps < 6 {
+        // User is struggling - suggest decreasing weight
+        let suggested_weight = (weight - 2.5).max(0.0); // Don't go below 0
+        if suggested_weight > 0.0 {
+            Some(format!(
+                "⚠️ Weniger als 6 Wiederholungen können auf zu hohes Gewicht hindeuten. Versuche es mit {}kg für bessere Form und Kontrolle.",
+                suggested_weight
+            ))
+        } else {
+            Some(
+                "⚠️ Weniger als 6 Wiederholungen - versuche mit weniger Gewicht oder Bodyweight zu trainieren für bessere Form.".to_string()
+            )
+        }
+    } else {
+        // Reps are in the optimal range (6-12), no suggestion needed
+        None
+    }
 }
 
 pub async fn start_training(
@@ -250,12 +285,19 @@ pub async fn show_live_training(
         let _ = session.remove::<Vec<String>>("pr_notifications").await;
     }
 
+    // Retrieve and clear overload suggestion from session
+    let overload_suggestion: Option<String> = session.get("overload_suggestion").await.ok().flatten();
+    if overload_suggestion.is_some() {
+        let _ = session.remove::<String>("overload_suggestion").await;
+    }
+
     let template = LiveTrainingTemplate {
         active_workout_view,
         current_exercise_sets,
         current_user,
         is_dashboard: false,
         pr_notifications,
+        overload_suggestion,
     };
 
     Html(template.render().unwrap()).into_response()
@@ -329,6 +371,11 @@ pub async fn complete_set(
             // Store PR notifications in session for display
             let _ = session.insert("pr_notifications", prs).await;
         }
+    }
+
+    // Generate progressive overload suggestion
+    if let Some(suggestion) = generate_overload_suggestion(&completed_set, form.weight) {
+        let _ = session.insert("overload_suggestion", suggestion).await;
     }
 
     let mut headers = HeaderMap::new();
