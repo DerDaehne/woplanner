@@ -32,6 +32,29 @@
       {% endmatch %}
   </div>
 
+  <!-- Personal Record Notifications -->
+  {% match pr_notifications %}
+    {% when Some with (prs) %}
+      <div id="pr-banner" class="glass-card rounded-2xl p-4 mb-6 border-2 border-yellow-500/50 bg-gradient-to-r from-yellow-900/20 to-orange-900/20 animate-fade-in">
+        <div class="flex items-start gap-3">
+          <div class="text-3xl">🏆</div>
+          <div class="flex-1">
+            <h3 class="text-lg font-bold text-yellow-400 mb-2">New Personal Record!</h3>
+            <div class="space-y-1">
+              {% for pr in prs %}
+                <div class="text-sm text-gray-200 flex items-center gap-2">
+                  <span class="text-yellow-500">★</span>
+                  <span>{{ pr }}</span>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <button onclick="document.getElementById('pr-banner').remove()" class="text-gray-400 hover:text-white text-xl">×</button>
+        </div>
+      </div>
+    {% when None %}
+  {% endmatch %}
+
   {% match active_workout_view.current_exercise %}
     {% when Some with (exercise) %}
       

@@ -21,6 +21,7 @@ pub struct LiveTrainingTemplate {
     pub current_exercise_sets: Vec<CompletedSetDetail>,
     pub current_user: Option<User>,
     pub is_dashboard: bool,
+    pub pr_notifications: Option<Vec<String>>,
 }
 
 async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
@@ -243,11 +244,18 @@ pub async fn show_live_training(
         progress_percent,
     };
 
+    // Retrieve and clear PR notifications from session
+    let pr_notifications: Option<Vec<String>> = session.get("pr_notifications").await.ok().flatten();
+    if pr_notifications.is_some() {
+        let _ = session.remove::<Vec<String>>("pr_notifications").await;
+    }
+
     let template = LiveTrainingTemplate {
         active_workout_view,
         current_exercise_sets,
         current_user,
         is_dashboard: false,
+        pr_notifications,
     };
 
     Html(template.render().unwrap()).into_response()
@@ -256,6 +264,7 @@ pub async fn show_live_training(
 pub async fn complete_set(
     Path(active_workout_id): Path<String>,
     State(database_pool): State<SqlitePool>,
+    session: Session,
     Form(form): Form<CompleteSetForm>,
 ) -> impl IntoResponse {
     // Get user_id from active workout
@@ -318,7 +327,7 @@ pub async fn complete_set(
     {
         if !prs.is_empty() {
             // Store PR notifications in session for display
-            println!("New PRs achieved: {:?}", prs);
+            let _ = session.insert("pr_notifications", prs).await;
         }
     }
 
