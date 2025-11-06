@@ -1,3 +1,4 @@
+use crate::handlers::personal_records::check_and_update_prs;
 use crate::models::{
     ActiveWorkout, ActiveWorkoutView, CompleteSetForm, CompletedSet, CompletedSetDetail,
     CompletedWorkout, FinishTrainingForm, StartWorkoutForm, User, Workout, WorkoutExerciseDetail,
@@ -257,6 +258,21 @@ pub async fn complete_set(
     State(database_pool): State<SqlitePool>,
     Form(form): Form<CompleteSetForm>,
 ) -> impl IntoResponse {
+    // Get user_id from active workout
+    let active_workout = match sqlx::query_as!(
+        ActiveWorkout,
+        "SELECT * FROM active_workouts WHERE id = ?",
+        active_workout_id
+    )
+    .fetch_optional(&database_pool)
+    .await
+    {
+        Ok(Some(workout)) => workout,
+        _ => {
+            return Html("Active workout not found".to_string()).into_response();
+        }
+    };
+
     let next_set_number = sqlx::query_scalar!(
         "SELECT COALESCE(MAX(set_number), 0) +1
          FROM completed_sets
@@ -270,7 +286,7 @@ pub async fn complete_set(
 
     let mut completed_set = CompletedSet::new(
         active_workout_id.clone(),
-        form.exercise_id,
+        form.exercise_id.clone(),
         next_set_number,
         form.weight,
         form.reps,
@@ -291,8 +307,20 @@ pub async fn complete_set(
         completed_set.created_at
     ).execute(&database_pool).await.expect("Failed to save completed set");
 
-    // TODO: PR detection will be implemented in next iteration
-    // check_and_update_prs(&database_pool, &user_id, &completed_set).await;
+    // Check for new personal records
+    if let Ok(prs) = check_and_update_prs(
+        &database_pool,
+        &active_workout.user_id,
+        &form.exercise_id,
+        &completed_set,
+    )
+    .await
+    {
+        if !prs.is_empty() {
+            // Store PR notifications in session for display
+            println!("New PRs achieved: {:?}", prs);
+        }
+    }
 
     let mut headers = HeaderMap::new();
     headers.insert(
