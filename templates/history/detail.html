@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ workout.workout_name }} - WOPlanner{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-6 pb-24">
+  <!-- Back Button -->
+  <a href="/history" class="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors">
+    <span>←</span>
+    <span>Back to History</span>
+  </a>
+
+  <!-- Workout Header -->
+  <div class="glass-card rounded-2xl p-6 mb-6">
+    <h1 class="text-2xl font-bold text-white mb-2">{{ workout.workout_name }}</h1>
+    <p class="text-gray-400 mb-4">{{ workout.completed_date_display() }}</p>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-netflix-red">{{ workout.duration_display() }}</div>
+        <div class="text-xs text-gray-400 mt-1">Duration</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-green-400">{{ workout.total_sets }}</div>
+        <div class="text-xs text-gray-400 mt-1">Total Sets</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-blue-400">{{ workout.total_volume_kg as i32 }}</div>
+        <div class="text-xs text-gray-400 mt-1">Volume (kg)</div>
+      </div>
+      <div class="glass rounded-xl p-4 text-center">
+        <div class="text-2xl font-bold text-purple-400">{{ exercises.len() }}</div>
+        <div class="text-xs text-gray-400 mt-1">Exercises</div>
+      </div>
+    </div>
+
+    {% match workout.notes %}
+      {% when Some with (notes) %}
+        <div class="mt-4 pt-4 border-t border-gray-700/50">
+          <div class="text-xs text-gray-400 mb-1">Workout Notes:</div>
+          <p class="text-sm text-gray-300 italic">"{{ notes }}"</p>
+        </div>
+      {% when None %}
+    {% endmatch %}
+  </div>
+
+  <!-- Exercises and Sets -->
+  <div class="space-y-4">
+    {% for exercise in exercises %}
+      <div class="glass-card rounded-2xl p-5">
+        <h2 class="text-lg font-bold text-white mb-4">{{ exercise.exercise_name }}</h2>
+
+        <div class="space-y-2">
+          {% for set in exercise.sets %}
+            <div class="flex items-center justify-between p-3 glass rounded-xl">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
+                  <span class="text-green-400 text-sm font-bold">{{ set.set_number }}</span>
+                </div>
+                <div>
+                  <div class="font-medium text-white text-sm">
+                    {{ set.weight_display() }} × {{ set.reps }} reps
+                  </div>
+                  {% match set.notes %}
+                    {% when Some with (notes) %}
+                      <div class="text-xs text-gray-400 mt-1">{{ notes }}</div>
+                    {% when None %}
+                  {% endmatch %}
+                </div>
+              </div>
+              {% match set.weight %}
+                {% when Some with (weight) %}
+                  <div class="text-xs text-gray-500">
+                    {{ (weight * set.reps as f32) as i32 }}kg
+                  </div>
+                {% when None %}
+              {% endmatch %}
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Exercise Summary -->
+        <div class="mt-3 pt-3 border-t border-gray-700/50 flex justify-between text-sm">
+          <span class="text-gray-400">Total Sets:</span>
+          <span class="text-white font-medium">{{ exercise.sets.len() }}</span>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
