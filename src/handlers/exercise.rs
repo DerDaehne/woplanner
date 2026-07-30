@@ -1,3 +1,4 @@
+use crate::error::AppError;
 use crate::models::{Exercise, User};
 use askama::Template;
 use axum::{
@@ -50,28 +51,26 @@ pub struct ExerciseProgressionTemplate {
     pub is_dashboard: bool,
 }
 
-async fn get_current_user(session: &Session, pool: &SqlitePool) -> Option<User> {
+async fn get_current_user(session: &Session, pool: &SqlitePool) -> Result<Option<User>, AppError> {
     if let Ok(Some(user_id)) = session.get::<String>("current_user_id").await {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
+        let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
             .fetch_optional(pool)
-            .await
-            .ok()
-            .flatten()
+            .await?;
+        Ok(user)
     } else {
-        None
+        Ok(None)
     }
 }
 
 pub async fn list_exercises(
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> impl IntoResponse {
+) -> Result<impl IntoResponse, AppError> {
     let exercises = sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name")
         .fetch_all(&database_pool)
-        .await
-        .unwrap_or(Vec::new());
+        .await?;
 
-    let current_user = get_current_user(&session, &database_pool).await;
+    let current_user = get_current_user(&session, &database_pool).await?;
 
     let template = ExerciseListTemplate {
         exercises,
@@ -79,16 +78,26 @@ pub async fn list_exercises(
         is_dashboard: false,
     };
 
-    Html(template.render().unwrap())
+    Ok(Html(template.render()?).into_response())
 }
 
 pub async fn create_exercise(
     State(database_pool): State<SqlitePool>,
     Form(form_data): Form<CreateExerciseForm>,
-) -> impl IntoResponse {
+) -> Result<impl IntoResponse, AppError> {
+    // Validate input
+    let name = form_data.name.trim().to_string();
+    if name.is_empty() {
+        return Err(AppError::BadRequest("Exercise name cannot be empty".to_string()));
+    }
+    let instructions = form_data.instructions.trim().to_string();
+    if instructions.is_empty() {
+        return Err(AppError::BadRequest("Instructions cannot be empty".to_string()));
+    }
+
     // Normalize empty string to None for video_url
     let video_url = form_data.video_url.filter(|url| !url.trim().is_empty());
-    let new_exercise = Exercise::new(form_data.name, form_data.instructions, video_url);
+    let new_exercise = Exercise::new(name, instructions, video_url);
 
     sqlx::query!(
         "INSERT INTO exercises (id, name, instructions, video_url, created_at) VALUES (?, ?, ?, ?, ?)",
@@ -99,43 +108,40 @@ pub async fn create_exercise(
         new_exercise.created_at
     )
     .execute(&database_pool)
-    .await
-    .expect("error creating new exercise");
+    .await?;
 
     let exercises = sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name")
         .fetch_all(&database_pool)
-        .await
-        .expect("error fetching exercise list");
+        .await?;
 
     let template = ExerciseListPartialTemplate { exercises };
-    Html(template.render().unwrap())
+    Ok(Html(template.render()?).into_response())
 }
 
 pub async fn show_exercise_progression(
     Path(exercise_id): Path<String>,
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> impl IntoResponse {
-    let current_user = get_current_user(&session, &database_pool).await;
+) -> Result<impl IntoResponse, AppError> {
+    let current_user = get_current_user(&session, &database_pool).await?;
 
     // Get the exercise
-    let exercise = match sqlx::query_as!(
+    let exercise = sqlx::query_as!(
         Exercise,
         "SELECT id, name, instructions, video_url, created_at FROM exercises WHERE id = ?",
         exercise_id
     )
     .fetch_optional(&database_pool)
-    .await
-    {
-        Ok(Some(ex)) => ex,
-        _ => return Html("Exercise not found".to_string()).into_response(),
+    .await?;
+
+    let exercise = match exercise {
+        Some(ex) => ex,
+        None => return Err(AppError::NotFound("Exercise not found".to_string())),
     };
 
-    // Get progression data for this exercise from completed sets
-    // We'll get the last 50 sets to show recent progression
     let user_id = match &current_user {
         Some(user) => &user.id,
-        None => return Html("Not logged in".to_string()).into_response(),
+        None => return Err(AppError::Unauthorized),
     };
 
     let progression_data = sqlx::query!(
@@ -156,8 +162,7 @@ pub async fn show_exercise_progression(
         user_id
     )
     .fetch_all(&database_pool)
-    .await
-    .unwrap_or(Vec::new());
+    .await?;
 
     let progression_data_vec: Vec<ProgressionDataPoint> = progression_data
         .into_iter()
@@ -182,7 +187,7 @@ pub async fn show_exercise_progression(
         is_dashboard: false,
     };
 
-    Html(template.render().unwrap()).into_response()
+    Ok(Html(template.render()?).into_response())
 }
 
 pub fn router() -> Router<SqlitePool> {

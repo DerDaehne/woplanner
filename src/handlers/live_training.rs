@@ -1,3 +1,4 @@
+use crate::error::AppError;
 use crate::handlers::personal_records::check_and_update_prs;
 use crate::models::{
     ActiveWorkout, ActiveWorkoutView, CompleteSetForm, CompletedSet, CompletedSetDetail,
@@ -25,15 +26,14 @@ pub struct LiveTrainingTemplate {
     pub overload_suggestion: Option<String>,
 }
 
-async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
+async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Result<Option<User>, AppError> {
     if let Ok(Some(user_id)) = session.get::<String>("current_user_id").await {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
+        let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
             .fetch_optional(database_pool)
-            .await
-            .ok()
-            .flatten()
+            .await?;
+        Ok(user)
     } else {
-        None
+        Ok(None)
     }
 }
 
@@ -41,7 +41,7 @@ async fn determine_current_exercise(
     database_pool: &SqlitePool,
     active_workout_id: &str,
     workout_id: &str,
-) -> Option<WorkoutExerciseDetail> {
+) -> Result<Option<WorkoutExerciseDetail>, AppError> {
     let workout_exercise = sqlx::query_as!(
         WorkoutExerciseDetail,
         r#"SELECT
@@ -60,8 +60,7 @@ async fn determine_current_exercise(
         workout_id
     )
     .fetch_all(database_pool)
-    .await
-    .unwrap_or(Vec::new());
+    .await?;
 
     for exercise in workout_exercise {
         let completed_sets_count = sqlx::query_scalar!(
@@ -74,27 +73,26 @@ async fn determine_current_exercise(
         .unwrap_or(0) as i32;
 
         if completed_sets_count < exercise.target_sets {
-            return Some(exercise);
+            return Ok(Some(exercise));
         }
     }
-    None
+    Ok(None)
 }
 
 async fn calculate_progress_percent(
     database_pool: &SqlitePool,
     active_workout_id: &str,
     workout_id: &str,
-) -> f32 {
+) -> Result<f32, AppError> {
     let total_planned_sets = sqlx::query_scalar!(
         "SELECT COALESCE(SUM(target_sets), 0) FROM workout_exercises WHERE workout_id = ?",
         workout_id
     )
     .fetch_one(database_pool)
-    .await
-    .unwrap_or(0) as f32;
+    .await? as f32;
 
     if total_planned_sets == 0.0 {
-        return 0.0;
+        return Ok(0.0);
     }
 
     let completed_sets_count = sqlx::query_scalar!(
@@ -102,10 +100,9 @@ async fn calculate_progress_percent(
         active_workout_id
     )
     .fetch_one(database_pool)
-    .await
-    .unwrap_or(0) as f32;
+    .await? as f32;
 
-    (completed_sets_count / total_planned_sets * 100.0).min(100.0)
+    Ok((completed_sets_count / total_planned_sets * 100.0).min(100.0))
 }
 
 /// Generate progressive overload suggestion based on completed set
@@ -146,15 +143,28 @@ pub async fn start_training(
     State(database_pool): State<SqlitePool>,
     session: Session,
     Form(form): Form<StartWorkoutForm>,
-) -> impl IntoResponse {
-    let current_user = match get_current_user(&session, &database_pool).await {
+) -> Result<impl IntoResponse, AppError> {
+    // Validate input
+    if form.workout_id.is_empty() {
+        return Err(AppError::BadRequest("Workout ID cannot be empty".to_string()));
+    }
+
+    let current_user = match get_current_user(&session, &database_pool).await? {
         Some(user) => user,
         None => {
             let mut headers = HeaderMap::new();
             headers.insert("HX-Redirect", HeaderValue::from_static("/users"));
-            return (headers, Html("Not logged in".to_string())).into_response();
+            return Ok((headers, Html("Not logged in".to_string())).into_response());
         }
     };
+
+    // Verify workout exists
+    sqlx::query_as!(
+        Workout,
+        "SELECT id, user_id, name, description, is_active, schedule_type as \"schedule_type!: String\", schedule_day as \"schedule_day: i32\", created_at, updated_at FROM workouts WHERE id = ?",
+        form.workout_id
+    ).fetch_optional(&database_pool).await?
+        .ok_or_else(|| AppError::NotFound(format!("Workout '{}' not found", form.workout_id)))?;
 
     let existing_active = sqlx::query_as!(
         ActiveWorkout,
@@ -162,57 +172,54 @@ pub async fn start_training(
         current_user.id
     )
     .fetch_optional(&database_pool)
-    .await
-    .unwrap_or(None);
+    .await?;
 
     if let Some(active) = existing_active {
         let mut headers = HeaderMap::new();
         headers.insert(
             "HX-Redirect",
-            HeaderValue::from_str(&format!("/live-training/{}", active.id)).unwrap(),
+            HeaderValue::from_str(&format!("/live-training/{}", active.id))?,
         );
-        return (headers, Html("Redirecting to active training".to_string())).into_response();
+        return Ok((headers, Html("Redirecting to active training".to_string())).into_response());
     }
 
     let new_active = ActiveWorkout::new(current_user.id, form.workout_id);
 
     sqlx::query!(
-    "INSERT INTO active_workouts (id, user_id, workout_id, started_at, created_at) VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO active_workouts (id, user_id, workout_id, started_at, created_at) VALUES (?, ?, ?, ?, ?)",
         new_active.id,
         new_active.user_id,
         new_active.workout_id,
         new_active.started_at,
         new_active.created_at
-    )
-    .execute(&database_pool)
-    .await
-    .expect("Failed to create active workout");
+    ).execute(&database_pool).await?;
 
     let mut headers = HeaderMap::new();
     headers.insert(
         "HX-Redirect",
-        HeaderValue::from_str(&format!("/live-training/{}", new_active.id)).unwrap(),
+        HeaderValue::from_str(&format!("/live-training/{}", new_active.id))?,
     );
-    (headers, Html("Training started!".to_string())).into_response()
+    Ok((headers, Html("Training started!".to_string())).into_response())
 }
 
 pub async fn show_live_training(
     Path(active_workout_id): Path<String>,
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> impl IntoResponse {
-    let current_user = get_current_user(&session, &database_pool).await;
+) -> Result<impl IntoResponse, AppError> {
+    let current_user = get_current_user(&session, &database_pool).await?;
 
-    let active_workout = match sqlx::query_as!(
+    let active_workout = sqlx::query_as!(
         ActiveWorkout,
         "SELECT * FROM active_workouts WHERE id = ?",
         active_workout_id
     )
     .fetch_optional(&database_pool)
-    .await
-    {
-        Ok(Some(workout)) => workout,
-        _ => return Html("Active workout not found".to_string()).into_response(),
+    .await?;
+
+    let active_workout = match active_workout {
+        Some(workout) => workout,
+        None => return Err(AppError::NotFound("Active workout not found".to_string())),
     };
 
     let workout = sqlx::query_as!(
@@ -221,21 +228,21 @@ pub async fn show_live_training(
             id, user_id, name, description, is_active, schedule_type as "schedule_type!: String",
             schedule_day as "schedule_day: i32", created_at, updated_at FROM workouts WHERE id = ?"#,
         active_workout.workout_id
-    ).fetch_one(&database_pool).await.expect("Workout should exist");
+    ).fetch_one(&database_pool).await?;
 
     let current_exercise = determine_current_exercise(
         &database_pool,
         &active_workout_id,
         &active_workout.workout_id,
     )
-    .await;
+    .await?;
 
     let progress_percent = calculate_progress_percent(
         &database_pool,
         &active_workout_id,
         &active_workout.workout_id,
     )
-    .await;
+    .await?;
 
     let total_sets_completed = sqlx::query_scalar!(
         "SELECT COUNT(*) FROM completed_sets WHERE active_workout_id = ?",
@@ -265,8 +272,7 @@ pub async fn show_live_training(
             exercise.exercise_id
         )
         .fetch_all(&database_pool)
-        .await
-        .unwrap_or(Vec::new())
+        .await?
     } else {
         Vec::new()
     };
@@ -300,7 +306,7 @@ pub async fn show_live_training(
         overload_suggestion,
     };
 
-    Html(template.render().unwrap()).into_response()
+    Ok(Html(template.render()?).into_response())
 }
 
 pub async fn complete_set(
@@ -308,20 +314,32 @@ pub async fn complete_set(
     State(database_pool): State<SqlitePool>,
     session: Session,
     Form(form): Form<CompleteSetForm>,
-) -> impl IntoResponse {
+) -> Result<impl IntoResponse, AppError> {
+    // Validate input
+    if form.exercise_id.is_empty() {
+        return Err(AppError::BadRequest("Exercise ID cannot be empty".to_string()));
+    }
+    if form.reps < 1 || form.reps > 100 {
+        return Err(AppError::BadRequest("Reps must be between 1 and 100".to_string()));
+    }
+    if let Some(weight) = form.weight {
+        if weight < 0.0 || weight > 10000.0 {
+            return Err(AppError::BadRequest("Weight must be between 0 and 10000 kg".to_string()));
+        }
+    }
+
     // Get user_id from active workout
-    let active_workout = match sqlx::query_as!(
+    let active_workout = sqlx::query_as!(
         ActiveWorkout,
         "SELECT * FROM active_workouts WHERE id = ?",
         active_workout_id
     )
     .fetch_optional(&database_pool)
-    .await
-    {
-        Ok(Some(workout)) => workout,
-        _ => {
-            return Html("Active workout not found".to_string()).into_response();
-        }
+    .await?;
+
+    let active_workout = match active_workout {
+        Some(workout) => workout,
+        None => return Err(AppError::NotFound("Active workout not found".to_string())),
     };
 
     let next_set_number = sqlx::query_scalar!(
@@ -356,7 +374,7 @@ pub async fn complete_set(
         completed_set.notes,
         completed_set.completed_at,
         completed_set.created_at
-    ).execute(&database_pool).await.expect("Failed to save completed set");
+    ).execute(&database_pool).await?;
 
     // Check for new personal records
     if let Ok(prs) = check_and_update_prs(
@@ -381,26 +399,27 @@ pub async fn complete_set(
     let mut headers = HeaderMap::new();
     headers.insert(
         "HX-Redirect",
-        HeaderValue::from_str(&format!("/live-training/{}", active_workout_id)).unwrap(),
+        HeaderValue::from_str(&format!("/live-training/{}", active_workout_id))?,
     );
-    (headers, Html("Set completed".to_string())).into_response()
+    Ok((headers, Html("Set completed".to_string())).into_response())
 }
 
 pub async fn finish_training(
     Path(active_workout_id): Path<String>,
     State(database_pool): State<SqlitePool>,
     Form(form): Form<FinishTrainingForm>,
-) -> impl IntoResponse {
-    let active_workout = match sqlx::query_as!(
+) -> Result<impl IntoResponse, AppError> {
+    let active_workout = sqlx::query_as!(
         ActiveWorkout,
         "SELECT * FROM active_workouts WHERE id = ?",
         active_workout_id
     )
     .fetch_optional(&database_pool)
-    .await
-    {
-        Ok(Some(workout)) => workout,
-        _ => return Html("Active workout not found".to_string()).into_response(),
+    .await?;
+
+    let active_workout = match active_workout {
+        Some(workout) => workout,
+        None => return Err(AppError::NotFound("Active workout not found".to_string())),
     };
 
     let total_sets = sqlx::query_scalar!(
@@ -425,9 +444,9 @@ pub async fn finish_training(
         CompletedWorkout::new(active_workout, total_sets, total_volume_kg, form.notes);
 
     sqlx::query!(
-    r#"INSERT INTO completed_workouts
-        (id, user_id, workout_id, started_at, completed_at, total_duration_minutes, total_sets, total_volume_kg, notes, created_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"#,
+        r#"INSERT INTO completed_workouts
+            (id, user_id, workout_id, started_at, completed_at, total_duration_minutes, total_sets, total_volume_kg, notes, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"#,
         completed_workout.id,
         completed_workout.user_id,
         completed_workout.workout_id,
@@ -438,24 +457,22 @@ pub async fn finish_training(
         completed_workout.total_volume_kg,
         completed_workout.notes,
         completed_workout.created_at
-    ).execute(&database_pool).await.expect("Failed to save completed workout!");
+    ).execute(&database_pool).await?;
 
     sqlx::query!(
         "DELETE FROM active_workouts WHERE id = ?",
         active_workout_id
     )
     .execute(&database_pool)
-    .await
-    .expect("Failed to delete active workout");
+    .await?;
 
     let mut headers = HeaderMap::new();
     headers.insert("HX-Redirect", HeaderValue::from_static("/dashboard"));
 
-    (
+    Ok((
         headers,
         Html("Training completed successfully!".to_string()),
-    )
-        .into_response()
+    ).into_response())
 }
 
 pub fn router() -> Router<SqlitePool> {

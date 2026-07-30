@@ -1,3 +1,4 @@
+use crate::error::AppError;
 use crate::models::User;
 use askama::Template;
 use axum::{
@@ -94,28 +95,27 @@ impl SetDetail {
     }
 }
 
-async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Option<User> {
+async fn get_current_user(session: &Session, database_pool: &SqlitePool) -> Result<Option<User>, AppError> {
     if let Ok(Some(user_id)) = session.get::<String>("current_user_id").await {
-        sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
+        let user = sqlx::query_as!(User, "SELECT * FROM users WHERE id = ?", user_id)
             .fetch_optional(database_pool)
-            .await
-            .ok()
-            .flatten()
+            .await?;
+        Ok(user)
     } else {
-        None
+        Ok(None)
     }
 }
 
 pub async fn list_history(
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> impl IntoResponse {
-    let current_user = match get_current_user(&session, &database_pool).await {
+) -> Result<impl IntoResponse, AppError> {
+    let current_user = match get_current_user(&session, &database_pool).await? {
         Some(user) => user,
         None => {
-            return Html(
+            return Ok(Html(
                 r#"<meta http-equiv="refresh" content="0; url=/users">"#.to_string(),
-            )
+            ).into_response());
         }
     };
 
@@ -141,8 +141,7 @@ pub async fn list_history(
         current_user.id
     )
     .fetch_all(&database_pool)
-    .await
-    .unwrap_or(Vec::new());
+    .await?;
 
     let template = HistoryListTemplate {
         user: current_user.clone(),
@@ -151,25 +150,25 @@ pub async fn list_history(
         is_dashboard: false,
     };
 
-    Html(template.render().unwrap())
+    Ok(Html(template.render()?).into_response())
 }
 
 pub async fn show_history_detail(
     Path(workout_id): Path<String>,
     State(database_pool): State<SqlitePool>,
     session: Session,
-) -> impl IntoResponse {
-    let current_user = match get_current_user(&session, &database_pool).await {
+) -> Result<impl IntoResponse, AppError> {
+    let current_user = match get_current_user(&session, &database_pool).await? {
         Some(user) => user,
         None => {
-            return Html(
+            return Ok(Html(
                 r#"<meta http-equiv="refresh" content="0; url=/users">"#.to_string(),
-            )
+            ).into_response());
         }
     };
 
     // Get completed workout with name
-    let workout = match sqlx::query_as!(
+    let workout = sqlx::query_as!(
         CompletedWorkoutWithName,
         r#"SELECT
             cw.id,
@@ -190,13 +189,14 @@ pub async fn show_history_detail(
         current_user.id
     )
     .fetch_optional(&database_pool)
-    .await
-    {
-        Ok(Some(w)) => w,
-        _ => {
-            return Html(
+    .await?;
+
+    let workout = match workout {
+        Some(w) => w,
+        None => {
+            return Ok(Html(
                 r#"<meta http-equiv="refresh" content="0; url=/history">"#.to_string(),
-            )
+            ).into_response());
         }
     };
 
@@ -215,8 +215,7 @@ pub async fn show_history_detail(
         workout.id
     )
     .fetch_all(&database_pool)
-    .await
-    .unwrap_or(Vec::new());
+    .await?;
 
     // Group sets by exercise
     let mut exercises: Vec<ExerciseWithSets> = Vec::new();
@@ -249,7 +248,7 @@ pub async fn show_history_detail(
         is_dashboard: false,
     };
 
-    Html(template.render().unwrap())
+    Ok(Html(template.render()?).into_response())
 }
 
 pub fn router() -> Router<SqlitePool> {
