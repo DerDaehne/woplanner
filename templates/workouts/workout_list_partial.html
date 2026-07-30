@@ -24,13 +24,13 @@
           <div class="is-flex is-flex-wrap-wrap is-gap-2 is-align-center">
             {% match workout.schedule_type.as_str() %}
               {% when "weekly" %}
-                <span class="tag is-blue">📅 {{ workout.day_name().unwrap_or("Weekly".to_string()) }}</span>
+                <span class="tag">📅 {{ workout.day_name().unwrap_or("Weekly".to_string()) }}</span>
               {% when "rotation" %}
-                <span class="tag is-purple">🔄 Rotation</span>
+                <span class="tag">🔄 Rotation</span>
               {% when "disabled" %}
-                <span class="tag is-gray">⏸️ Paused</span>
+                <span class="tag">⏸️ Paused</span>
               {% when _ %}
-                <span class="tag is-gray">🎯 Manual</span>
+                <span class="tag">🎯 Manual</span>
             {% endmatch %}
             
             {% match workout.description %}

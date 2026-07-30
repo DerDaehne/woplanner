@@ -16,7 +16,7 @@
         {% match active_workout %}
           {% when Some with (workout) %}
             <div class="is-inline-block" style="background: rgba(229, 9, 20, 0.2); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 1rem; border: 1px solid rgba(229, 9, 20, 0.3); margin-top: 0.75rem;">
-              <div class="is-inline-block" style="width: 0.5rem; height: 0.5rem; background: #E50914; border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+              <div class="is-inline-block" style="width: 0.5rem; height: 0.5rem; background: #E50914; border-radius: 50%;"></div>
               <span style="color: #E50914; font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem;">Training in progress</span>
               <span style="color: rgba(229, 9, 20, 0.8); font-size: 0.875rem;">{{ workout.duration_display() }}</span>
             </div>
