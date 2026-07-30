@@ -264,7 +264,9 @@ let models = sqlx::query_as!(
 - **Askama Docs:** https://docs.rs/askama/
 - **PWA Guide:** https://web.dev/progressive-web-apps/
 
-## Project Status
+## Project Status (kabai)
+
+See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for detailed kabai board configuration.
 
 ### Completed Features
 - User management with sessions
@@ -278,6 +280,11 @@ let models = sqlx::query_as!(
 - Training history with progression tracking
 
 ### Planned
+
+> **Project Status & kabai Configuration**
+> 
+> See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for detailed kabai board configuration, status definitions, and allowed workflow transitions.
+
 - Exercise progression charts
 - Body measurements tracking
 - Rest timer between sets

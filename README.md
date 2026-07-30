@@ -9,7 +9,8 @@ A Progressive Web App (PWA) for tracking workouts and monitoring strength progre
 ## Features ✨
 
 ### Core Functionality
-- **User Management** - Multi-user support with session-based authentication
+
+- **User Management - Multi-user support with session-based authentication
 - **Exercise Library** - Create and manage custom exercises with instructions
 - **Workout Planning** - Build structured workout routines with multiple exercises
 - **Live Training** - Guided workout experience with real-time set tracking
@@ -136,6 +137,12 @@ PORT=3000
 - [ ] progressive overload suggestions
 - [ ] full offline support
 - [ ] export/import data
+
+---
+
+> **Project Status & kabai Configuration**
+> 
+> See [`PROJECT_STATUS.md`](PROJECT_STATUS.md) for detailed kabai board configuration, status definitions, and allowed workflow transitions.
 
 ## License 📄
 
