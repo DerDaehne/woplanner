@@ -4,6 +4,7 @@
   "description": "A Progressive Web App (PWA) for tracking workouts and monitoring strength progression. Built with Rust, HTMX, and focused on simplicity and performance.",
   "main": "index.js",
   "scripts": {
+    "assets": "cp node_modules/bulma/css/bulma.min.css static/css/ && cp node_modules/htmx.org/dist/htmx.min.js static/js/ && cp node_modules/chart.js/dist/chart.umd.js static/js/chart.umd.min.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,6 +16,8 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "bulma": "^1.0.4"
+    "bulma": "^1.0.4",
+    "chart.js": "^4.4.0",
+    "htmx.org": "^1.9.12"
   }
 }
