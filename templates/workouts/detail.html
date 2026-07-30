@@ -3,31 +3,31 @@
 {% block title %}{{ workout.name }} - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto;">
+<div class="container is-max-desktop">
   
   <!-- Workout Header -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem;">
-    <div class="columns is-mobile">
+  <div class="wo-section">
+    <div class="columns">
       <div class="column">
-        <h1 class="gradient-text" style="font-size: 2rem; font-weight: bold; margin-bottom: 0.75rem;">
+        <h1 class="wo-title" style="margin-bottom: var(--wo-s2);">
           {{ workout.name }}
         </h1>
         {% match workout.description %}
           {% when Some with (desc) %}
-            <p style="color: #d4d4d4; font-size: 1.125rem;">{{ desc }}</p>
+            <p class="wo-meta">{{ desc }}</p>
           {% when None %}
         {% endmatch %}
       </div>
       
-      <div class="column is-narrow" style="margin-top: 1rem;">
-        <div class="is-flex is-gap-2 is-flex-wrap-wrap">
+      <div class="column is-narrow" style="margin-top: var(--wo-s2);">
+        <div class="is-flex is-flex-wrap-wrap is-gap-2">
           <!-- Toggle Active Status -->
           <form hx-post="/workouts/{{ workout.id }}/toggle" hx-swap="none">
-            <button type="submit" class="btn-secondary" style="padding: 0.75rem 1.5rem; font-weight: 500;">
+            <button type="submit" class="wo-btn wo-btn-inline">
               {% if workout.is_active.unwrap_or(true) %}
-                <span style="margin-right: 0.5rem;">⏸️</span> Deactivate
+                ⏸️ Deactivate
               {% else %}
-                <span style="margin-right: 0.5rem;">▶️</span> Activate
+                ▶️ Activate
               {% endif %}
             </button>
           </form>
@@ -35,9 +35,8 @@
           <!-- Start Training Button -->
           <form hx-post="/start-training" hx-swap="none">
             <input type="hidden" name="workout_id" value="{{ workout.id }}">
-            <button type="submit" class="btn-primary" style="padding: 1rem 2rem; font-weight: 600; font-size: 1rem;">
-              <span style="font-size: 1.25rem; margin-right: 0.5rem;">🔥</span>
-              Start Training
+            <button type="submit" class="wo-btn wo-btn-primary">
+              🔥 Start Training
             </button>
           </form>
         </div>
@@ -46,17 +45,16 @@
   </div>
 
   <!-- Schedule Settings -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
-    <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.25rem; margin-right: 0.5rem;">📅</span>
-      Schedule Settings
+  <div class="wo-section">
+    <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">
+      📅 Schedule Settings
     </h3>
     
     <form hx-post="/workouts/{{ workout.id }}/schedule" 
           hx-swap="none"
           class="is-flex is-flex-wrap-wrap is-gap-2">
       <div class="is-expanded" style="min-width: 12rem;">
-        <select name="schedule_type" class="input" style="width: 100%;">
+        <select name="schedule_type" class="wo-input" style="min-height: 44px;">
           <option value="manual" {% if workout.schedule_type == "manual" %}selected{% endif %}>Manual</option>
           <option value="rotation" {% if workout.schedule_type == "rotation" %}selected{% endif %}>In Rotation</option>
           <option value="weekly" {% if workout.schedule_type == "weekly" %}selected{% endif %}>Weekly</option>
@@ -65,7 +63,7 @@
       </div>
       
       <div style="min-width: 10rem;">
-        <select name="schedule_day" class="input" style="width: 100%;">
+        <select name="schedule_day" class="wo-input" style="min-height: 44px;">
           <option value="">No specific day</option>
           <option value="0" {% if workout.schedule_day == Some(0) %}selected{% endif %}>Sunday</option>
           <option value="1" {% if workout.schedule_day == Some(1) %}selected{% endif %}>Monday</option>
@@ -77,88 +75,83 @@
         </select>
       </div>
       
-      <button type="submit" class="btn-primary" style="padding: 0.75rem 1.5rem; font-weight: 500;">
+      <button type="submit" class="wo-btn wo-btn-inline">
         Update Schedule
       </button>
     </form>
   </div>
 
   <!-- Exercises in Workout -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem;">
-    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">💪</span>
-      Exercises ({{ exercises.len() }})
+  <div class="wo-section">
+    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      💪 Exercises ({{ exercises.len() }})
     </h2>
 
     {% if exercises.len() == 0 %}
-      <div class="has-text-centered" style="padding: 3rem 0;">
-        <div style="font-size: 3.5rem; margin-bottom: 1rem;" class="float-element">🏋️</div>
-        <p style="color: #d4d4d4; font-size: 1.25rem; margin-bottom: 0.75rem;">No exercises yet!</p>
-        <p style="color: #7a7a7a; font-size: 0.875rem;">Add exercises below to build your workout</p>
+      <div class="has-text-centered" style="padding: var(--wo-s6) 0;">
+        <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">🏋️</div>
+        <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-body); margin-bottom: var(--wo-s2);">No exercises yet!</p>
+        <p class="wo-label">Add exercises below to build your workout</p>
       </div>
     {% else %}
-      <div style="margin-bottom: 1rem;">
+      <div>
         {% for exercise in exercises %}
-        <div class="glass" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 1rem; transition: all 0.3s;">
-          <div class="is-flex is-flex-between is-align-start">
-            <div class="is-expanded">
-              <!-- Exercise Number & Name -->
-              <div class="is-flex is-align-center is-gap-3" style="margin-bottom: 0.75rem;">
-                <div style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #E50914, #991b1b); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #f5f5f5;">
-                  {{ exercise.position }}
-                </div>
-                <h3 style="font-size: 1.25rem; font-weight: 600; color: #f5f5f5;">{{ exercise.exercise_name }}</h3>
+        <div class="wo-row">
+          <div class="is-expanded">
+            <!-- Exercise Number & Name -->
+            <div class="is-flex is-align-items-center is-gap-3" style="margin-bottom: var(--wo-s3);">
+              <div style="width: 2.5rem; height: 2.5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text);">
+                {{ exercise.position }}
               </div>
-              
-              <!-- Target Stats -->
-              <div class="columns is-gapless">
-                <div class="column">
-                  <div class="glass" style="border-radius: 0.75rem; padding: 0.75rem;">
-                    <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Sets</div>
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #f5f5f5;">{{ exercise.target_sets }}</div>
-                  </div>
-                </div>
-                <div class="column">
-                  <div class="glass" style="border-radius: 0.75rem; padding: 0.75rem;">
-                    <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Weight</div>
-                    <div style="font-size: 1.5rem; font-weight: bold; color: #f5f5f5;">
-                      {% match exercise.target_weight %}
-                        {% when Some with (weight) %}
-                          {{ weight }} kg
-                        {% when None %}
-                          Bodyweight
-                      {% endmatch %}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <!-- Notes if any -->
-              {% match exercise.notes %}
-                {% when Some with (notes) %}
-                  <div style="font-size: 0.875rem; color: #b5b5b5; font-style: italic; background: rgba(51, 51, 51, 0.3); border-radius: 0.75rem; padding: 0.75rem; margin-top: 0.75rem;">
-                    💡 {{ notes }}
-                  </div>
-                {% when None %}
-              {% endmatch %}
-              
-              <!-- Instructions -->
-              <details style="margin-top: 0.75rem;">
-                <summary style="cursor: pointer; font-size: 0.875rem; color: #b5b5b5; transition: color 0.2s;" onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#b5b5b5'">
-                  View instructions
-                </summary>
-                <p style="color: #d4d4d4; font-size: 0.875rem; margin-top: 0.5rem; padding-left: 1rem; border-left: 2px solid rgba(122, 122, 122, 0.5);">
-                  {{ exercise.exercise_instructions }}
-                </p>
-              </details>
+              <h3 class="wo-title" style="font-size: var(--wo-fs-body);">{{ exercise.exercise_name }}</h3>
             </div>
             
-            <!-- Actions -->
-            <div style="margin-left: 1rem;">
-              <button class="btn-secondary" style="padding: 0.5rem; border-radius: 0.5rem;">
-                <span>✏️</span>
-              </button>
+            <!-- Target Stats -->
+            <div class="columns is-gapless">
+              <div class="column is-one-third-tablet">
+                <div>
+                  <div class="wo-label">Sets</div>
+                  <div class="wo-num" style="font-size: var(--wo-fs-title);">{{ exercise.target_sets }}</div>
+                </div>
+              </div>
+              <div class="column">
+                <div>
+                  <div class="wo-label">Weight</div>
+                  <div class="wo-num" style="font-size: var(--wo-fs-title);">
+                    {% match exercise.target_weight %}
+                      {% when Some with (weight) %}
+                        {{ weight }} kg
+                      {% when None %}
+                        Bodyweight
+                    {% endmatch %}
+                  </div>
+                </div>
+              </div>
             </div>
+            
+            <!-- Notes if any -->
+            {% match exercise.notes %}
+              {% when Some with (notes) %}
+                <div style="font-size: var(--wo-fs-meta); color: var(--wo-text-dim); font-style: italic; background: var(--wo-raised); border-radius: var(--wo-radius-sm); padding: var(--wo-s3); margin-top: var(--wo-s2);">
+                  💡 {{ notes }}
+                </div>
+              {% when None %}
+            {% endmatch %}
+            
+            <!-- Instructions -->
+            <details style="margin-top: var(--wo-s2);">
+              <summary class="wo-label">View instructions</summary>
+              <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-meta); margin-top: var(--wo-s2); padding-left: var(--wo-s3); border-left: 2px solid var(--wo-line-strong);">
+                {{ exercise.exercise_instructions }}
+              </p>
+            </details>
+          </div>
+          
+          <!-- Actions -->
+          <div style="margin-left: var(--wo-s3);">
+            <button class="wo-btn wo-btn-inline" style="padding: var(--wo-s2); min-height: 44px;">
+              ✏️
+            </button>
           </div>
         </div>
         {% endfor %}
@@ -167,23 +160,21 @@
   </div>
 
   <!-- Add Exercise Form -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem;">
-    <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.5rem; margin-right: 0.75rem;">➕</span>
-      Add Exercise
+  <div class="wo-section">
+    <h3 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      ➕ Add Exercise
     </h3>
     
     <form hx-post="/workouts/{{ workout.id }}/exercises"
-          hx-swap="none"
-          style="margin-bottom: 1rem;">
+          hx-swap="none">
       
       <div class="columns">
         <div class="column is-half">
           <div class="field">
-            <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
               Exercise
             </label>
-            <select name="exercise_id" required class="input" style="width: 100%;">
+            <select name="exercise_id" required class="wo-input" style="min-height: 44px;">
               <option value="">Select exercise...</option>
               {% for exercise in available_exercises %}
                 <option value="{{ exercise.id }}">{{ exercise.name }}</option>
@@ -194,22 +185,22 @@
         
         <div class="column is-one-quarter">
           <div class="field">
-            <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
               Sets
             </label>
             <input type="number" 
                    name="target_sets" 
                    value="3" 
                    min="1" 
-                   max="10"
+                   max="50"
                    required
-                   class="input-glass">
+                   class="wo-input wo-input--num">
           </div>
         </div>
         
         <div class="column is-one-quarter">
           <div class="field">
-            <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
               Weight (kg)
             </label>
             <input type="number" 
@@ -217,23 +208,23 @@
                    step="0.5"
                    min="0"
                    placeholder="Optional"
-                   class="input-glass">
+                   class="wo-input wo-input--num">
           </div>
         </div>
       </div>
       
-      <div class="field" style="margin-bottom: 1rem;">
-        <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
           Notes
         </label>
         <input type="text" 
                name="notes"
                placeholder="e.g. To failure, Drop set, etc."
-               class="input-glass">
+               class="wo-input">
       </div>
       
       <button type="submit"
-              class="btn-primary is-fullwidth" style="padding: 0.75rem 1.5rem; font-weight: 600; font-size: 1rem;">
+              class="wo-btn wo-btn-primary">
         Add to Workout
       </button>
     </form>

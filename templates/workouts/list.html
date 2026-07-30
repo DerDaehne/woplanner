@@ -3,40 +3,37 @@
 {% block title %}Workouts - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto;">
+<div class="container is-max-desktop">
   
   <!-- Hero Section -->
-  <div class="has-text-centered" style="margin-bottom: 2rem;">
-    <h1 class="gradient-text" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;">
+  <div class="wo-section" style="text-align: center;">
+    <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s2);">
       Your Workouts
     </h1>
-    <p style="font-size: 1.25rem; color: #b5b5b5;">Create and manage your training routines</p>
+    <p class="wo-meta" style="font-size: var(--wo-fs-body);">Create and manage your training routines</p>
   </div>
 
   <!-- Workouts List Container -->
-  <div id="workout-list" class="glass-card" style="border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem;">
-    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">🏋️</span>
-      Available Workouts
+  <div id="workout-list" class="wo-section">
+    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      🏋️ Available Workouts
     </h2>
     {% include "workouts/workout_list_partial.html" %}
   </div>
 
   <!-- Create New Workout -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem;">
-    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">➕</span>
-      Create New Workout
+  <div class="wo-section">
+    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      ➕ Create New Workout
     </h2>
 
     <form hx-post="/workouts"
           hx-target="#workout-list"
           hx-swap="innerHTML"
-          hx-on::after-request="this.reset()"
-          style="margin-bottom: 1.5rem;">
+          hx-on::after-request="this.reset()">
       
-      <div class="field" style="margin-bottom: 1.5rem;">
-        <label for="name" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label for="name" class="wo-label" style="margin-bottom: var(--wo-s2); display: block;">
           Workout Name
         </label>
         <input type="text"
@@ -44,11 +41,12 @@
                name="name"
                placeholder="e.g. Push Day, Leg Day, Upper Body"
                required
-               class="input-glass">
+               maxlength="100"
+               class="wo-input">
       </div>
       
-      <div class="field" style="margin-bottom: 1.5rem;">
-        <label for="description" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label for="description" class="wo-label" style="margin-bottom: var(--wo-s2); display: block;">
           Description (optional)
         </label>
         <textarea 
@@ -56,14 +54,13 @@
                name="description"
                rows="3"
                placeholder="What muscle groups does this workout target?"
-               class="input-glass"
+               class="wo-input"
                style="resize: none;"></textarea>
       </div>
       
       <button type="submit"
-              class="btn-primary is-fullwidth" style="padding: 1rem 1.5rem; font-size: 1rem;">
-        <span style="margin-right: 0.5rem;">🚀</span>
-        Create Workout
+              class="wo-btn wo-btn-primary">
+        🚀 Create Workout
       </button>
     </form>
   </div>
