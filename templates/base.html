@@ -30,31 +30,31 @@
 <body>
     
     <!-- Top Bar -->
-    <div class="container is-max-desktop" style="padding-top: 2rem; padding-bottom: 1rem;">
-      <div class="is-flex is-flex-between is-align-center">
+    <div class="container is-max-desktop" style="padding-top: var(--wo-s5); padding-bottom: var(--wo-s4);">
+      <div class="is-flex is-justify-content-space-between is-align-items-center">
         <!-- Logo -->
-        <div class="is-flex is-align-center is-gap-2">
-          <span class="is-size-4 float-element">🏋️</span>
-          <h1 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5;">
-            WO<span style="color: #E50914;">Planner</span>
+        <div class="is-flex is-align-items-center is-gap-2">
+          <span class="is-size-4">🏋️</span>
+          <h1 class="is-size-4 has-text-weight-bold" style="color: var(--wo-text);">
+            WO<span style="color: var(--wo-accent);">Planner</span>
           </h1>
         </div>
         
         <!-- User Actions -->
         {% match current_user %}
           {% when Some with (user) %}
-            <div class="is-flex is-align-center is-gap-2">
-              <div class="is-mobile-hidden" style="color: #b5b5b5; font-size: 0.875rem;">
+            <div class="is-flex is-align-items-center is-gap-2">
+              <div class="is-mobile-hidden" style="color: var(--wo-text-mute); font-size: var(--wo-fs-body);">
                 Hey {{ user.name }}! 💪
               </div>
               <form hx-post="/logout" hx-swap="outerHTML" hx-target="body" class="is-inline-flex">
-                <button type="submit" class="btn-secondary" style="padding: 0.5rem 0.75rem; font-size: 0.875rem;">
+                <button type="submit" class="wo-btn wo-btn-inline" style="padding: 0.5rem 0.75rem; font-size: var(--wo-fs-body);">
                   🔄
                 </button>
               </form>
             </div>
           {% when None %}
-            <a href="/users" class="btn-primary" style="padding: 0.75rem 1.5rem; font-size: 0.875rem;">
+            <a href="/users" class="wo-btn wo-btn-primary wo-btn-inline" style="padding: 0.75rem 1.5rem; font-size: var(--wo-fs-body);">
               🏋️ Get Started
             </a>
         {% endmatch %}
@@ -62,46 +62,46 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container is-max-desktop" style="padding-bottom: 5rem;">
+    <main class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 4rem);">
       {% block content %}{% endblock %}
     </main>
     
     <!-- Toast Container -->
-    <div class="is-fixed-bottom" style="top: 5rem; right: 1rem; z-index: 50;" id="toast-container"></div>
+    <div id="toast-container" class="wo-toasts"></div>
     
-    <!-- Floating Dock Navigation -->
+    <!-- Dock Navigation -->
     {% match current_user %}
       {% when Some with (user) %}
-        <nav class="dock">
+        <nav class="wo-dock">
           {% if is_dashboard == false %}
-            <a href="/dashboard" class="back-button">
-              <div class="dock-icon">←</div>
+            <a href="/dashboard" class="wo-dock-item">
+              <div>←</div>
+              <div class="wo-dock-label">Back</div>
             </a>
           {% endif %}
           
-          <a href="/exercises" class="dock-item">
-            <div class="dock-icon">📚</div>
-            <div class="dock-label">Exercises</div>
+          <a href="/exercises" class="wo-dock-item">
+            <div>📚</div>
+            <div class="wo-dock-label">Exercises</div>
           </a>
 
-          <a href="/workouts" class="dock-item">
-            <div class="dock-icon">💪</div>
-            <div class="dock-label">Workouts</div>
+          <a href="/workouts" class="wo-dock-item">
+            <div>💪</div>
+            <div class="wo-dock-label">Workouts</div>
           </a>
 
-          <a href="/history" class="dock-item">
-            <div class="dock-icon">📊</div>
-            <div class="dock-label">History</div>
+          <a href="/history" class="wo-dock-item">
+            <div>📊</div>
+            <div class="wo-dock-label">History</div>
           </a>
           
-          <a href="/settings" class="dock-item">
-            <div class="dock-avatar">{{ user.name.chars().next().unwrap_or('U') }}</div>
-            <div class="dock-label">Settings</div>
+          <a href="/settings" class="wo-dock-item">
+            <div>{{ user.name.chars().next().unwrap_or('U') }}</div>
+            <div class="wo-dock-label">Settings</div>
           </a>
         </nav>
       {% when None %}
       {% endmatch %}
-    
     
   </body>
 </html>

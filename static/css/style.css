@@ -222,6 +222,9 @@ body {
 /* Hidden utility */
 .hidden { display: none !important; }
 
+/* Toast Container */
+.wo-toasts { position: fixed; top: 1rem; right: 1rem; z-index: 50; }
+
 /* Responsive helpers */
 @media screen and (max-width: 768px) {
   .is-mobile-hidden { display: none !important; }
