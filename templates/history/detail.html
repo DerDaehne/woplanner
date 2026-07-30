@@ -3,75 +3,84 @@
 {% block title %}{{ workout.workout_name }} - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-6 pb-24">
+<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto; padding-bottom: 5rem;">
+  
   <!-- Back Button -->
-  <a href="/history" class="inline-flex items-center gap-2 text-gray-400 hover:text-white mb-6 transition-colors">
+  <a href="/history" class="is-flex is-align-center is-gap-2" style="color: #b5b5b5; text-decoration: none; margin-bottom: 1.5rem; transition: color 0.2s;" onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#b5b5b5'">
     <span>←</span>
     <span>Back to History</span>
   </a>
 
   <!-- Workout Header -->
-  <div class="glass-card rounded-2xl p-6 mb-6">
-    <h1 class="text-2xl font-bold text-white mb-2">{{ workout.workout_name }}</h1>
-    <p class="text-gray-400 mb-4">{{ workout.completed_date_display() }}</p>
+  <div class="glass-card" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <h1 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">{{ workout.workout_name }}</h1>
+    <p style="color: #b5b5b5; margin-bottom: 1rem;">{{ workout.completed_date_display() }}</p>
 
     <!-- Stats Grid -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <div class="glass rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-netflix-red">{{ workout.duration_display() }}</div>
-        <div class="text-xs text-gray-400 mt-1">Duration</div>
+    <div class="columns is-gapless">
+      <div class="column">
+        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
+          <div class="is-size-4 has-text-weight-bold" style="color: #E50914;">{{ workout.duration_display() }}</div>
+          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Duration</div>
+        </div>
       </div>
-      <div class="glass rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-green-400">{{ workout.total_sets }}</div>
-        <div class="text-xs text-gray-400 mt-1">Total Sets</div>
+      <div class="column">
+        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
+          <div class="is-size-4 has-text-weight-bold" style="color: #4ade80;">{{ workout.total_sets }}</div>
+          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Total Sets</div>
+        </div>
       </div>
-      <div class="glass rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-blue-400">{{ workout.total_volume_kg as i32 }}</div>
-        <div class="text-xs text-gray-400 mt-1">Volume (kg)</div>
+      <div class="column">
+        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
+          <div class="is-size-4 has-text-weight-bold" style="color: #60a5fa;">{{ workout.total_volume_kg as i32 }}</div>
+          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Volume (kg)</div>
+        </div>
       </div>
-      <div class="glass rounded-xl p-4 text-center">
-        <div class="text-2xl font-bold text-purple-400">{{ exercises.len() }}</div>
-        <div class="text-xs text-gray-400 mt-1">Exercises</div>
+      <div class="column">
+        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
+          <div class="is-size-4 has-text-weight-bold" style="color: #a78bfa;">{{ exercises.len() }}</div>
+          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Exercises</div>
+        </div>
       </div>
     </div>
 
     {% match workout.notes %}
       {% when Some with (notes) %}
-        <div class="mt-4 pt-4 border-t border-gray-700/50">
-          <div class="text-xs text-gray-400 mb-1">Workout Notes:</div>
-          <p class="text-sm text-gray-300 italic">"{{ notes }}"</p>
+        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
+          <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Workout Notes:</div>
+          <p style="font-size: 0.875rem; color: #d4d4d4; font-style: italic;">"{{ notes }}"</p>
         </div>
       {% when None %}
     {% endmatch %}
   </div>
 
   <!-- Exercises and Sets -->
-  <div class="space-y-4">
+  <div style="margin-bottom: 1rem;">
     {% for exercise in exercises %}
-      <div class="glass-card rounded-2xl p-5">
-        <h2 class="text-lg font-bold text-white mb-4">{{ exercise.exercise_name }}</h2>
+      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;">
+        <h2 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;">{{ exercise.exercise_name }}</h2>
 
-        <div class="space-y-2">
+        <div style="margin-bottom: 0.5rem;">
           {% for set in exercise.sets %}
-            <div class="flex items-center justify-between p-3 glass rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                  <span class="text-green-400 text-sm font-bold">{{ set.set_number }}</span>
+            <div class="is-flex is-flex-between is-align-center" style="padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 1rem; margin-bottom: 0.5rem;">
+              <div class="is-flex is-align-center is-gap-3">
+                <div style="width: 2rem; height: 2rem; background: rgba(0, 209, 178, 0.2); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                  <span style="color: #00d1b2; font-size: 0.875rem; font-weight: bold;">{{ set.set_number }}</span>
                 </div>
                 <div>
-                  <div class="font-medium text-white text-sm">
+                  <div style="font-weight: 500; color: #f5f5f5; font-size: 0.875rem;">
                     {{ set.weight_display() }} × {{ set.reps }} reps
                   </div>
                   {% match set.notes %}
                     {% when Some with (notes) %}
-                      <div class="text-xs text-gray-400 mt-1">{{ notes }}</div>
+                      <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">{{ notes }}</div>
                     {% when None %}
                   {% endmatch %}
                 </div>
               </div>
               {% match set.weight %}
                 {% when Some with (weight) %}
-                  <div class="text-xs text-gray-500">
+                  <div style="font-size: 0.75rem; color: #7a7a7a;">
                     {{ (weight * set.reps as f32) as i32 }}kg
                   </div>
                 {% when None %}
@@ -81,9 +90,9 @@
         </div>
 
         <!-- Exercise Summary -->
-        <div class="mt-3 pt-3 border-t border-gray-700/50 flex justify-between text-sm">
-          <span class="text-gray-400">Total Sets:</span>
-          <span class="text-white font-medium">{{ exercise.sets.len() }}</span>
+        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3); display: flex; justify-content: space-between; font-size: 0.875rem;">
+          <span style="color: #b5b5b5;">Total Sets:</span>
+          <span style="color: #f5f5f5; font-weight: 500;">{{ exercise.sets.len() }}</span>
         </div>
       </div>
     {% endfor %}

@@ -3,28 +3,29 @@
 {% block title %}Workouts - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto animate-fade-in">
+<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto;">
+  
   <!-- Hero Section -->
-  <div class="text-center mb-12">
-    <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent">
+  <div class="has-text-centered" style="margin-bottom: 2rem;">
+    <h1 class="gradient-text" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;">
       Your Workouts
     </h1>
-    <p class="text-xl text-gray-400">Create and manage your training routines</p>
+    <p style="font-size: 1.25rem; color: #b5b5b5;">Create and manage your training routines</p>
   </div>
 
   <!-- Workouts List Container -->
-  <div id="workout-list" class="glass-card rounded-3xl p-8 mb-8">
-    <h2 class="text-2xl font-semibold mb-6 text-white flex items-center">
-      <span class="text-3xl mr-3 float-element">🏋️</span>
+  <div id="workout-list" class="glass-card" style="border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem;">
+    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
+      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">🏋️</span>
       Available Workouts
     </h2>
     {% include "workouts/workout_list_partial.html" %}
   </div>
 
   <!-- Create New Workout -->
-  <div class="glass-card rounded-3xl p-8">
-    <h2 class="text-2xl font-semibold mb-6 text-white flex items-center">
-      <span class="text-3xl mr-3 float-element">➕</span>
+  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem;">
+    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
+      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">➕</span>
       Create New Workout
     </h2>
 
@@ -32,10 +33,10 @@
           hx-target="#workout-list"
           hx-swap="innerHTML"
           hx-on::after-request="this.reset()"
-          class="space-y-6">
+          style="margin-bottom: 1.5rem;">
       
-      <div>
-        <label for="name" class="block text-sm font-medium text-gray-300 mb-3">
+      <div class="field" style="margin-bottom: 1.5rem;">
+        <label for="name" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
           Workout Name
         </label>
         <input type="text"
@@ -43,11 +44,11 @@
                name="name"
                placeholder="e.g. Push Day, Leg Day, Upper Body"
                required
-               class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300">
+               class="input-glass">
       </div>
       
-      <div>
-        <label for="description" class="block text-sm font-medium text-gray-300 mb-3">
+      <div class="field" style="margin-bottom: 1.5rem;">
+        <label for="description" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
           Description (optional)
         </label>
         <textarea 
@@ -55,12 +56,13 @@
                name="description"
                rows="3"
                placeholder="What muscle groups does this workout target?"
-               class="w-full px-4 py-4 input-glass rounded-2xl text-white placeholder-gray-400 focus:outline-none transition-all duration-300 resize-none"></textarea>
+               class="input-glass"
+               style="resize: none;"></textarea>
       </div>
       
       <button type="submit"
-              class="w-full btn-primary py-4 px-6 rounded-2xl font-semibold text-white transition-all duration-300">
-        <span class="mr-2">🚀</span>
+              class="btn-primary is-fullwidth" style="padding: 1rem 1.5rem; font-size: 1rem;">
+        <span style="margin-right: 0.5rem;">🚀</span>
         Create Workout
       </button>
     </form>

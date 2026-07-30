@@ -3,41 +3,38 @@
 {% block title %}Dashboard - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto animate-fade-in space-y-6">
+<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto;">
   
   <!-- Welcome Hero Section -->
-  <div class="glass-card rounded-3xl p-6 transition-all duration-300">
-    <div class="flex flex-col md:flex-row md:items-center justify-between">
-      <div class="flex-1">
-        <h1 class="text-3xl md:text-4xl font-bold mb-2 bg-gradient-to-r from-white via-gray-100 to-netflix-red bg-clip-text text-transparent">
+  <div class="glass-card" style="border-radius: 1.5rem; padding: 1.5rem; margin-bottom: 1.5rem;">
+    <div class="columns is-mobile">
+      <div class="column">
+        <h1 class="gradient-text" style="font-size: 2rem; font-weight: bold; margin-bottom: 0.5rem;">
           Welcome back, {{ user.name }}
         </h1>
         
         {% match active_workout %}
           {% when Some with (workout) %}
-            <!-- Active Training Banner -->
-            <div class="inline-flex items-center gap-2 bg-netflix-red/20 backdrop-blur px-4 py-2 rounded-xl border border-netflix-red/30 mt-3">
-              <div class="w-2 h-2 bg-netflix-red rounded-full animate-pulse"></div>
-              <span class="text-netflix-red font-semibold text-sm">Training in progress</span>
-              <span class="text-netflix-red/80 text-sm">{{ workout.duration_display() }}</span>
+            <div class="is-inline-block" style="background: rgba(229, 9, 20, 0.2); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 1rem; border: 1px solid rgba(229, 9, 20, 0.3); margin-top: 0.75rem;">
+              <div class="is-inline-block" style="width: 0.5rem; height: 0.5rem; background: #E50914; border-radius: 50%; animation: pulse 1.5s infinite;"></div>
+              <span style="color: #E50914; font-weight: 600; font-size: 0.875rem; margin-left: 0.5rem;">Training in progress</span>
+              <span style="color: rgba(229, 9, 20, 0.8); font-size: 0.875rem;">{{ workout.duration_display() }}</span>
             </div>
           {% when None %}
-            <p class="text-gray-300 text-lg">Ready to crush your next workout?</p>
+            <p style="color: #d4d4d4; font-size: 1.125rem; margin-top: 0.5rem;">Ready to crush your next workout?</p>
         {% endmatch %}
       </div>
       
-      <div class="mt-6 md:mt-0 flex gap-3">
+      <div class="column is-narrow" style="margin-top: 1rem;">
         {% match active_workout %}
           {% when Some with (workout) %}
-            <a href="/live-training/{{ workout.id }}" 
-               class="btn-primary px-6 py-3 rounded-2xl font-semibold transition-all duration-300 text-white">
-              <span class="text-xl mr-2">🔥</span>
+            <a href="/live-training/{{ workout.id }}" class="btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 1.5rem; font-weight: 600; font-size: 1rem;">
+              <span style="font-size: 1.25rem; margin-right: 0.5rem;">🔥</span>
               Continue Training
             </a>
           {% when None %}
-            <a href="/workouts" 
-               class="btn-primary px-6 py-3 rounded-2xl font-semibold transition-all duration-300 text-white">
-              <span class="text-xl mr-2">💪</span>
+            <a href="/workouts" class="btn-primary" style="padding: 0.75rem 1.5rem; border-radius: 1.5rem; font-weight: 600; font-size: 1rem;">
+              <span style="font-size: 1.25rem; margin-right: 0.5rem;">💪</span>
               Start Training
             </a>
         {% endmatch %}
@@ -45,184 +42,189 @@
     </div>
   </div>
 
-  <!-- Stats Grid - Real Data -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+  <!-- Stats Grid -->
+  <div class="columns is-multiline" style="margin-bottom: 1.5rem;">
     
     <!-- Total Workouts -->
-    <div class="glass-card rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02]">
-      <div class="flex items-center justify-between mb-3">
-        <div class="text-3xl float-element">🏆</div>
-        <div class="text-right">
-          <div class="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent">
-            {{ stats.total_workouts }}
+    <div class="column is-one-third-tablet is-one-quarter-desktop">
+      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+        <div class="is-flex is-flex-between is-align-center" style="margin-bottom: 0.75rem;">
+          <div style="font-size: 1.75rem;" class="float-element">🏆</div>
+          <div class="has-text-right">
+            <div class="is-size-4 has-text-weight-bold" style="background: linear-gradient(90deg, #4ade80, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              {{ stats.total_workouts }}
+            </div>
+            <div style="font-size: 0.75rem; color: #b5b5b5; font-weight: 500;">TOTAL</div>
           </div>
-          <div class="text-xs text-gray-400 font-medium">TOTAL</div>
         </div>
+        <h3 style="font-size: 0.875rem; font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Completed Workouts</h3>
+        <p style="font-size: 0.75rem; color: #b5b5b5;">All time record</p>
       </div>
-      <h3 class="text-sm font-semibold text-white mb-1">Completed Workouts</h3>
-      <p class="text-gray-400 text-xs">All time record</p>
     </div>
 
     <!-- This Week -->
-    <div class="glass-card rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02]">
-      <div class="flex items-center justify-between mb-3">
-        <div class="text-3xl float-element">📊</div>
-        <div class="text-right">
-          <div class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            {{ stats.workouts_this_week }}
+    <div class="column is-one-third-tablet is-one-quarter-desktop">
+      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+        <div class="is-flex is-flex-between is-align-center" style="margin-bottom: 0.75rem;">
+          <div style="font-size: 1.75rem;" class="float-element">📊</div>
+          <div class="has-text-right">
+            <div class="is-size-4 has-text-weight-bold" style="background: linear-gradient(90deg, #60a5fa, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              {{ stats.workouts_this_week }}
+            </div>
+            <div style="font-size: 0.75rem; color: #b5b5b5; font-weight: 500;">THIS WEEK</div>
           </div>
-          <div class="text-xs text-gray-400 font-medium">THIS WEEK</div>
         </div>
-      </div>
-      <h3 class="text-sm font-semibold text-white mb-1">Weekly Progress</h3>
-      <div class="w-full bg-gray-800/50 rounded-full h-2 overflow-hidden">
-        <div class="bg-gradient-to-r from-blue-500 to-purple-400 h-2 rounded-full transition-all duration-1000" 
-             style="width: {% if stats.workouts_this_week >= 3 %}100{% else %}{{ stats.workouts_this_week * 33 }}{% endif %}%"></div>
+        <h3 style="font-size: 0.875rem; font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Weekly Progress</h3>
+        <div class="progress is-medium" style="background: rgba(51, 51, 51, 0.5); border-radius: 1rem; overflow: hidden;">
+          <div class="has-background-success" style="background: linear-gradient(90deg, #3b82f6, #8b5cf6) !important; height: 0.5rem; border-radius: 1rem; transition: width 1s; width: {% if stats.workouts_this_week >= 3 %}100{% else %}{{ stats.workouts_this_week * 33 }}{% endif %}%"></div>
+        </div>
       </div>
     </div>
 
     <!-- Current Streak -->
-    <div class="glass-card rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02]">
-      <div class="flex items-center justify-between mb-3">
-        <div class="text-3xl float-element">🔥</div>
-        <div class="text-right">
-          <div class="text-2xl font-bold bg-gradient-to-r from-netflix-red to-red-400 bg-clip-text text-transparent">
-            {{ stats.current_streak }}
+    <div class="column is-one-third-tablet is-one-quarter-desktop">
+      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+        <div class="is-flex is-flex-between is-align-center" style="margin-bottom: 0.75rem;">
+          <div style="font-size: 1.75rem;" class="float-element">🔥</div>
+          <div class="has-text-right">
+            <div class="is-size-4 has-text-weight-bold" style="background: linear-gradient(90deg, #E50914, #f87171); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              {{ stats.current_streak }}
+            </div>
+            <div style="font-size: 0.75rem; color: #b5b5b5; font-weight: 500;">DAYS</div>
           </div>
-          <div class="text-xs text-gray-400 font-medium">DAYS</div>
         </div>
+        <h3 style="font-size: 0.875rem; font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Current Streak</h3>
+        <p style="font-size: 0.75rem; color: #b5b5b5;">Keep it going!</p>
       </div>
-      <h3 class="text-sm font-semibold text-white mb-1">Current Streak</h3>
-      <p class="text-gray-400 text-xs">Keep it going!</p>
     </div>
 
     <!-- Total Volume -->
-    <div class="glass-card rounded-2xl p-5 transition-all duration-300 hover:scale-[1.02]">
-      <div class="flex items-center justify-between mb-3">
-        <div class="text-3xl float-element">⚖️</div>
-        <div class="text-right">
-          <div class="text-lg font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-            {% if stats.total_volume_kg >= 1000.0 %}
-              {{ (stats.total_volume_kg / 1000.0) as i32 }}.{{ ((stats.total_volume_kg / 100.0) as i32) % 10 }}t
-            {% else %}
-              {{ stats.total_volume_kg as i32 }}kg
-            {% endif %}
+    <div class="column is-one-third-tablet is-one-quarter-desktop">
+      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem;">
+        <div class="is-flex is-flex-between is-align-center" style="margin-bottom: 0.75rem;">
+          <div style="font-size: 1.75rem;" class="float-element">⚖️</div>
+          <div class="has-text-right">
+            <div class="is-size-5 has-text-weight-bold" style="background: linear-gradient(90deg, #facc15, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+              {% if stats.total_volume_kg >= 1000.0 %}
+                {{ (stats.total_volume_kg / 1000.0) as i32 }}.{{ ((stats.total_volume_kg / 100.0) as i32) % 10 }}t
+              {% else %}
+                {{ stats.total_volume_kg as i32 }}kg
+              {% endif %}
+            </div>
+            <div style="font-size: 0.75rem; color: #b5b5b5; font-weight: 500;">VOLUME</div>
           </div>
-          <div class="text-xs text-gray-400 font-medium">VOLUME</div>
         </div>
+        <h3 style="font-size: 0.875rem; font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Total Lifted</h3>
+        <p style="font-size: 0.75rem; color: #b5b5b5;">Beast mode! 💪</p>
       </div>
-      <h3 class="text-sm font-semibold text-white mb-1">Total Lifted</h3>
-      <p class="text-gray-400 text-xs">Beast mode! 💪</p>
     </div>
 
   </div>
 
   <!-- Recent Activity & Quick Actions Grid -->
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="columns">
     
     <!-- Recent Workouts -->
-    <div class="glass-card rounded-3xl p-6">
-      <h2 class="text-xl font-semibold mb-5 text-white flex items-center">
-        <span class="text-2xl mr-3 float-element">📈</span>
-        Recent Activity
-      </h2>
-      
-      {% if recent_workouts.len() == 0 %}
-        <div class="text-center py-8">
-          <div class="text-5xl mb-4 float-element">🏋️</div>
-          <p class="text-gray-300 text-lg mb-2">No workouts yet!</p>
-          <p class="text-gray-500 text-sm">Start your first training to see your progress here</p>
-        </div>
-      {% else %}
-        <div class="space-y-3">
-          {% for workout in recent_workouts %}
-          <div class="glass rounded-xl p-4 transition-all duration-300 hover:bg-white/5">
-            <div class="flex items-start justify-between">
-              <div class="flex-1">
-                <div class="flex items-center gap-2 mb-2">
-                  <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                    <span class="text-green-400 text-sm">✓</span>
-                  </div>
+    <div class="column is-half">
+      <div class="glass-card" style="border-radius: 1.5rem; padding: 1.5rem;">
+        <h2 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.25rem;" class="is-flex is-align-center">
+          <span style="font-size: 1.5rem; margin-right: 0.75rem;" class="float-element">📈</span>
+          Recent Activity
+        </h2>
+        
+        {% if recent_workouts.len() == 0 %}
+          <div class="has-text-centered" style="padding: 2rem 0;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;" class="float-element">🏋️</div>
+            <p style="color: #d4d4d4; font-size: 1.125rem; margin-bottom: 0.5rem;">No workouts yet!</p>
+            <p style="color: #7a7a7a; font-size: 0.875rem;">Start your first training to see your progress here</p>
+          </div>
+        {% else %}
+          <div style="margin-bottom: 0.75rem;">
+            {% for workout in recent_workouts %}
+            <div class="glass" style="border-radius: 1rem; padding: 1rem; margin-bottom: 0.75rem; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+              <div class="is-flex is-flex-between">
+                <div class="is-flex is-align-start">
                   <div>
-                    <div class="font-medium text-white text-sm">Training Completed</div>
-                    <div class="text-xs text-gray-400">
+                    <div class="has-text-weight-medium" style="font-size: 0.875rem; color: #f5f5f5;">Training Completed</div>
+                    <div style="font-size: 0.75rem; color: #b5b5b5;">
                       {% match stats.last_workout %}
                         {% when Some with (when) %}{{ when }}{% when None %}Recently
                       {% endmatch %}
                     </div>
                   </div>
                 </div>
-                
-                <div class="flex items-center gap-4 text-xs text-gray-400 ml-10">
-                  <span class="flex items-center gap-1">
-                    ⏱️ {{ workout.duration_display() }}
-                  </span>
-                  <span class="flex items-center gap-1">
-                    💪 {{ workout.total_sets }} sets
-                  </span>
-                  <span class="flex items-center gap-1">
-                    ⚖️ {{ workout.total_volume_kg as i32 }}kg
-                  </span>
-                </div>
+              </div>
+              
+              <div class="is-flex is-gap-4" style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.5rem; margin-left: 2rem;">
+                <span>⏱️ {{ workout.duration_display() }}</span>
+                <span>💪 {{ workout.total_sets }} sets</span>
+                <span>⚖️ {{ workout.total_volume_kg as i32 }}kg</span>
               </div>
             </div>
+            {% endfor %}
           </div>
-          {% endfor %}
-        </div>
-        
-        <div class="mt-4 text-center">
-          <button class="text-sm text-gray-400 hover:text-white transition-colors">
-            View workout history →
-          </button>
-        </div>
-      {% endif %}
+          
+          <div class="has-text-centered">
+            <a href="/history" style="font-size: 0.875rem; color: #b5b5b5; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#b5b5b5'">
+              View workout history →
+            </a>
+          </div>
+        {% endif %}
+      </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="glass-card rounded-3xl p-6">
-      <h2 class="text-xl font-semibold mb-5 text-white flex items-center">
-        <span class="text-2xl mr-3 float-element">⚡</span>
-        Quick Actions
-      </h2>
-      
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Start Training -->
-        {% match active_workout %}
-          {% when Some with (workout) %}
-            <a href="/live-training/{{ workout.id }}" 
-               class="glass rounded-2xl p-6 btn-secondary transition-all duration-300 text-center group block">
-              <div class="text-3xl mb-3 group-hover:scale-105 transition-transform duration-300 float-element">🔥</div>
-              <div class="font-semibold text-netflix-red mb-1">Continue</div>
-              <div class="text-xs text-gray-400">Resume training</div>
+    <div class="column is-half">
+      <div class="glass-card" style="border-radius: 1.5rem; padding: 1.5rem;">
+        <h2 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.25rem;" class="is-flex is-align-center">
+          <span style="font-size: 1.5rem; margin-right: 0.75rem;" class="float-element">⚡</span>
+          Quick Actions
+        </h2>
+        
+        <div class="columns is-multiline">
+          {% match active_workout %}
+            {% when Some with (workout) %}
+              <div class="column is-half">
+                <a href="/live-training/{{ workout.id }}" class="glass" style="border-radius: 1.5rem; padding: 1.5rem; text-decoration: none; display: block; text-align: center; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+                  <div style="font-size: 1.75rem; margin-bottom: 0.75rem;" class="float-element">🔥</div>
+                  <div style="font-weight: 600; color: #E50914; margin-bottom: 0.25rem;">Continue</div>
+                  <div style="font-size: 0.75rem; color: #b5b5b5;">Resume training</div>
+                </a>
+              </div>
+            {% when None %}
+              <div class="column is-half">
+                <a href="/workouts" class="glass" style="border-radius: 1.5rem; padding: 1.5rem; text-decoration: none; display: block; text-align: center; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+                  <div style="font-size: 1.75rem; margin-bottom: 0.75rem;" class="float-element">💪</div>
+                  <div style="font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Start Training</div>
+                  <div style="font-size: 0.75rem; color: #b5b5b5;">Begin workout</div>
+                </a>
+              </div>
+          {% endmatch %}
+          
+          <div class="column is-half">
+            <a href="/exercises" class="glass" style="border-radius: 1.5rem; padding: 1.5rem; text-decoration: none; display: block; text-align: center; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+              <div style="font-size: 1.75rem; margin-bottom: 0.75rem;" class="float-element">📚</div>
+              <div style="font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Exercises</div>
+              <div style="font-size: 0.75rem; color: #b5b5b5;">{{ exercises.len() }} available</div>
             </a>
-          {% when None %}
-            <a href="/workouts" class="glass rounded-2xl p-6 btn-secondary transition-all duration-300 text-center group block">
-              <div class="text-3xl mb-3 group-hover:scale-105 transition-transform duration-300 float-element">💪</div>
-              <div class="font-semibold text-white mb-1">Start Training</div>
-              <div class="text-xs text-gray-400">Begin workout</div>
+          </div>
+          
+          <div class="column is-half">
+            <a href="/workouts" class="glass" style="border-radius: 1.5rem; padding: 1.5rem; text-decoration: none; display: block; text-align: center; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+              <div style="font-size: 1.75rem; margin-bottom: 0.75rem;" class="float-element">📝</div>
+              <div style="font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Workouts</div>
+              <div style="font-size: 0.75rem; color: #b5b5b5;">Plan routines</div>
             </a>
-        {% endmatch %}
-        
-        <!-- Browse Exercises -->
-        <a href="/exercises" class="glass rounded-2xl p-6 btn-secondary transition-all duration-300 text-center group block">
-          <div class="text-3xl mb-3 group-hover:scale-105 transition-transform duration-300 float-element">📚</div>
-          <div class="font-semibold text-white mb-1">Exercises</div>
-          <div class="text-xs text-gray-400">{{ exercises.len() }} available</div>
-        </a>
-        
-        <!-- Workouts -->
-        <a href="/workouts" class="glass rounded-2xl p-6 btn-secondary transition-all duration-300 text-center group block">
-          <div class="text-3xl mb-3 group-hover:scale-105 transition-transform duration-300 float-element">📝</div>
-          <div class="font-semibold text-white mb-1">Workouts</div>
-          <div class="text-xs text-gray-400">Plan routines</div>
-        </a>
-        
-        <!-- Settings -->
-        <button class="glass rounded-2xl p-6 btn-secondary transition-all duration-300 text-center group">
-          <div class="text-3xl mb-3 group-hover:scale-105 transition-transform duration-300 float-element">⚙️</div>
-          <div class="font-semibold text-white mb-1">Settings</div>
-          <div class="text-xs text-gray-400">Customize app</div>
-        </button>
+          </div>
+          
+          <div class="column is-half">
+            <a href="/settings" class="glass" style="border-radius: 1.5rem; padding: 1.5rem; text-decoration: none; display: block; text-align: center; transition: all 0.3s;" onmouseover="this.style.background='rgba(255,255,255,0.08)'" onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+              <div style="font-size: 1.75rem; margin-bottom: 0.75rem;" class="float-element">⚙️</div>
+              <div style="font-weight: 600; color: #f5f5f5; margin-bottom: 0.25rem;">Settings</div>
+              <div style="font-size: 0.75rem; color: #b5b5b5;">Customize app</div>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
 

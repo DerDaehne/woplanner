@@ -3,61 +3,61 @@
 {% block title %}Training History - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto px-4 py-6 pb-24">
-  <div class="mb-6">
-    <h1 class="text-3xl font-bold text-white mb-2">Training History</h1>
-    <p class="text-gray-400">Your past workout sessions</p>
+<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto; padding-bottom: 5rem;">
+  <div style="margin-bottom: 1.5rem;">
+    <h1 class="is-size-3 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">Training History</h1>
+    <p style="color: #b5b5b5;">Your past workout sessions</p>
   </div>
 
   {% if workouts.len() == 0 %}
-    <div class="glass-card rounded-2xl p-12 text-center">
-      <div class="text-6xl mb-4">📊</div>
-      <h2 class="text-xl font-bold text-white mb-2">No Training History Yet</h2>
-      <p class="text-gray-400 mb-6">Complete your first workout to see it here!</p>
-      <a href="/workouts" class="btn-primary inline-block px-6 py-3 rounded-xl">
+    <div class="glass-card" style="border-radius: 1rem; padding: 3rem; text-align: center;">
+      <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+      <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">No Training History Yet</h2>
+      <p style="color: #b5b5b5; margin-bottom: 1.5rem;">Complete your first workout to see it here!</p>
+      <a href="/workouts" class="btn-primary is-inline-block" style="padding: 0.75rem 1.5rem; border-radius: 1rem;">
         Start Training
       </a>
     </div>
   {% else %}
-    <div class="space-y-4">
+    <div style="margin-bottom: 1rem;">
       {% for workout in workouts %}
         <a href="/history/{{ workout.id }}"
-           class="block glass-card rounded-2xl p-5 hover:scale-[1.01] transition-all duration-300">
-          <div class="flex items-start justify-between">
-            <div class="flex-1 min-w-0">
-              <h3 class="text-lg font-bold text-white mb-1">
+           class="glass-card" style="border-radius: 1rem; padding: 1.25rem; text-decoration: none; display: block; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
+          <div class="is-flex is-flex-between is-align-start">
+            <div class="is-expanded">
+              <h3 style="font-size: 1.125rem; font-weight: bold; color: #f5f5f5; margin-bottom: 0.25rem;">
                 {{ workout.workout_name }}
               </h3>
-              <div class="text-sm text-gray-400 mb-3">
+              <div style="font-size: 0.875rem; color: #b5b5b5; margin-bottom: 0.75rem;">
                 {{ workout.completed_date_display() }}
               </div>
 
-              <div class="flex flex-wrap gap-3">
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-400">⏱️</span>
-                  <span class="text-sm text-gray-300">{{ workout.duration_display() }}</span>
+              <div class="is-flex is-flex-wrap-wrap is-gap-3">
+                <div class="is-flex is-align-center is-gap-2">
+                  <span style="color: #b5b5b5;">⏱️</span>
+                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.duration_display() }}</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-400">🔢</span>
-                  <span class="text-sm text-gray-300">{{ workout.total_sets }} sets</span>
+                <div class="is-flex is-align-center is-gap-2">
+                  <span style="color: #b5b5b5;">🔢</span>
+                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.total_sets }} sets</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  <span class="text-gray-400">💪</span>
-                  <span class="text-sm text-gray-300">{{ workout.total_volume_kg as i32 }}kg</span>
+                <div class="is-flex is-align-center is-gap-2">
+                  <span style="color: #b5b5b5;">💪</span>
+                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.total_volume_kg as i32 }}kg</span>
                 </div>
               </div>
 
               {% match workout.notes %}
                 {% when Some with (notes) %}
-                  <div class="mt-3 pt-3 border-t border-gray-700/50">
-                    <p class="text-sm text-gray-400 italic">"{{ notes }}"</p>
+                  <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
+                    <p style="font-size: 0.875rem; color: #b5b5b5; font-style: italic;">"{{ notes }}"</p>
                   </div>
                 {% when None %}
               {% endmatch %}
             </div>
 
-            <div class="ml-4 text-gray-500">
-              <span class="text-2xl">→</span>
+            <div style="margin-left: 1rem; color: #7a7a7a;">
+              <span style="font-size: 1.5rem;">→</span>
             </div>
           </div>
         </a>
@@ -65,8 +65,8 @@
     </div>
 
     {% if workouts.len() == 50 %}
-      <div class="mt-6 text-center">
-        <p class="text-sm text-gray-500">Showing last 50 workouts</p>
+      <div class="has-text-centered" style="margin-top: 1.5rem;">
+        <p style="font-size: 0.875rem; color: #7a7a7a;">Showing last 50 workouts</p>
       </div>
     {% endif %}
   {% endif %}

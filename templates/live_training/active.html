@@ -3,69 +3,68 @@
 {% block title %}Live Training - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="max-w-lg mx-auto animate-fade-in px-4 py-6">
+<div class="is-max-desktop" style="max-width: 32rem; margin: 0 auto; padding-bottom: 5rem;">
 
-  <!-- Header: Current Exercise + Progress -->
-  <div class="mb-6">
+  <!-- Header -->
+  <div style="margin-bottom: 1.5rem;">
     {% match active_workout_view.current_exercise %}
       {% when Some with (exercise) %}
-        <div class="flex items-start justify-between mb-2">
-          <div class="flex-1 min-w-0">
-            <h1 class="text-2xl font-bold text-white mb-1 leading-tight">
+        <div class="is-flex is-flex-between is-align-start" style="margin-bottom: 0.5rem;">
+          <div class="is-expanded">
+            <h1 style="font-size: 1.5rem; font-weight: bold; color: #f5f5f5; margin-bottom: 0.25rem; line-height: 1.2;">
               {{ exercise.exercise_name }}
             </h1>
-            <p class="text-sm text-gray-400">{{ active_workout_view.workout_name }}</p>
+            <p style="font-size: 0.875rem; color: #b5b5b5;">{{ active_workout_view.workout_name }}</p>
           </div>
-          <div class="text-right ml-4">
-            <div class="text-lg font-bold text-netflix-red">
+          <div class="has-text-right" style="margin-left: 1rem;">
+            <div class="is-size-5 has-text-weight-bold" style="color: #E50914;">
               {{ active_workout_view.progress_percent as i32 }}%
             </div>
-            <div class="text-xs text-gray-500">Progress</div>
+            <div style="font-size: 0.75rem; color: #7a7a7a;">Progress</div>
           </div>
         </div>
       {% when None %}
-        <!-- Workout Complete State -->
-        <div class="text-center">
-          <h1 class="text-3xl font-bold text-green-400 mb-2">🎉 Workout Complete!</h1>
-          <p class="text-gray-400">{{ active_workout_view.workout_name }}</p>
+        <div class="has-text-centered">
+          <h1 class="is-size-3 has-text-weight-bold" style="color: #4ade80; margin-bottom: 0.5rem;">🎉 Workout Complete!</h1>
+          <p style="color: #b5b5b5;">{{ active_workout_view.workout_name }}</p>
         </div>
-      {% endmatch %}
+    {% endmatch %}
   </div>
 
-  <!-- Personal Record Notifications -->
+  <!-- PR Notifications -->
   {% match pr_notifications %}
     {% when Some with (prs) %}
-      <div id="pr-banner" class="glass-card rounded-2xl p-4 mb-6 border-2 border-yellow-500/50 bg-gradient-to-r from-yellow-900/20 to-orange-900/20 animate-fade-in">
-        <div class="flex items-start gap-3">
-          <div class="text-3xl">🏆</div>
-          <div class="flex-1">
-            <h3 class="text-lg font-bold text-yellow-400 mb-2">New Personal Record!</h3>
-            <div class="space-y-1">
+      <div id="pr-banner" class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid rgba(241, 196, 15, 0.5); background: linear-gradient(90deg, rgba(120, 80, 0, 0.2), rgba(120, 60, 0, 0.2));">
+        <div class="is-flex is-align-start is-gap-3">
+          <div style="font-size: 1.75rem;">🏆</div>
+          <div class="is-expanded">
+            <h3 class="is-size-5 has-text-weight-bold" style="color: #f1c40f; margin-bottom: 0.5rem;">New Personal Record!</h3>
+            <div style="margin-bottom: 0.25rem;">
               {% for pr in prs %}
-                <div class="text-sm text-gray-200 flex items-center gap-2">
-                  <span class="text-yellow-500">★</span>
+                <div style="font-size: 0.875rem; color: #e0e0e0; display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.25rem;">
+                  <span style="color: #f1c40f;">★</span>
                   <span>{{ pr }}</span>
                 </div>
               {% endfor %}
             </div>
           </div>
-          <button onclick="document.getElementById('pr-banner').remove()" class="text-gray-400 hover:text-white text-xl">×</button>
+          <button onclick="document.getElementById('pr-banner').remove()" style="color: #b5b5b5; background: none; border: none; font-size: 1.25rem; cursor: pointer;">×</button>
         </div>
       </div>
     {% when None %}
   {% endmatch %}
 
-  <!-- Progressive Overload Suggestions -->
+  <!-- Overload Suggestions -->
   {% match overload_suggestion %}
     {% when Some with (suggestion) %}
-      <div id="overload-banner" class="glass-card rounded-2xl p-4 mb-6 border-2 border-blue-500/50 bg-gradient-to-r from-blue-900/20 to-purple-900/20 animate-fade-in">
-        <div class="flex items-start gap-3">
-          <div class="text-3xl">💡</div>
-          <div class="flex-1">
-            <h3 class="text-lg font-bold text-blue-400 mb-2">Trainingstipp</h3>
-            <p class="text-sm text-gray-200">{{ suggestion }}</p>
+      <div id="overload-banner" class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid rgba(96, 165, 250, 0.5); background: linear-gradient(90deg, rgba(30, 60, 120, 0.2), rgba(60, 30, 120, 0.2));">
+        <div class="is-flex is-align-start is-gap-3">
+          <div style="font-size: 1.75rem;">💡</div>
+          <div class="is-expanded">
+            <h3 class="is-size-5 has-text-weight-bold" style="color: #60a5fa; margin-bottom: 0.5rem;">Trainingstipp</h3>
+            <p style="font-size: 0.875rem; color: #e0e0e0;">{{ suggestion }}</p>
           </div>
-          <button onclick="document.getElementById('overload-banner').remove()" class="text-gray-400 hover:text-white text-xl">×</button>
+          <button onclick="document.getElementById('overload-banner').remove()" style="color: #b5b5b5; background: none; border: none; font-size: 1.25rem; cursor: pointer;">×</button>
         </div>
       </div>
     {% when None %}
@@ -74,36 +73,37 @@
   {% match active_workout_view.current_exercise %}
     {% when Some with (exercise) %}
       
-      <!-- Exercise Instructions Card -->
-      <div class="glass-card rounded-2xl p-4 mb-6">
-        <div class="text-sm text-gray-300 leading-relaxed">
+      <!-- Exercise Instructions -->
+      <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
+        <div style="font-size: 0.875rem; color: #d4d4d4; line-height: 1.6;">
           {{ exercise.exercise_instructions }}
         </div>
         {% match exercise.notes %}
           {% when Some with (notes) %}
-            <div class="mt-3 pt-3 border-t border-gray-700/50">
-              <div class="text-xs text-gray-400 mb-1">Training Notes:</div>
-              <div class="text-sm text-netflix-red">💡 {{ notes }}</div>
+            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
+              <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Training Notes:</div>
+              <div style="font-size: 0.875rem; color: #E50914;">💡 {{ notes }}</div>
             </div>
           {% when None %}
         {% endmatch %}
       </div>
 
-      <!-- Video Instructions Card (Collapsible) -->
+      <!-- Video Instructions -->
       {% match exercise.youtube_embed_id() %}
         {% when Some with (video_id) %}
-          <details class="glass-card rounded-2xl mb-6 overflow-hidden">
-            <summary class="p-4 cursor-pointer hover:bg-white/5 transition-all duration-300 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <span class="text-lg">📹</span>
-                <span class="text-sm font-medium text-gray-300">Video Instructions</span>
+          <details class="glass-card" style="border-radius: 1rem; margin-bottom: 1.5rem; overflow: hidden;">
+            <summary style="padding: 1rem; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; justify-content: space-between;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+              <div class="is-flex is-align-center is-gap-2">
+                <span style="font-size: 1.125rem;">📹</span>
+                <span style="font-size: 0.875rem; font-weight: 500; color: #d4d4d4;">Video Instructions</span>
               </div>
-              <span class="text-gray-400 text-xs">▼</span>
+              <span style="color: #b5b5b5; font-size: 0.75rem;">▼</span>
             </summary>
-            <div class="p-4 pt-0">
-              <div class="relative w-full" style="padding-bottom: 56.25%;">
+            <div style="padding: 1rem; padding-top: 0;">
+              <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
                 <iframe
-                  class="absolute top-0 left-0 w-full h-full rounded-xl"
+                  class="is-overlay"
+                  style="border-radius: 1rem;"
                   src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&rel=0"
                   title="Exercise video instructions"
                   frameborder="0"
@@ -116,32 +116,32 @@
         {% when None %}
       {% endmatch %}
 
-      <!-- Current Exercise Sets History -->
-      <div class="glass-card rounded-2xl p-4 mb-6">
-        <h3 class="text-lg font-semibold text-white mb-4 flex items-center">
-          <span class="mr-2">📊</span>
+      <!-- Sets Completed -->
+      <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
+        <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;" class="is-flex is-align-center">
+          <span style="margin-right: 0.5rem;">📊</span>
           Sets Completed
-          <span class="ml-auto text-sm text-gray-400">
+          <span class="is-flex-grow" style="font-size: 0.875rem; color: #b5b5b5;">
             {{ current_exercise_sets.len() }} / {{ exercise.target_sets }}
           </span>
         </h3>
         
         {% if current_exercise_sets.len() == 0 %}
-          <div class="text-center py-6 text-gray-400">
-            <div class="text-3xl mb-2">🎯</div>
-            <p class="text-sm">No sets completed yet</p>
-            <p class="text-xs text-gray-500">Start with your first set below</p>
+          <div class="has-text-centered" style="padding: 1.5rem 0; color: #b5b5b5;">
+            <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🎯</div>
+            <p style="font-size: 0.875rem;">No sets completed yet</p>
+            <p style="font-size: 0.75rem; color: #7a7a7a;">Start with your first set below</p>
           </div>
         {% else %}
-          <div class="space-y-2">
+          <div style="margin-bottom: 0.5rem;">
             {% for set in current_exercise_sets %}
-              <div class="flex items-center justify-between p-3 glass rounded-xl">
-                <div class="flex items-center gap-3">
-                  <div class="w-8 h-8 bg-green-500/20 rounded-lg flex items-center justify-center">
-                    <span class="text-green-400 text-sm font-bold">{{ set.set_number }}</span>
+              <div class="is-flex is-flex-between is-align-center" style="padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 1rem; margin-bottom: 0.5rem;">
+                <div class="is-flex is-align-center is-gap-3">
+                  <div style="width: 2rem; height: 2rem; background: rgba(0, 209, 178, 0.2); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: #00d1b2; font-size: 0.875rem; font-weight: bold;">{{ set.set_number }}</span>
                   </div>
                   <div>
-                    <div class="font-medium text-white text-sm">
+                    <div style="font-weight: 500; color: #f5f5f5; font-size: 0.875rem;">
                       {% match set.weight %}
                         {% when Some with (weight) %}
                           {{ weight }}kg × {{ set.reps }}
@@ -151,12 +151,12 @@
                     </div>
                     {% match set.notes %}
                       {% when Some with (notes) %}
-                        <div class="text-xs text-gray-400">{{ notes }}</div>
+                        <div style="font-size: 0.75rem; color: #b5b5b5;">{{ notes }}</div>
                       {% when None %}
                     {% endmatch %}
                   </div>
                 </div>
-                <div class="text-xs text-gray-500">
+                <div style="font-size: 0.75rem; color: #7a7a7a;">
                   {{ active_workout_view.active_workout.duration_display() }} ago
                 </div>
               </div>
@@ -165,116 +165,111 @@
         {% endif %}
       </div>
 
-      <!-- Rest Timer Display (Initially Hidden) -->
-      <div id="rest-timer" class="glass-card rounded-2xl p-6 mb-6 text-center hidden">
-        <div class="text-sm text-gray-400 mb-2">Rest Time</div>
-        <div id="timer-display" class="text-6xl font-bold text-netflix-red mb-4">0:00</div>
-        <div class="flex gap-3 justify-center">
-          <button onclick="skipRest()" class="btn-secondary px-6 py-2 rounded-xl text-sm font-medium">
+      <!-- Rest Timer (Initially Hidden) -->
+      <div id="rest-timer" class="glass-card" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;" class="hidden">
+        <div style="font-size: 0.875rem; color: #b5b5b5; margin-bottom: 0.5rem;">Rest Time</div>
+        <div id="timer-display" class="is-size-1 has-text-weight-bold" style="color: #E50914; margin-bottom: 1rem;">0:00</div>
+        <div class="is-flex is-gap-3 is-justify-center">
+          <button onclick="skipRest()" class="btn-secondary" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; font-weight: 500;">
             Skip Rest
           </button>
-          <button onclick="addTime(30)" class="glass px-6 py-2 rounded-xl text-sm font-medium hover:bg-white/10">
+          <button onclick="addTime(30)" class="glass" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; font-weight: 500; border-radius: 1rem; color: #f5f5f5; cursor: pointer; background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
             +30s
           </button>
         </div>
       </div>
 
-      <!-- Input Form: Weight + Reps -->
+      <!-- Set Form -->
       <form id="set-form"
             hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
             hx-swap="none"
-            class="space-y-4 mb-20"
+            style="margin-bottom: 5rem;"
             onsubmit="handleWeightField(event)">
 
-        <!-- Hidden exercise_id -->
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
 
-        <div class="grid grid-cols-2 gap-4">
-          <!-- Weight Input -->
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
-              Weight (kg)
-            </label>
-            <input type="text"
-                   name="weight"
-                   inputmode="decimal"
-                   pattern="[0-9]*\.?[0-9]*"
-                   {% match exercise.target_weight %}
-                     {% when Some with (weight) %}
-                       value="{{ weight }}"
-                       placeholder="{{ weight }}kg"
-                     {% when None %}
-                       placeholder="Bodyweight"
-                   {% endmatch %}
-                   class="w-full px-4 py-4 input-glass rounded-xl text-white text-center text-lg font-semibold">
+        <div class="columns is-gapless">
+          <div class="column">
+            <div class="field">
+              <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                Weight (kg)
+              </label>
+              <input type="text"
+                     name="weight"
+                     inputmode="decimal"
+                     pattern="[0-9]*\.?[0-9]*"
+                     {% match exercise.target_weight %}
+                       {% when Some with (weight) %}
+                         value="{{ weight }}"
+                         placeholder="{{ weight }}kg"
+                       {% when None %}
+                         placeholder="Bodyweight"
+                     {% endmatch %}
+                     class="input-glass"
+                     style="text-align: center; font-size: 1.125rem; font-weight: 600;">
+            </div>
           </div>
 
-          <!-- Reps Input -->
-          <div>
-            <label class="block text-sm font-medium text-gray-300 mb-2">
-              Reps
-            </label>
-            <input type="number"
-                   name="reps"
-                   min="1"
-                   required
-                   inputmode="numeric"
-                   pattern="[0-9]*"
-                   placeholder="8"
-                   class="w-full px-4 py-4 input-glass rounded-xl text-white text-center text-lg font-semibold">
+          <div class="column">
+            <div class="field">
+              <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+                Reps
+              </label>
+              <input type="number"
+                     name="reps"
+                     min="1"
+                     required
+                     inputmode="numeric"
+                     pattern="[0-9]*"
+                     placeholder="8"
+                     class="input-glass"
+                     style="text-align: center; font-size: 1.125rem; font-weight: 600;">
+            </div>
           </div>
         </div>
 
-        <!-- Notes Input (Optional) -->
-        <div>
+        <!-- Notes Input -->
+        <div class="field" style="margin-bottom: 1rem;">
           <input type="text"
                  name="notes"
-                 placeholder="Optional: How did it feel?"
-                 class="w-full px-4 py-3 input-glass rounded-xl text-white placeholder-gray-500">
+                 placeholder="How did it feel? (optional)"
+                 class="input-glass"
+                 style="color: #7a7a7a;">
         </div>
 
-        <!-- Submit Button: Big and Prominent -->
+        <!-- Submit Button -->
         <button type="submit"
-                class="w-full btn-primary py-4 px-6 rounded-2xl font-bold text-white text-lg flex items-center justify-center gap-2">
+                class="btn-primary is-fullwidth"
+                style="padding: 1rem 1.5rem; font-size: 1.125rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
           <span>Complete Set</span>
-          <span class="text-xl">→</span>
+          <span style="font-size: 1.25rem;">→</span>
         </button>
 
       </form>
 
       <script>
-        // Handle empty weight field for bodyweight exercises
         function handleWeightField(event) {
           const weightInput = document.querySelector('input[name="weight"]');
           if (weightInput && weightInput.value.trim() === '') {
-            // Remove the weight field from form submission if empty
             weightInput.removeAttribute('name');
           }
         }
 
         let timerInterval = null;
         let remainingSeconds = 0;
-        const DEFAULT_REST_TIME = 90; // 90 seconds default
+        const DEFAULT_REST_TIME = 90;
 
         function startRestTimer(seconds = DEFAULT_REST_TIME) {
           remainingSeconds = seconds;
-
-          // Show timer, hide form
           document.getElementById('rest-timer').classList.remove('hidden');
           document.getElementById('set-form').style.opacity = '0.4';
           document.getElementById('set-form').style.pointerEvents = 'none';
-
           updateTimerDisplay();
-
           if (timerInterval) clearInterval(timerInterval);
-
           timerInterval = setInterval(() => {
             remainingSeconds--;
             updateTimerDisplay();
-
-            if (remainingSeconds <= 0) {
-              finishRest();
-            }
+            if (remainingSeconds <= 0) finishRest();
           }, 1000);
         }
 
@@ -285,9 +280,7 @@
             `${minutes}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function skipRest() {
-          finishRest();
-        }
+        function skipRest() { finishRest(); }
 
         function addTime(seconds) {
           remainingSeconds += seconds;
@@ -299,29 +292,20 @@
           document.getElementById('rest-timer').classList.add('hidden');
           document.getElementById('set-form').style.opacity = '1';
           document.getElementById('set-form').style.pointerEvents = 'auto';
-
-          // Play completion sound (vibration on mobile)
-          if (navigator.vibrate) {
-            navigator.vibrate([200, 100, 200]);
-          }
+          if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
         }
 
-        // Listen for successful set completion
         document.getElementById('set-form').addEventListener('htmx:afterRequest', function(event) {
           if (event.detail.successful) {
-            // Reload page first, timer will start after reload
             window.location.reload();
           }
         });
 
-        // Check if we should start timer (after page reload from completing a set)
-        // We use sessionStorage to persist this across page reload
         if (sessionStorage.getItem('justCompletedSet') === 'true') {
           sessionStorage.removeItem('justCompletedSet');
           startRestTimer();
         }
 
-        // Set flag before form submission
         document.getElementById('set-form').addEventListener('htmx:beforeRequest', function() {
           sessionStorage.setItem('justCompletedSet', 'true');
         });
@@ -329,37 +313,36 @@
 
     {% when None %}
       <!-- Workout Complete Actions -->
-      <div class="text-center space-y-4 mb-20">
-        <div class="glass-card rounded-2xl p-8">
-          <div class="text-6xl mb-4">🏆</div>
-          <h2 class="text-xl font-bold text-white mb-2">Amazing Work!</h2>
-          <p class="text-gray-400 mb-4">You completed {{ active_workout_view.total_sets_completed }} sets</p>
-          <div class="text-sm text-gray-500">
+      <div class="has-text-centered" style="margin-bottom: 5rem;">
+        <div class="glass-card" style="border-radius: 1rem; padding: 2rem;">
+          <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
+          <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">Amazing Work!</h2>
+          <p style="color: #b5b5b5; margin-bottom: 1rem;">You completed {{ active_workout_view.total_sets_completed }} sets</p>
+          <div style="font-size: 0.875rem; color: #7a7a7a;">
             Training Duration: {{ active_workout_view.active_workout.duration_display() }}
           </div>
         </div>
         
-        <!-- Finish Training Form -->
         <form hx-post="/live-training/{{ active_workout_view.active_workout.id }}/finish"
               hx-swap="none"
-              class="space-y-4">
+              style="margin-top: 1.5rem;">
           
-          <!-- Optional Notes Input -->
-          <div>
+          <div class="field" style="margin-bottom: 1rem;">
             <input type="text" 
                    name="notes"
                    placeholder="How did the training feel? (optional)"
-                   class="w-full px-4 py-3 input-glass rounded-xl text-white placeholder-gray-500">
+                   class="input-glass"
+                   style="color: #7a7a7a;">
           </div>
           
-          <!-- Finish Training Button -->
           <button type="submit"
-                  class="w-full btn-primary py-4 px-6 rounded-2xl font-bold text-white text-lg">
+                  class="btn-primary is-fullwidth"
+                  style="padding: 1rem 1.5rem; font-size: 1.125rem; font-weight: bold;">
             🏁 Finish Training
           </button>
         </form>
         
-        <button class="w-full btn-secondary py-3 px-6 rounded-2xl font-medium text-white">
+        <button class="btn-secondary is-fullwidth" style="padding: 0.75rem 1.5rem; font-size: 1rem; margin-top: 0.75rem;">
           📊 View Summary
         </button>
       </div>
