@@ -80,6 +80,10 @@
             pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
           ];
 
+          # SQLx offline mode: use pre-generated query metadata
+          # Required because Nix sandbox has no database for compile-time query verification
+          SQLX_OFFLINE = true;
+
           # Copy static files, templates, migrations to output
           postInstall = ''
             mkdir -p $out/share/woplanner
