@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "\n        SELECT\n            we.position as \"position: i32\",\n            we.target_sets as \"target_sets: i32\",\n            we.target_weight as \"target_weight: f32\",\n            we.notes,\n            e.id as exercise_id,\n            e.name as exercise_name,\n            e.instructions as exercise_instructions,\n            e.video_url as exercise_video_url\n        FROM workout_exercises we INNER JOIN exercises e ON we.exercise_id = e.id WHERE we.workout_id = ? ORDER BY we.position ASC ",
+  "query": "\n        SELECT\n            we.position as \"position: i32\",\n            we.target_sets as \"target_sets: i32\",\n            we.target_weight as \"target_weight: f32\",\n            we.notes,\n            e.id as exercise_id,\n            e.name as exercise_name,\n            e.instructions as exercise_instructions,\n            e.video_url as exercise_video_url\n        FROM workout_exercises we INNER JOIN exercises e ON we.exercise_id = e.id WHERE we.workout_id = ? ORDER BY we.position ASC",
   "describe": {
     "columns": [
       {
@@ -58,5 +58,5 @@
       true
     ]
   },
-  "hash": "711805a001a30f31e73679f3f0af1f3d6426988d084d46823e8d7716a3d90b5f"
+  "hash": "db4d42aff87cbdbed1930a4d68f15445e4b6c445129774359245cb6663239e8b"
 }
