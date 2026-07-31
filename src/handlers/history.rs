@@ -13,7 +13,6 @@ use tower_sessions::Session;
 #[derive(Template)]
 #[template(path = "history/list.html")]
 pub struct HistoryListTemplate {
-    pub user: User,
     pub current_user: Option<User>,
     pub workouts: Vec<CompletedWorkoutWithName>,
     pub is_dashboard: bool,
@@ -22,7 +21,6 @@ pub struct HistoryListTemplate {
 #[derive(Template)]
 #[template(path = "history/detail.html")]
 pub struct HistoryDetailTemplate {
-    pub user: User,
     pub current_user: Option<User>,
     pub workout: CompletedWorkoutWithName,
     pub exercises: Vec<ExerciseWithSets>,
@@ -32,16 +30,12 @@ pub struct HistoryDetailTemplate {
 #[derive(Debug, Clone)]
 pub struct CompletedWorkoutWithName {
     pub id: String,
-    pub user_id: String,
-    pub workout_id: String,
     pub workout_name: String,
-    pub started_at: String,
     pub completed_at: String,
     pub total_duration_minutes: i32,
     pub total_sets: i32,
     pub total_volume_kg: f32,
     pub notes: Option<String>,
-    pub created_at: String,
 }
 
 impl CompletedWorkoutWithName {
@@ -123,16 +117,12 @@ pub async fn list_history(
         CompletedWorkoutWithName,
         r#"SELECT
             cw.id,
-            cw.user_id,
-            cw.workout_id,
             w.name as workout_name,
-            cw.started_at,
             cw.completed_at,
             cw.total_duration_minutes as "total_duration_minutes: i32",
             cw.total_sets as "total_sets: i32",
             cw.total_volume_kg as "total_volume_kg: f32",
-            cw.notes,
-            cw.created_at
+            cw.notes
         FROM completed_workouts cw
         JOIN workouts w ON cw.workout_id = w.id
         WHERE cw.user_id = ?
@@ -144,8 +134,7 @@ pub async fn list_history(
     .await?;
 
     let template = HistoryListTemplate {
-        user: current_user.clone(),
-        current_user: Some(current_user),
+        current_user: Some(current_user.clone()),
         workouts,
         is_dashboard: false,
     };
@@ -172,16 +161,12 @@ pub async fn show_history_detail(
         CompletedWorkoutWithName,
         r#"SELECT
             cw.id,
-            cw.user_id,
-            cw.workout_id,
             w.name as workout_name,
-            cw.started_at,
             cw.completed_at,
             cw.total_duration_minutes as "total_duration_minutes: i32",
             cw.total_sets as "total_sets: i32",
             cw.total_volume_kg as "total_volume_kg: f32",
-            cw.notes,
-            cw.created_at
+            cw.notes
         FROM completed_workouts cw
         JOIN workouts w ON cw.workout_id = w.id
         WHERE cw.id = ? AND cw.user_id = ?"#,
@@ -241,8 +226,7 @@ pub async fn show_history_detail(
     }
 
     let template = HistoryDetailTemplate {
-        user: current_user.clone(),
-        current_user: Some(current_user),
+        current_user: Some(current_user.clone()),
         workout,
         exercises,
         is_dashboard: false,

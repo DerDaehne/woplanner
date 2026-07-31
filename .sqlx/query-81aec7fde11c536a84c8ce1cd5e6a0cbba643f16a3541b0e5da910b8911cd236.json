@@ -1,0 +1,56 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n            cw.id,\n            w.name as workout_name,\n            cw.completed_at,\n            cw.total_duration_minutes as \"total_duration_minutes: i32\",\n            cw.total_sets as \"total_sets: i32\",\n            cw.total_volume_kg as \"total_volume_kg: f32\",\n            cw.notes\n        FROM completed_workouts cw\n        JOIN workouts w ON cw.workout_id = w.id\n        WHERE cw.id = ? AND cw.user_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "workout_name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "completed_at",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "total_duration_minutes: i32",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "total_sets: i32",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "total_volume_kg: f32",
+        "ordinal": 5,
+        "type_info": "Float"
+      },
+      {
+        "name": "notes",
+        "ordinal": 6,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "81aec7fde11c536a84c8ce1cd5e6a0cbba643f16a3541b0e5da910b8911cd236"
+}

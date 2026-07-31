@@ -1,9 +1,11 @@
 use axum::{
-    http::{header::InvalidHeaderValue, HeaderValue, StatusCode},
-    response::{IntoResponse, Response, Html, Json},
+    http::{header::InvalidHeaderValue, StatusCode},
+    response::{IntoResponse, Response, Json},
 };
 use serde_json::json;
 use thiserror::Error;
+use askama::Template;
+use crate::templates::{ErrorPage, ErrorFragment};
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -32,8 +34,164 @@ pub enum AppError {
     Internal(String),
 }
 
+/// Check if this is an HTMX request
+pub fn is_htmx_request(headers: &axum::http::HeaderMap) -> bool {
+    headers
+        .get("HX-Request")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| s == "true")
+        .unwrap_or(false)
+}
+
+/// Render error to HTML using Askama templates
+pub fn error_to_html(error: &AppError, headers: Option<&axum::http::HeaderMap>) -> String {
+    // Determine if this is an HTMX request
+    let is_htmx = headers.map(|h| is_htmx_request(h)).unwrap_or(false);
+    
+    match error {
+        AppError::Database(_) => {
+            let fragment = ErrorFragment {
+                message: "Datenbankfehler. Bitte versuchen Sie es später erneut.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Database error.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 500,
+                    message: "Internal Server Error".to_string(),
+                    detail: "Database operation failed. Please try again later.".to_string(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Database error.".to_string())
+            }
+        }
+        AppError::Template(_) => {
+            let fragment = ErrorFragment {
+                message: "Template rendering error.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Template error.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 500,
+                    message: "Template Error".to_string(),
+                    detail: "Failed to render template.".to_string(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Template error.".to_string())
+            }
+        }
+        AppError::InvalidHeader(_) => {
+            let fragment = ErrorFragment {
+                message: "Invalid header value.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Invalid header.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 400,
+                    message: "Bad Request".to_string(),
+                    detail: "Invalid response header.".to_string(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Invalid header.".to_string())
+            }
+        }
+        AppError::Session(_) => {
+            let fragment = ErrorFragment {
+                message: "Session error.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Session error.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 500,
+                    message: "Session Error".to_string(),
+                    detail: "Session error occurred.".to_string(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Session error.".to_string())
+            }
+        }
+        AppError::Unauthorized => {
+            let fragment = ErrorFragment {
+                message: "Not authenticated.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Unauthorized.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 401,
+                    message: "Unauthorized".to_string(),
+                    detail: "Please log in to continue.".to_string(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Unauthorized.".to_string())
+            }
+        }
+        AppError::NotFound(msg) => {
+            let fragment = ErrorFragment {
+                message: format!("Not found: {}", msg),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Not found.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 404,
+                    message: "Not Found".to_string(),
+                    detail: msg.clone(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Not found.".to_string())
+            }
+        }
+        AppError::BadRequest(msg) => {
+            let fragment = ErrorFragment {
+                message: format!("Bad request: {}", msg),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Bad request.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 400,
+                    message: "Bad Request".to_string(),
+                    detail: msg.clone(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Bad request.".to_string())
+            }
+        }
+        AppError::Internal(msg) => {
+            let fragment = ErrorFragment {
+                message: "Internal error occurred.".to_string(),
+            };
+            if is_htmx {
+                fragment.render().unwrap_or_else(|_| "Internal error.".to_string())
+            } else {
+                let page = ErrorPage {
+                    status_code: 500,
+                    message: "Internal Error".to_string(),
+                    detail: msg.clone(),
+                    current_user: None,
+                    is_dashboard: false,
+                };
+                page.render().unwrap_or_else(|_| "Internal error.".to_string())
+            }
+        }
+    }
+}
+
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
+        // For now, return JSON as default - this will be updated when
+        // we have proper middleware to detect request context
         match self {
             AppError::Database(e) => {
                 tracing::error!("Database error: {}", e);
@@ -84,28 +242,6 @@ impl IntoResponse for AppError {
     }
 }
 
-// HTMX-specific error response
-impl AppError {
-    pub fn to_htmx_redirect(&self, url: &str) -> Response {
-        let mut headers = axum::http::HeaderMap::new();
-        headers.insert(
-            "HX-Redirect",
-            HeaderValue::from_str(url).unwrap(),
-        );
-        (StatusCode::SEE_OTHER, headers, Html(self.to_string())).into_response()
-    }
-}
 
-// Convert AppError to a plain text/html response for non-JSON endpoints
-pub fn error_to_html(error: &AppError) -> String {
-    match error {
-        AppError::Database(_) => "Database error. Please try again later.".to_string(),
-        AppError::Template(_) => "Template rendering error.".to_string(),
-        AppError::InvalidHeader(_) => "Invalid header value.".to_string(),
-        AppError::Session(_) => "Session error.".to_string(),
-        AppError::Unauthorized => "Not authenticated.".to_string(),
-        AppError::NotFound(msg) => format!("Not found: {}", msg),
-        AppError::BadRequest(msg) => format!("Bad request: {}", msg),
-        AppError::Internal(_) => "An internal error occurred.".to_string(),
-    }
-}
+
+

@@ -3,6 +3,7 @@ mod error;
 mod filters;
 mod handlers;
 mod models;
+mod templates;
 
 use axum::{
     Router,
