@@ -3,17 +3,17 @@
 {% block title %}Training History - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 5rem);">
-  <div style="margin-bottom: var(--wo-s4);">
-    <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s2);">Training History</h1>
+<div class="container is-max-desktop wo-pb-calc">
+  <div class="wo-mb-s4">
+    <h1 class="wo-title wo-fs-num-lg wo-mb-s2">Training History</h1>
     <p class="wo-label">Your past workout sessions</p>
   </div>
 
   {% if workouts.len() == 0 %}
-    <div class="wo-section" style="text-align: center; padding: var(--wo-s6);">
-      <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">📊</div>
-      <h2 class="wo-title" style="margin-bottom: var(--wo-s2);">No Training History Yet</h2>
-      <p class="wo-label" style="margin-bottom: var(--wo-s4);">Complete your first workout to see it here!</p>
+    <div class="wo-section wo-text-center-pad6">
+      <div class="wo-fs-num-lg wo-mb-s4">📊</div>
+      <h2 class="wo-title wo-mb-s2">No Training History Yet</h2>
+      <p class="wo-label wo-mb-s4">Complete your first workout to see it here!</p>
       <a href="/workouts" class="wo-btn wo-btn-primary">
         Start Training
       </a>
@@ -22,12 +22,12 @@
     <div>
       {% for workout in workouts %}
         <a href="/history/{{ workout.id }}"
-           class="wo-row" style="text-decoration: none; display: flex; padding: var(--wo-s3) 0; transition: background 0.2s;">
+           class="wo-link">
           <div class="is-expanded">
-            <h3 class="wo-title" style="font-size: var(--wo-fs-body); margin-bottom: var(--wo-s1);">
+            <h3 class="wo-title wo-fs-body wo-mb-s1">
               {{ workout.workout_name }}
             </h3>
-            <div class="wo-label" style="margin-bottom: var(--wo-s2);">
+            <div class="wo-label wo-mb-s2">
               {{ workout.completed_date_display() }}
             </div>
 
@@ -48,22 +48,22 @@
 
             {% match workout.notes %}
               {% when Some with (notes) %}
-                <div style="margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line-strong);">
-                  <p class="wo-label" style="font-style: italic;">"{{ notes }}"</p>
+                <div class="wo-mt-s2-pt2-border">
+                  <p class="wo-label wo-italic">"{{ notes }}"</p>
                 </div>
               {% when None %}
             {% endmatch %}
           </div>
 
-          <div style="margin-left: var(--wo-s3); color: var(--wo-text-mute);">
-            <span style="font-size: var(--wo-fs-title);">→</span>
+          <div class="wo-ml-s3 wo-color-text-mute">
+            <span class="wo-fs-title">→</span>
           </div>
         </a>
       {% endfor %}
     </div>
 
     {% if workouts.len() == 50 %}
-      <div class="has-text-centered" style="margin-top: var(--wo-s4);">
+      <div class="has-text-centered wo-mt-s4">
         <p class="wo-label">Showing last 50 workouts</p>
       </div>
     {% endif %}

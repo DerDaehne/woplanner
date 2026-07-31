@@ -3,70 +3,70 @@
 {% block title %}{{ exercise.name }} - Progression - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 5rem);">
+<div class="container is-max-desktop wo-pb-calc">
 
   <!-- Header -->
-  <div style="margin-bottom: var(--wo-s4);">
-    <div class="is-flex is-align-items-center is-gap-3" style="margin-bottom: var(--wo-s2);">
-      <a href="/exercises" style="color: var(--wo-text-dim); text-decoration: none;">
-        <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <div class="wo-mb-s4">
+    <div class="is-flex is-align-items-center is-gap-3 wo-mb-s2">
+      <a href="/exercises" class="wo-color-text-dim-link">
+        <svg class="wo-w-1.5rem wo-h-1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
       </a>
-      <h1 class="wo-title" style="color: var(--wo-text);">{{ exercise.name }}</h1>
+      <h1 class="wo-title wo-color-text">{{ exercise.name }}</h1>
     </div>
-    <p class="wo-label" style="margin-left: 2.25rem;">Exercise Progression</p>
+    <p class="wo-label wo-ml-s3">Exercise Progression</p>
   </div>
 
   {% if progression_data.len() == 0 %}
-    <div class="wo-section" style="text-align: center; padding: var(--wo-s5);">
-      <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">📊</div>
-      <h2 class="wo-title" style="margin-bottom: var(--wo-s2);">No Data Yet</h2>
+    <div class="wo-section wo-text-center-pad5">
+      <div class="wo-fs-num-lg wo-mb-s4">📊</div>
+      <h2 class="wo-title wo-mb-s2">No Data Yet</h2>
       <p class="wo-label">Complete some sets of this exercise to see your progression!</p>
     </div>
   {% else %}
     <!-- Chart Tabs -->
     <div class="wo-section">
-      <div class="is-flex is-gap-2" style="margin-bottom: var(--wo-s3);">
-        <button onclick="showChart('weight')" id="btn-weight" class="wo-btn wo-btn-primary" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
+      <div class="is-flex is-gap-2 wo-mb-s3">
+        <button onclick="showChart('weight')" id="btn-weight" class="wo-btn wo-btn-primary wo-px-s2-py-s3 wo-fs-meta">
           Weight
         </button>
-        <button onclick="showChart('reps')" id="btn-reps" class="wo-btn" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
+        <button onclick="showChart('reps')" id="btn-reps" class="wo-btn wo-px-s2-py-s3 wo-fs-meta">
           Reps
         </button>
-        <button onclick="showChart('volume')" id="btn-volume" class="wo-btn" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
+        <button onclick="showChart('volume')" id="btn-volume" class="wo-btn wo-px-s2-py-s3 wo-fs-meta">
           Volume
         </button>
       </div>
 
       <!-- Chart Container -->
-      <div style="background: var(--wo-raised); border-radius: var(--wo-radius-sm); padding: var(--wo-s3); min-height: 300px;">
+      <div class="wo-bg-raised wo-rounded-sm wo-p-s3 wo-min-h-300px">
         <canvas id="progressionChart"></canvas>
       </div>
     </div>
 
     <!-- Personal Records Summary -->
     <div class="wo-section">
-      <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">
+      <h3 class="wo-title wo-mb-s3">
         🏆 Personal Records
       </h3>
       <div class="columns is-gapless">
         <div class="column is-one-third-tablet">
-          <div style="text-align: center;">
+          <div class="wo-text-center">
             <div class="wo-label">Max Weight</div>
-            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-weight">-</div>
+            <div class="wo-num wo-fs-title wo-color-accent" id="max-weight">-</div>
           </div>
         </div>
         <div class="column is-one-third-tablet">
-          <div style="text-align: center;">
+          <div class="wo-text-center">
             <div class="wo-label">Max Reps</div>
-            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-reps">-</div>
+            <div class="wo-num wo-fs-title wo-color-accent" id="max-reps">-</div>
           </div>
         </div>
         <div class="column is-one-third-tablet">
-          <div style="text-align: center;">
+          <div class="wo-text-center">
             <div class="wo-label">Max Volume</div>
-            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-volume">-</div>
+            <div class="wo-num wo-fs-title wo-color-accent" id="max-volume">-</div>
           </div>
         </div>
       </div>
@@ -74,13 +74,13 @@
 
     <!-- Recent Sets Table -->
     <div class="wo-section">
-      <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">Recent Sets</h3>
+      <h3 class="wo-title wo-mb-s3">Recent Sets</h3>
       <div>
         {% for data in progression_data %}
-          <div class="wo-row" style="padding: var(--wo-s2) 0; background: var(--wo-raised); border-radius: var(--wo-radius-sm); margin-bottom: var(--wo-s1);">
+          <div class="wo-row-pad">
             <div class="is-flex is-align-items-center is-gap-3">
-              <div style="width: 2rem; height: 2rem; background: var(--wo-text-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center;">
-                <span style="color: var(--wo-text); font-size: var(--wo-fs-meta); font-weight: bold;">{{ data.set_number }}</span>
+              <div class="wo-w-2rem wo-h-2rem wo-bg-text-weak wo-rounded-sm wo-flex-center">
+                <span class="wo-color-text wo-fs-meta wo-font-bold">{{ data.set_number }}</span>
               </div>
               <div>
                 <div class="wo-meta">

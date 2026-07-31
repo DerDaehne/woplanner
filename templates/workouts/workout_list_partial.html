@@ -1,7 +1,7 @@
 {% if workouts.len() == 0 %}
-  <div class="has-text-centered" style="padding: var(--wo-s6) 0;">
-    <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">💪</div>
-    <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-body); margin-bottom: var(--wo-s2);">No workouts yet!</p>
+  <div class="has-text-centered wo-center-pad">
+    <div class="wo-fs-num-lg wo-mb-s4">💪</div>
+    <p class="wo-color-text-dim-body wo-mb-s2">No workouts yet!</p>
     <p class="wo-label">Create your first workout below to start training</p>
   </div>
 {% else %}
@@ -9,12 +9,12 @@
     {% for workout in workouts %}
     <div class="wo-row">
       <div class="is-expanded">
-        <div class="is-flex is-align-items-center is-gap-2" style="margin-bottom: var(--wo-s1);">
-          <h3 class="wo-title" style="font-size: var(--wo-fs-body);">
+        <div class="is-flex is-align-items-center is-gap-2 wo-mb-s1">
+          <h3 class="wo-title wo-fs-body">
             {{ workout.name }}
           </h3>
           {% if workout.is_active.unwrap_or(true) %}
-            <div style="width: 0.5rem; height: 0.5rem; background: var(--wo-ok); border-radius: 50%;"></div>
+            <div class="wo-icon-sm"></div>
           {% endif %}
         </div>
         
@@ -33,16 +33,16 @@
           
           {% match workout.description %}
             {% when Some with (desc) %}
-              <span class="is-mobile-hidden wo-label" style="font-size: var(--wo-fs-meta);">{{ desc }}</span>
+              <span class="is-mobile-hidden wo-label wo-fs-meta">{{ desc }}</span>
             {% when None %}
           {% endmatch %}
         </div>
       </div>
       
       <!-- Right: Action Buttons -->
-      <div class="is-flex is-align-items-center is-gap-2" style="flex-shrink: 0;">
+      <div class="is-flex is-align-items-center is-gap-2 wo-flex-shrink-0">
         <a href="/workouts/{{ workout.id }}" 
-           class="wo-btn wo-btn-inline" style="padding: var(--wo-s2); min-height: 44px;">
+           class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px">
           👁️
         </a>
         <form hx-post="/start-training" hx-swap="none">
@@ -57,14 +57,14 @@
     <!-- Mobile description -->
     {% match workout.description %}
       {% when Some with (desc) %}
-        <div class="is-tablet-hidden wo-label" style="margin-top: var(--wo-s1);">{{ desc }}</div>
+        <div class="is-tablet-hidden wo-label wo-mt-s1">{{ desc }}</div>
       {% when None %}
     {% endmatch %}
     
     <!-- Footer info -->
     {% if workout.is_scheduled_today() %}
-      <div class="wo-row" style="margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line);">
-        <span style="font-size: var(--wo-fs-meta); color: var(--wo-ok); font-weight: 500;">⚡ Scheduled for today!</span>
+      <div class="wo-row wo-mt-s2-pt2-border">
+        <span class="wo-fs-meta-ok">⚡ Scheduled for today!</span>
       </div>
     {% endif %}
     {% endfor %}

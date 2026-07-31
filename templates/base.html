@@ -30,13 +30,13 @@
 <body>
     
     <!-- Top Bar -->
-    <div class="container is-max-desktop" style="padding-top: var(--wo-s5); padding-bottom: var(--wo-s4);">
+    <div class="container is-max-desktop wo-pt-s5 wo-pb-s4">
       <div class="is-flex is-justify-content-space-between is-align-items-center">
         <!-- Logo -->
         <div class="is-flex is-align-items-center is-gap-2">
           <span class="is-size-4">🏋️</span>
-          <h1 class="is-size-4 has-text-weight-bold" style="color: var(--wo-text);">
-            WO<span style="color: var(--wo-accent);">Planner</span>
+          <h1 class="is-size-4 has-text-weight-bold wo-color-text">
+            WO<span class="wo-color-accent">Planner</span>
           </h1>
         </div>
         
@@ -44,17 +44,17 @@
         {% match current_user %}
           {% when Some with (user) %}
             <div class="is-flex is-align-items-center is-gap-2">
-              <div class="is-mobile-hidden" style="color: var(--wo-text-mute); font-size: var(--wo-fs-body);">
+              <div class="is-mobile-hidden wo-color-text-mute wo-fs-body">
                 Hey {{ user.name }}! 💪
               </div>
               <form hx-post="/logout" hx-swap="outerHTML" hx-target="body" class="is-inline-flex">
-                <button type="submit" class="wo-btn wo-btn-inline" style="padding: 0.5rem 0.75rem; font-size: var(--wo-fs-body);">
+                <button type="submit" class="wo-btn wo-btn-inline wo-btn-sm">
                   🔄
                 </button>
               </form>
             </div>
           {% when None %}
-            <a href="/users" class="wo-btn wo-btn-primary wo-btn-inline" style="padding: 0.75rem 1.5rem; font-size: var(--wo-fs-body);">
+            <a href="/users" class="wo-btn wo-btn-primary wo-btn-inline wo-btn-md">
               🏋️ Get Started
             </a>
         {% endmatch %}
@@ -62,7 +62,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 4rem);">
+    <main class="container is-max-desktop wo-pb-calc4">
       {% block content %}{% endblock %}
     </main>
     

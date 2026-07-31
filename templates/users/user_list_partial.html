@@ -1,7 +1,7 @@
 {% if users.len() == 0 %}
-  <div class="has-text-centered" style="padding: var(--wo-s6) 0;">
-    <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">🏋️</div>
-    <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-body); margin-bottom: var(--wo-s2);">No users yet!</p>
+  <div class="has-text-centered wo-center-pad">
+    <div class="wo-fs-num-lg wo-mb-s4">🏋️</div>
+    <p class="wo-color-text-dim-body wo-mb-s2">No users yet!</p>
     <p class="wo-label">Create your first profile below to get started</p>
   </div>
 {% else %}
@@ -11,19 +11,18 @@
       <button hx-post="/users/{{ user.id }}/select"
               hx-target="#toast-container"
               hx-swap="afterbegin"
-              class="is-fullwidth wo-btn"
-              style="flex-direction: column; gap: var(--wo-s3); padding: var(--wo-s5); cursor: pointer; display: flex; position: relative; overflow: hidden;">
+              class="is-fullwidth wo-btn wo-flex-col-center-gap3-pad5 wo-wo-relative wo-overflow-hidden">
         
         <!-- Content -->
-        <div class="is-flex is-flex-column is-align-items-center is-gap-3" style="position: relative;">
+        <div class="is-flex is-flex-direction-column is-align-items-center is-gap-3">
           <!-- User Avatar -->
           <div class="is-relative">
-            <div style="width: 5rem; height: 5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-md); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); border: 1px solid var(--wo-line);">
+            <div class="wo-avatar-lg">
               {{ user.name.chars().next().unwrap_or('U') }}
             </div>
             <!-- Floating badge -->
-            <div style="position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: var(--wo-done-weak); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-              <svg style="width: 0.75rem; height: 0.75rem; color: var(--wo-ok);" fill="currentColor" viewBox="0 0 20 20">
+            <div class="wo-badge">
+              <svg class="wo-icon-sm-color" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5l-1.293 1.293a1 1 0 101.414 1.414l2-2a1 1 0 000-1.414z" clip-rule="evenodd"></path>
               </svg>
             </div>
@@ -31,7 +30,7 @@
           
           <!-- User Name -->
           <div>
-            <div style="font-weight: 600; color: var(--wo-text); font-size: var(--wo-fs-body);">
+            <div class="wo-color-text-bold-body">
               {{ user.name }}
             </div>
             <div class="wo-label">
@@ -45,9 +44,8 @@
     
     <!-- Add New User Card -->
     <div class="column is-one-third-tablet is-one-quarter-desktop">
-      <div class="is-fullwidth" style="background: var(--wo-raised); border: 2px dashed var(--wo-line-strong); border-radius: var(--wo-radius-md); padding: var(--wo-s5); text-align: center; color: var(--wo-text-mute);"
-           style="display: flex; flex-direction: column; align-items: center; gap: var(--wo-s3);">
-        <div style="width: 5rem; height: 5rem; border-radius: var(--wo-radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--wo-fs-title);">
+      <div class="is-fullwidth wo-bg-raised wo-border-dashed-line-strong wo-rounded-md wo-text-center-pad5 wo-flex-col-center-gap3 wo-color-text-mute">
+        <div class="wo-w-5rem wo-h-5rem wo-rounded-md wo-flex-center wo-fs-title">
           ➕
         </div>
         <div>

@@ -6,16 +6,16 @@
 <div class="container is-max-desktop">
   
   <!-- Hero Section -->
-  <div class="wo-section" style="text-align: center;">
-    <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s2);">
+  <div class="wo-section wo-text-center">
+    <h1 class="wo-title wo-fs-num-lg wo-mb-s2">
       Your Workouts
     </h1>
-    <p class="wo-meta" style="font-size: var(--wo-fs-body);">Create and manage your training routines</p>
+    <p class="wo-meta wo-fs-body">Create and manage your training routines</p>
   </div>
 
   <!-- Workouts List Container -->
   <div id="workout-list" class="wo-section">
-    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+    <h2 class="wo-title wo-mb-s4">
       🏋️ Available Workouts
     </h2>
     {% include "workouts/workout_list_partial.html" %}
@@ -23,7 +23,7 @@
 
   <!-- Create New Workout -->
   <div class="wo-section">
-    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+    <h2 class="wo-title wo-mb-s4">
       ➕ Create New Workout
     </h2>
 
@@ -32,8 +32,8 @@
           hx-swap="innerHTML"
           hx-on::after-request="this.reset()">
       
-      <div class="field" style="margin-bottom: var(--wo-s4);">
-        <label for="name" class="wo-label" style="margin-bottom: var(--wo-s2); display: block;">
+      <div class="field wo-mb-s4">
+        <label for="name" class="wo-label wo-mb-s2 wo-block">
           Workout Name
         </label>
         <input type="text"
@@ -45,8 +45,8 @@
                class="wo-input">
       </div>
       
-      <div class="field" style="margin-bottom: var(--wo-s4);">
-        <label for="description" class="wo-label" style="margin-bottom: var(--wo-s2); display: block;">
+      <div class="field wo-mb-s4">
+        <label for="description" class="wo-label wo-mb-s2 wo-block">
           Description (optional)
         </label>
         <textarea 
@@ -54,8 +54,7 @@
                name="description"
                rows="3"
                placeholder="What muscle groups does this workout target?"
-               class="wo-input"
-               style="resize: none;"></textarea>
+               class="wo-input wo-resize-none"></textarea>
       </div>
       
       <button type="submit"

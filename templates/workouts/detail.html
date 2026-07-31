@@ -9,7 +9,7 @@
   <div class="wo-section">
     <div class="columns">
       <div class="column">
-        <h1 class="wo-title" style="margin-bottom: var(--wo-s2);">
+        <h1 class="wo-title wo-mb-s2">
           {{ workout.name }}
         </h1>
         {% match workout.description %}
@@ -19,7 +19,7 @@
         {% endmatch %}
       </div>
       
-      <div class="column is-narrow" style="margin-top: var(--wo-s2);">
+      <div class="column is-narrow wo-mt-s2">
         <div class="is-flex is-flex-wrap-wrap is-gap-2">
           <!-- Toggle Active Status -->
           <form hx-post="/workouts/{{ workout.id }}/toggle" hx-swap="none">
@@ -46,15 +46,15 @@
 
   <!-- Schedule Settings -->
   <div class="wo-section">
-    <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">
+    <h3 class="wo-title wo-mb-s3">
       📅 Schedule Settings
     </h3>
     
     <form hx-post="/workouts/{{ workout.id }}/schedule" 
           hx-swap="none"
           class="is-flex is-flex-wrap-wrap is-gap-2">
-      <div class="is-expanded" style="min-width: 12rem;">
-        <select name="schedule_type" class="wo-input" style="min-height: 44px;">
+      <div class="is-expanded wo-w-12rem">
+        <select name="schedule_type" class="wo-input wo-min-h-44px">
           <option value="manual" {% if workout.schedule_type == "manual" %}selected{% endif %}>Manual</option>
           <option value="rotation" {% if workout.schedule_type == "rotation" %}selected{% endif %}>In Rotation</option>
           <option value="weekly" {% if workout.schedule_type == "weekly" %}selected{% endif %}>Weekly</option>
@@ -62,8 +62,8 @@
         </select>
       </div>
       
-      <div style="min-width: 10rem;">
-        <select name="schedule_day" class="wo-input" style="min-height: 44px;">
+      <div class="wo-w-10rem">
+        <select name="schedule_day" class="wo-input wo-min-h-44px">
           <option value="">No specific day</option>
           <option value="0" {% if workout.schedule_day == Some(0) %}selected{% endif %}>Sunday</option>
           <option value="1" {% if workout.schedule_day == Some(1) %}selected{% endif %}>Monday</option>
@@ -83,14 +83,14 @@
 
   <!-- Exercises in Workout -->
   <div class="wo-section">
-    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+    <h2 class="wo-title wo-mb-s4">
       💪 Exercises ({{ exercises.len() }})
     </h2>
 
     {% if exercises.len() == 0 %}
-      <div class="has-text-centered" style="padding: var(--wo-s6) 0;">
-        <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">🏋️</div>
-        <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-body); margin-bottom: var(--wo-s2);">No exercises yet!</p>
+      <div class="has-text-centered wo-center-pad">
+        <div class="wo-fs-num-lg wo-mb-s4">🏋️</div>
+        <p class="wo-color-text-dim-body wo-mb-s2">No exercises yet!</p>
         <p class="wo-label">Add exercises below to build your workout</p>
       </div>
     {% else %}
@@ -99,11 +99,9 @@
         <div class="wo-row">
           <div class="is-expanded">
             <!-- Exercise Number & Name -->
-            <div class="is-flex is-align-items-center is-gap-3" style="margin-bottom: var(--wo-s3);">
-              <div style="width: 2.5rem; height: 2.5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text);">
-                {{ exercise.position }}
-              </div>
-              <h3 class="wo-title" style="font-size: var(--wo-fs-body);">{{ exercise.exercise_name }}</h3>
+            <div class="is-flex is-align-items-center is-gap-3 wo-mb-s3">
+              <div class="wo-avatar">{{ exercise.position }}</div>
+              <h3 class="wo-title wo-fs-body">{{ exercise.exercise_name }}</h3>
             </div>
             
             <!-- Target Stats -->
@@ -111,13 +109,13 @@
               <div class="column is-one-third-tablet">
                 <div>
                   <div class="wo-label">Sets</div>
-                  <div class="wo-num" style="font-size: var(--wo-fs-title);">{{ exercise.target_sets }}</div>
+                  <div class="wo-num wo-fs-title">{{ exercise.target_sets }}</div>
                 </div>
               </div>
               <div class="column">
                 <div>
                   <div class="wo-label">Weight</div>
-                  <div class="wo-num" style="font-size: var(--wo-fs-title);">
+                  <div class="wo-num wo-fs-title">
                     {% match exercise.target_weight %}
                       {% when Some with (weight) %}
                         {{ weight }} kg
@@ -132,24 +130,24 @@
             <!-- Notes if any -->
             {% match exercise.notes %}
               {% when Some with (notes) %}
-                <div style="font-size: var(--wo-fs-meta); color: var(--wo-text-dim); font-style: italic; background: var(--wo-raised); border-radius: var(--wo-radius-sm); padding: var(--wo-s3); margin-top: var(--wo-s2);">
+                <div class="wo-fs-meta-dim-italic">
                   💡 {{ notes }}
                 </div>
               {% when None %}
             {% endmatch %}
             
             <!-- Instructions -->
-            <details style="margin-top: var(--wo-s2);">
+            <details class="wo-mt-s2">
               <summary class="wo-label">View instructions</summary>
-              <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-meta); margin-top: var(--wo-s2); padding-left: var(--wo-s3); border-left: 2px solid var(--wo-line-strong);">
+              <p class="wo-mt-s2-pt2-border-line wo-pl-s3 wo-fs-meta-dim">
                 {{ exercise.exercise_instructions }}
               </p>
             </details>
           </div>
           
           <!-- Actions -->
-          <div style="margin-left: var(--wo-s3);">
-            <button class="wo-btn wo-btn-inline" style="padding: var(--wo-s2); min-height: 44px;">
+          <div class="wo-ml-s3">
+            <button class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px">
               ✏️
             </button>
           </div>
@@ -161,7 +159,7 @@
 
   <!-- Add Exercise Form -->
   <div class="wo-section">
-    <h3 class="wo-title" style="margin-bottom: var(--wo-s4);">
+    <h3 class="wo-title wo-mb-s4">
       ➕ Add Exercise
     </h3>
     
@@ -171,10 +169,10 @@
       <div class="columns">
         <div class="column is-half">
           <div class="field">
-            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
+            <label class="wo-label wo-block wo-mb-s2">
               Exercise
             </label>
-            <select name="exercise_id" required class="wo-input" style="min-height: 44px;">
+            <select name="exercise_id" required class="wo-input wo-min-h-44px">
               <option value="">Select exercise...</option>
               {% for exercise in available_exercises %}
                 <option value="{{ exercise.id }}">{{ exercise.name }}</option>
@@ -185,7 +183,7 @@
         
         <div class="column is-one-quarter">
           <div class="field">
-            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
+            <label class="wo-label wo-block wo-mb-s2">
               Sets
             </label>
             <input type="number" 
@@ -200,7 +198,7 @@
         
         <div class="column is-one-quarter">
           <div class="field">
-            <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
+            <label class="wo-label wo-block wo-mb-s2">
               Weight (kg)
             </label>
             <input type="number" 
@@ -213,8 +211,8 @@
         </div>
       </div>
       
-      <div class="field" style="margin-bottom: var(--wo-s4);">
-        <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
+      <div class="field wo-mb-s4">
+        <label class="wo-label wo-block wo-mb-s2">
           Notes
         </label>
         <input type="text" 
