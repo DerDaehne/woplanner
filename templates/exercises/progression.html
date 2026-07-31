@@ -3,88 +3,87 @@
 {% block title %}{{ exercise.name }} - Progression - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto; padding-bottom: 5rem;">
+<div class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 5rem);">
 
   <!-- Header -->
-  <div style="margin-bottom: 1.5rem;">
-    <div class="is-flex is-align-center is-gap-3" style="margin-bottom: 0.5rem;">
-      <a href="/exercises" style="color: #b5b5b5; text-decoration: none; transition: color 0.2s;" onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#b5b5b5'">
+  <div style="margin-bottom: var(--wo-s4);">
+    <div class="is-flex is-align-items-center is-gap-3" style="margin-bottom: var(--wo-s2);">
+      <a href="/exercises" style="color: var(--wo-text-dim); text-decoration: none;">
         <svg style="width: 1.5rem; height: 1.5rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
         </svg>
       </a>
-      <h1 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5;">{{ exercise.name }}</h1>
+      <h1 class="wo-title" style="color: var(--wo-text);">{{ exercise.name }}</h1>
     </div>
-    <p style="font-size: 0.875rem; color: #b5b5b5; margin-left: 2.25rem;">Exercise Progression</p>
+    <p class="wo-label" style="margin-left: 2.25rem;">Exercise Progression</p>
   </div>
 
   {% if progression_data.len() == 0 %}
-    <div class="glass-card" style="border-radius: 1rem; padding: 2rem; text-align: center;">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
-      <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">No Data Yet</h2>
-      <p style="color: #b5b5b5;">Complete some sets of this exercise to see your progression!</p>
+    <div class="wo-section" style="text-align: center; padding: var(--wo-s5);">
+      <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">📊</div>
+      <h2 class="wo-title" style="margin-bottom: var(--wo-s2);">No Data Yet</h2>
+      <p class="wo-label">Complete some sets of this exercise to see your progression!</p>
     </div>
   {% else %}
     <!-- Chart Tabs -->
-    <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
-      <div class="is-flex is-gap-2" style="margin-bottom: 1rem;">
-        <button onclick="showChart('weight')" id="btn-weight" class="btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+    <div class="wo-section">
+      <div class="is-flex is-gap-2" style="margin-bottom: var(--wo-s3);">
+        <button onclick="showChart('weight')" id="btn-weight" class="wo-btn wo-btn-primary" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
           Weight
         </button>
-        <button onclick="showChart('reps')" id="btn-reps" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+        <button onclick="showChart('reps')" id="btn-reps" class="wo-btn" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
           Reps
         </button>
-        <button onclick="showChart('volume')" id="btn-volume" class="btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+        <button onclick="showChart('volume')" id="btn-volume" class="wo-btn" style="padding: var(--wo-s2) var(--wo-s3); font-size: var(--wo-fs-meta);">
           Volume
         </button>
       </div>
 
       <!-- Chart Container -->
-      <div style="background: rgba(51, 51, 51, 0.5); border-radius: 1rem; padding: 1rem; min-height: 300px;">
+      <div style="background: var(--wo-raised); border-radius: var(--wo-radius-sm); padding: var(--wo-s3); min-height: 300px;">
         <canvas id="progressionChart"></canvas>
       </div>
     </div>
 
     <!-- Personal Records Summary -->
-    <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
-      <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;" class="is-flex is-align-center">
-        <span style="margin-right: 0.5rem;">🏆</span>
-        Personal Records
+    <div class="wo-section">
+      <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">
+        🏆 Personal Records
       </h3>
       <div class="columns is-gapless">
-        <div class="column">
-          <div class="glass" style="border-radius: 1rem; padding: 0.75rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Max Weight</div>
-            <div class="is-size-5 has-text-weight-bold" style="color: #E50914;" id="max-weight">-</div>
+        <div class="column is-one-third-tablet">
+          <div style="text-align: center;">
+            <div class="wo-label">Max Weight</div>
+            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-weight">-</div>
           </div>
         </div>
-        <div class="column">
-          <div class="glass" style="border-radius: 1rem; padding: 0.75rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Max Reps</div>
-            <div class="is-size-5 has-text-weight-bold" style="color: #E50914;" id="max-reps">-</div>
+        <div class="column is-one-third-tablet">
+          <div style="text-align: center;">
+            <div class="wo-label">Max Reps</div>
+            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-reps">-</div>
           </div>
         </div>
-        <div class="column">
-          <div class="glass" style="border-radius: 1rem; padding: 0.75rem; text-align: center;">
-            <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Max Volume</div>
-            <div class="is-size-5 has-text-weight-bold" style="color: #E50914;" id="max-volume">-</div>
+        <div class="column is-one-third-tablet">
+          <div style="text-align: center;">
+            <div class="wo-label">Max Volume</div>
+            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);" id="max-volume">-</div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Recent Sets Table -->
-    <div class="glass-card" style="border-radius: 1rem; padding: 1rem;">
-      <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;">Recent Sets</h3>
-      <div style="margin-bottom: 0.5rem;">
+    <div class="wo-section">
+      <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">Recent Sets</h3>
+      <div>
         {% for data in progression_data %}
-          <div class="is-flex is-flex-between is-align-center" style="padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 1rem; margin-bottom: 0.5rem;">
-            <div class="is-flex is-align-center is-gap-3">
-              <div style="width: 2rem; height: 2rem; background: rgba(96, 165, 250, 0.2); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
-                <span style="color: #60a5fa; font-size: 0.75rem; font-weight: bold;">{{ data.set_number }}</span>
+          <div class="wo-row" style="padding: var(--wo-s2) 0; background: var(--wo-raised); border-radius: var(--wo-radius-sm); margin-bottom: var(--wo-s1);">
+            <div class="is-flex is-align-items-center is-gap-3">
+              <div style="width: 2rem; height: 2rem; background: var(--wo-text-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center;">
+                <span style="color: var(--wo-text); font-size: var(--wo-fs-meta); font-weight: bold;">{{ data.set_number }}</span>
               </div>
               <div>
-                <div style="font-weight: 500; color: #f5f5f5; font-size: 0.875rem;">
+                <div class="wo-meta">
                   {% match data.weight %}
                     {% when Some with (weight) %}
                       {{ weight }}kg × {{ data.reps }}
@@ -94,12 +93,12 @@
                 </div>
                 {% match data.volume %}
                   {% when Some with (volume) %}
-                    <div style="font-size: 0.75rem; color: #b5b5b5;">Volume: {{ volume }}kg</div>
+                    <div class="wo-label">Volume: {{ volume }}kg</div>
                   {% when None %}
                 {% endmatch %}
               </div>
             </div>
-            <div style="font-size: 0.75rem; color: #7a7a7a;">
+            <div class="wo-label">
               {{ data.date }}
             </div>
           </div>

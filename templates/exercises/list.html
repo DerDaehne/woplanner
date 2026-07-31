@@ -3,39 +3,36 @@
 {% block title %}Exercise Library - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto;">
+<div class="container is-max-desktop">
   
   <!-- Hero Section -->
-  <div class="has-text-centered" style="margin-bottom: 2rem;">
-    <h1 class="gradient-text" style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;">
+  <div class="wo-section" style="text-align: center;">
+    <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s2);">
       Exercise Library
     </h1>
-    <p style="font-size: 1.25rem; color: #b5b5b5;">Master your movements, build your strength</p>
+    <p class="wo-meta" style="font-size: var(--wo-fs-body);">Master your movements, build your strength</p>
   </div>
 
   <!-- Exercise List Container -->
-  <div id="exercise-list" class="glass-card" style="border-radius: 1.5rem; padding: 2rem; margin-bottom: 1.5rem;">
-    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">💪</span>
-      Available Exercises
+  <div id="exercise-list" class="wo-section">
+    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      💪 Available Exercises
     </h2>
     {% include "exercises/exercise_list_partial.html" %}
   </div>
 
   <!-- Add Exercise Container -->
-  <div class="glass-card" style="border-radius: 1.5rem; padding: 2rem;">
-    <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1.5rem;" class="is-flex is-align-center">
-      <span style="font-size: 1.75rem; margin-right: 0.75rem;" class="float-element">➕</span>
-      Add New Exercise
+  <div class="wo-section">
+    <h2 class="wo-title" style="margin-bottom: var(--wo-s4);">
+      ➕ Add New Exercise
     </h2>
 
     <form hx-post="/exercises"
           hx-target="#exercise-list"
           hx-swap="innerHTML"
-          hx-on::after-request="this.reset()"
-          style="margin-bottom: 1.5rem;">
-      <div class="field" style="margin-bottom: 1.5rem;">
-        <label for="name" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
+          hx-on::after-request="this.reset()">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label for="name" class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
           Exercise Name
         </label>
         <input type="text"
@@ -43,11 +40,12 @@
                name="name"
                placeholder="e.g. Bench Press, Squat, Deadlift"
                required
-               class="input-glass">
+               maxlength="100"
+               class="wo-input">
       </div>
       
-      <div class="field" style="margin-bottom: 1.5rem;">
-        <label for="instructions" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label for="instructions" class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
           Instructions
         </label>
         <textarea
@@ -56,26 +54,25 @@
                rows="4"
                placeholder="Describe proper form and execution..."
                required
-               class="input-glass"
+               class="wo-input"
                style="resize: none;"></textarea>
       </div>
 
-      <div class="field" style="margin-bottom: 1.5rem;">
-        <label for="video_url" class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.75rem;">
+      <div class="field" style="margin-bottom: var(--wo-s4);">
+        <label for="video_url" class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
           Video URL (optional)
         </label>
         <input type="url"
                id="video_url"
                name="video_url"
                placeholder="https://www.youtube.com/watch?v=..."
-               class="input-glass">
-        <p style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.5rem;">📹 Add a YouTube video link for visual instructions</p>
+               class="wo-input">
+        <p class="wo-label" style="margin-top: var(--wo-s2);">📹 Add a YouTube video link for visual instructions</p>
       </div>
 
       <button type="submit"
-              class="btn-primary is-fullwidth" style="padding: 1rem 1.5rem; font-size: 1rem;">
-        <span style="margin-right: 0.5rem;">🚀</span>
-        Add Exercise
+              class="wo-btn wo-btn-primary">
+        🚀 Add Exercise
       </button>
     </form>
   </div>

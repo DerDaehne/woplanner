@@ -3,70 +3,68 @@
 {% block title %}Training History - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto; padding-bottom: 5rem;">
-  <div style="margin-bottom: 1.5rem;">
-    <h1 class="is-size-3 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">Training History</h1>
-    <p style="color: #b5b5b5;">Your past workout sessions</p>
+<div class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 5rem);">
+  <div style="margin-bottom: var(--wo-s4);">
+    <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s2);">Training History</h1>
+    <p class="wo-label">Your past workout sessions</p>
   </div>
 
   {% if workouts.len() == 0 %}
-    <div class="glass-card" style="border-radius: 1rem; padding: 3rem; text-align: center;">
-      <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
-      <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">No Training History Yet</h2>
-      <p style="color: #b5b5b5; margin-bottom: 1.5rem;">Complete your first workout to see it here!</p>
-      <a href="/workouts" class="btn-primary is-inline-block" style="padding: 0.75rem 1.5rem; border-radius: 1rem;">
+    <div class="wo-section" style="text-align: center; padding: var(--wo-s6);">
+      <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">📊</div>
+      <h2 class="wo-title" style="margin-bottom: var(--wo-s2);">No Training History Yet</h2>
+      <p class="wo-label" style="margin-bottom: var(--wo-s4);">Complete your first workout to see it here!</p>
+      <a href="/workouts" class="wo-btn wo-btn-primary">
         Start Training
       </a>
     </div>
   {% else %}
-    <div style="margin-bottom: 1rem;">
+    <div>
       {% for workout in workouts %}
         <a href="/history/{{ workout.id }}"
-           class="glass-card" style="border-radius: 1rem; padding: 1.25rem; text-decoration: none; display: block; transition: all 0.3s;" onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
-          <div class="is-flex is-flex-between is-align-start">
-            <div class="is-expanded">
-              <h3 style="font-size: 1.125rem; font-weight: bold; color: #f5f5f5; margin-bottom: 0.25rem;">
-                {{ workout.workout_name }}
-              </h3>
-              <div style="font-size: 0.875rem; color: #b5b5b5; margin-bottom: 0.75rem;">
-                {{ workout.completed_date_display() }}
-              </div>
-
-              <div class="is-flex is-flex-wrap-wrap is-gap-3">
-                <div class="is-flex is-align-center is-gap-2">
-                  <span style="color: #b5b5b5;">⏱️</span>
-                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.duration_display() }}</span>
-                </div>
-                <div class="is-flex is-align-center is-gap-2">
-                  <span style="color: #b5b5b5;">🔢</span>
-                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.total_sets }} sets</span>
-                </div>
-                <div class="is-flex is-align-center is-gap-2">
-                  <span style="color: #b5b5b5;">💪</span>
-                  <span style="font-size: 0.875rem; color: #d4d4d4;">{{ workout.total_volume_kg as i32 }}kg</span>
-                </div>
-              </div>
-
-              {% match workout.notes %}
-                {% when Some with (notes) %}
-                  <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
-                    <p style="font-size: 0.875rem; color: #b5b5b5; font-style: italic;">"{{ notes }}"</p>
-                  </div>
-                {% when None %}
-              {% endmatch %}
+           class="wo-row" style="text-decoration: none; display: flex; padding: var(--wo-s3) 0; transition: background 0.2s;">
+          <div class="is-expanded">
+            <h3 class="wo-title" style="font-size: var(--wo-fs-body); margin-bottom: var(--wo-s1);">
+              {{ workout.workout_name }}
+            </h3>
+            <div class="wo-label" style="margin-bottom: var(--wo-s2);">
+              {{ workout.completed_date_display() }}
             </div>
 
-            <div style="margin-left: 1rem; color: #7a7a7a;">
-              <span style="font-size: 1.5rem;">→</span>
+            <div class="is-flex is-flex-wrap-wrap is-gap-3">
+              <div class="is-flex is-align-items-center is-gap-2">
+                <span>⏱️</span>
+                <span class="wo-meta">{{ workout.duration_display() }}</span>
+              </div>
+              <div class="is-flex is-align-items-center is-gap-2">
+                <span>🔢</span>
+                <span class="wo-meta">{{ workout.total_sets }} sets</span>
+              </div>
+              <div class="is-flex is-align-items-center is-gap-2">
+                <span>💪</span>
+                <span class="wo-meta">{{ workout.total_volume_kg as i32 }}kg</span>
+              </div>
             </div>
+
+            {% match workout.notes %}
+              {% when Some with (notes) %}
+                <div style="margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line-strong);">
+                  <p class="wo-label" style="font-style: italic;">"{{ notes }}"</p>
+                </div>
+              {% when None %}
+            {% endmatch %}
+          </div>
+
+          <div style="margin-left: var(--wo-s3); color: var(--wo-text-mute);">
+            <span style="font-size: var(--wo-fs-title);">→</span>
           </div>
         </a>
       {% endfor %}
     </div>
 
     {% if workouts.len() == 50 %}
-      <div class="has-text-centered" style="margin-top: 1.5rem;">
-        <p style="font-size: 0.875rem; color: #7a7a7a;">Showing last 50 workouts</p>
+      <div class="has-text-centered" style="margin-top: var(--wo-s4);">
+        <p class="wo-label">Showing last 50 workouts</p>
       </div>
     {% endif %}
   {% endif %}

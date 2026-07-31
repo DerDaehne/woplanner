@@ -3,30 +3,30 @@
 {% block title %}Live Training - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 32rem; margin: 0 auto; padding-bottom: 5rem;">
+<div class="container is-max-desktop" style="max-width: 32rem; padding-bottom: calc(var(--wo-s6) + 5rem);">
 
   <!-- Header -->
-  <div style="margin-bottom: 1.5rem;">
+  <div style="margin-bottom: var(--wo-s4);">
     {% match active_workout_view.current_exercise %}
       {% when Some with (exercise) %}
-        <div class="is-flex is-flex-between is-align-start" style="margin-bottom: 0.5rem;">
+        <div class="is-flex is-flex-between is-align-items-start" style="margin-bottom: var(--wo-s2);">
           <div class="is-expanded">
-            <h1 style="font-size: 1.5rem; font-weight: bold; color: #f5f5f5; margin-bottom: 0.25rem; line-height: 1.2;">
+            <h1 class="wo-title" style="font-size: var(--wo-fs-title); margin-bottom: var(--wo-s1); line-height: 1.2;">
               {{ exercise.exercise_name }}
             </h1>
-            <p style="font-size: 0.875rem; color: #b5b5b5;">{{ active_workout_view.workout_name }}</p>
+            <p class="wo-label">{{ active_workout_view.workout_name }}</p>
           </div>
-          <div class="has-text-right" style="margin-left: 1rem;">
-            <div class="is-size-5 has-text-weight-bold" style="color: #E50914;">
+          <div class="has-text-right" style="margin-left: var(--wo-s3);">
+            <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);">
               {{ active_workout_view.progress_percent as i32 }}%
             </div>
-            <div style="font-size: 0.75rem; color: #7a7a7a;">Progress</div>
+            <div class="wo-label">Progress</div>
           </div>
         </div>
       {% when None %}
         <div class="has-text-centered">
-          <h1 class="is-size-3 has-text-weight-bold" style="color: #4ade80; margin-bottom: 0.5rem;">🎉 Workout Complete!</h1>
-          <p style="color: #b5b5b5;">{{ active_workout_view.workout_name }}</p>
+          <h1 class="wo-title" style="font-size: var(--wo-fs-num-lg); color: var(--wo-ok); margin-bottom: var(--wo-s2);">🎉 Workout Complete!</h1>
+          <p class="wo-label">{{ active_workout_view.workout_name }}</p>
         </div>
     {% endmatch %}
   </div>
@@ -34,21 +34,21 @@
   <!-- PR Notifications -->
   {% match pr_notifications %}
     {% when Some with (prs) %}
-      <div id="pr-banner" class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid rgba(241, 196, 15, 0.5); background: linear-gradient(90deg, rgba(120, 80, 0, 0.2), rgba(120, 60, 0, 0.2));">
-        <div class="is-flex is-align-start is-gap-3">
-          <div style="font-size: 1.75rem;">🏆</div>
+      <div id="pr-banner" class="wo-alert" style="margin-bottom: var(--wo-s4); border-color: var(--wo-pr);">
+        <div class="is-flex is-align-items-start is-gap-3">
+          <div style="font-size: var(--wo-fs-title);">🏆</div>
           <div class="is-expanded">
-            <h3 class="is-size-5 has-text-weight-bold" style="color: #f1c40f; margin-bottom: 0.5rem;">New Personal Record!</h3>
-            <div style="margin-bottom: 0.25rem;">
+            <h3 class="wo-title" style="font-size: var(--wo-fs-body); color: var(--wo-pr); margin-bottom: var(--wo-s2);">New Personal Record!</h3>
+            <div>
               {% for pr in prs %}
-                <div style="font-size: 0.875rem; color: #e0e0e0; display: flex; align-items: center; gap: 0.25rem; margin-bottom: 0.25rem;">
-                  <span style="color: #f1c40f;">★</span>
+                <div class="wo-meta" style="display: flex; align-items: center; gap: var(--wo-s1); margin-bottom: var(--wo-s1);">
+                  <span style="color: var(--wo-pr);">★</span>
                   <span>{{ pr }}</span>
                 </div>
               {% endfor %}
             </div>
           </div>
-          <button onclick="document.getElementById('pr-banner').remove()" style="color: #b5b5b5; background: none; border: none; font-size: 1.25rem; cursor: pointer;">×</button>
+          <button onclick="document.getElementById('pr-banner').remove()" style="color: var(--wo-text-dim); background: none; border: none; font-size: var(--wo-fs-title); cursor: pointer;">×</button>
         </div>
       </div>
     {% when None %}
@@ -57,14 +57,14 @@
   <!-- Overload Suggestions -->
   {% match overload_suggestion %}
     {% when Some with (suggestion) %}
-      <div id="overload-banner" class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem; border: 2px solid rgba(96, 165, 250, 0.5); background: linear-gradient(90deg, rgba(30, 60, 120, 0.2), rgba(60, 30, 120, 0.2));">
-        <div class="is-flex is-align-start is-gap-3">
-          <div style="font-size: 1.75rem;">💡</div>
+      <div id="overload-banner" class="wo-alert" style="margin-bottom: var(--wo-s4); border-color: var(--wo-text);">
+        <div class="is-flex is-align-items-start is-gap-3">
+          <div style="font-size: var(--wo-fs-title);">💡</div>
           <div class="is-expanded">
-            <h3 class="is-size-5 has-text-weight-bold" style="color: #60a5fa; margin-bottom: 0.5rem;">Trainingstipp</h3>
-            <p style="font-size: 0.875rem; color: #e0e0e0;">{{ suggestion }}</p>
+            <h3 class="wo-title" style="font-size: var(--wo-fs-body); color: var(--wo-text); margin-bottom: var(--wo-s2);">Trainingstipp</h3>
+            <p class="wo-meta">{{ suggestion }}</p>
           </div>
-          <button onclick="document.getElementById('overload-banner').remove()" style="color: #b5b5b5; background: none; border: none; font-size: 1.25rem; cursor: pointer;">×</button>
+          <button onclick="document.getElementById('overload-banner').remove()" style="color: var(--wo-text-dim); background: none; border: none; font-size: var(--wo-fs-title); cursor: pointer;">×</button>
         </div>
       </div>
     {% when None %}
@@ -74,15 +74,15 @@
     {% when Some with (exercise) %}
       
       <!-- Exercise Instructions -->
-      <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
-        <div style="font-size: 0.875rem; color: #d4d4d4; line-height: 1.6;">
+      <div class="wo-section">
+        <div class="wo-meta" style="line-height: 1.6;">
           {{ exercise.exercise_instructions }}
         </div>
         {% match exercise.notes %}
           {% when Some with (notes) %}
-            <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
-              <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Training Notes:</div>
-              <div style="font-size: 0.875rem; color: #E50914;">💡 {{ notes }}</div>
+            <div style="margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line-strong);">
+              <div class="wo-label">Training Notes:</div>
+              <div class="wo-meta" style="color: var(--wo-accent);">💡 {{ notes }}</div>
             </div>
           {% when None %}
         {% endmatch %}
@@ -91,19 +91,18 @@
       <!-- Video Instructions -->
       {% match exercise.youtube_embed_id() %}
         {% when Some with (video_id) %}
-          <details class="glass-card" style="border-radius: 1rem; margin-bottom: 1.5rem; overflow: hidden;">
-            <summary style="padding: 1rem; cursor: pointer; transition: background 0.3s; display: flex; align-items: center; justify-content: space-between;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
-              <div class="is-flex is-align-center is-gap-2">
-                <span style="font-size: 1.125rem;">📹</span>
-                <span style="font-size: 0.875rem; font-weight: 500; color: #d4d4d4;">Video Instructions</span>
+          <details class="wo-section" style="overflow: hidden;">
+            <summary class="wo-label" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+              <div class="is-flex is-align-items-center is-gap-2">
+                <span style="font-size: var(--wo-fs-body);">📹</span>
+                <span style="font-weight: 500; color: var(--wo-text-dim);">Video Instructions</span>
               </div>
-              <span style="color: #b5b5b5; font-size: 0.75rem;">▼</span>
+              <span class="wo-label">▼</span>
             </summary>
-            <div style="padding: 1rem; padding-top: 0;">
+            <div style="padding-top: 0;">
               <div style="position: relative; width: 100%; padding-bottom: 56.25%;">
                 <iframe
-                  class="is-overlay"
-                  style="border-radius: 1rem;"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: var(--wo-radius-sm);"
                   src="https://www.youtube.com/embed/{{ video_id }}?autoplay=1&rel=0"
                   title="Exercise video instructions"
                   frameborder="0"
@@ -117,31 +116,30 @@
       {% endmatch %}
 
       <!-- Sets Completed -->
-      <div class="glass-card" style="border-radius: 1rem; padding: 1rem; margin-bottom: 1.5rem;">
-        <h3 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;" class="is-flex is-align-center">
-          <span style="margin-right: 0.5rem;">📊</span>
-          Sets Completed
-          <span class="is-flex-grow" style="font-size: 0.875rem; color: #b5b5b5;">
+      <div class="wo-section">
+        <h3 class="wo-title" style="margin-bottom: var(--wo-s3);">
+          📊 Sets Completed
+          <span class="is-flex-grow" style="font-size: var(--wo-fs-meta); color: var(--wo-text-dim);">
             {{ current_exercise_sets.len() }} / {{ exercise.target_sets }}
           </span>
         </h3>
         
         {% if current_exercise_sets.len() == 0 %}
-          <div class="has-text-centered" style="padding: 1.5rem 0; color: #b5b5b5;">
-            <div style="font-size: 1.75rem; margin-bottom: 0.5rem;">🎯</div>
-            <p style="font-size: 0.875rem;">No sets completed yet</p>
-            <p style="font-size: 0.75rem; color: #7a7a7a;">Start with your first set below</p>
+          <div class="has-text-centered" style="padding: var(--wo-s4) 0; color: var(--wo-text-dim);">
+            <div style="font-size: var(--wo-fs-title); margin-bottom: var(--wo-s2);">🎯</div>
+            <p class="wo-meta">No sets completed yet</p>
+            <p class="wo-label">Start with your first set below</p>
           </div>
         {% else %}
-          <div style="margin-bottom: 0.5rem;">
+          <div>
             {% for set in current_exercise_sets %}
-              <div class="is-flex is-flex-between is-align-center" style="padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 1rem; margin-bottom: 0.5rem;">
-                <div class="is-flex is-align-center is-gap-3">
-                  <div style="width: 2rem; height: 2rem; background: rgba(0, 209, 178, 0.2); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
-                    <span style="color: #00d1b2; font-size: 0.875rem; font-weight: bold;">{{ set.set_number }}</span>
+              <div class="wo-row" style="padding: var(--wo-s2) 0; background: var(--wo-raised); border-radius: var(--wo-radius-sm); margin-bottom: var(--wo-s1);">
+                <div class="is-flex is-align-items-center is-gap-3">
+                  <div style="width: 2rem; height: 2rem; background: var(--wo-done-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center;">
+                    <span style="color: var(--wo-ok); font-size: var(--wo-fs-body); font-weight: bold;">{{ set.set_number }}</span>
                   </div>
                   <div>
-                    <div style="font-weight: 500; color: #f5f5f5; font-size: 0.875rem;">
+                    <div class="wo-meta">
                       {% match set.weight %}
                         {% when Some with (weight) %}
                           {{ weight }}kg × {{ set.reps }}
@@ -151,12 +149,12 @@
                     </div>
                     {% match set.notes %}
                       {% when Some with (notes) %}
-                        <div style="font-size: 0.75rem; color: #b5b5b5;">{{ notes }}</div>
+                        <div class="wo-label">{{ notes }}</div>
                       {% when None %}
                     {% endmatch %}
                   </div>
                 </div>
-                <div style="font-size: 0.75rem; color: #7a7a7a;">
+                <div class="wo-label">
                   {{ active_workout_view.active_workout.duration_display() }} ago
                 </div>
               </div>
@@ -166,14 +164,14 @@
       </div>
 
       <!-- Rest Timer (Initially Hidden) -->
-      <div id="rest-timer" class="glass-card" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center;" class="hidden">
-        <div style="font-size: 0.875rem; color: #b5b5b5; margin-bottom: 0.5rem;">Rest Time</div>
-        <div id="timer-display" class="is-size-1 has-text-weight-bold" style="color: #E50914; margin-bottom: 1rem;">0:00</div>
-        <div class="is-flex is-gap-3 is-justify-center">
-          <button onclick="skipRest()" class="btn-secondary" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; font-weight: 500;">
+      <div id="rest-timer" class="wo-section" style="text-align: center;" class="hidden">
+        <div class="wo-label" style="margin-bottom: var(--wo-s2);">Rest Time</div>
+        <div id="timer-display" class="wo-title" style="font-size: var(--wo-fs-num-lg); color: var(--wo-accent); margin-bottom: var(--wo-s3);">0:00</div>
+        <div class="is-flex is-gap-3 is-justify-content-center">
+          <button onclick="skipRest()" class="wo-btn wo-btn-inline">
             Skip Rest
           </button>
-          <button onclick="addTime(30)" class="glass" style="padding: 0.5rem 1.5rem; font-size: 0.875rem; font-weight: 500; border-radius: 1rem; color: #f5f5f5; cursor: pointer; background: rgba(255,255,255,0.08); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.15); transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.08)'">
+          <button onclick="addTime(30)" class="wo-btn wo-btn-inline" style="background: var(--wo-raised); border: 1px solid var(--wo-line-strong);">
             +30s
           </button>
         </div>
@@ -183,7 +181,7 @@
       <form id="set-form"
             hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
             hx-swap="none"
-            style="margin-bottom: 5rem;"
+            style="margin-bottom: calc(var(--wo-s6) + 5rem);"
             onsubmit="handleWeightField(event)">
 
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
@@ -191,7 +189,7 @@
         <div class="columns is-gapless">
           <div class="column">
             <div class="field">
-              <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+              <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
                 Weight (kg)
               </label>
               <input type="text"
@@ -205,14 +203,14 @@
                        {% when None %}
                          placeholder="Bodyweight"
                      {% endmatch %}
-                     class="input-glass"
-                     style="text-align: center; font-size: 1.125rem; font-weight: 600;">
+                     class="wo-input wo-input--num"
+                     style="font-size: var(--wo-fs-body); font-weight: 600;">
             </div>
           </div>
 
           <div class="column">
             <div class="field">
-              <label class="label" style="color: #b5b5b5; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">
+              <label class="wo-label" style="display: block; margin-bottom: var(--wo-s2);">
                 Reps
               </label>
               <input type="number"
@@ -222,27 +220,27 @@
                      inputmode="numeric"
                      pattern="[0-9]*"
                      placeholder="8"
-                     class="input-glass"
-                     style="text-align: center; font-size: 1.125rem; font-weight: 600;">
+                     class="wo-input wo-input--num"
+                     style="font-size: var(--wo-fs-body); font-weight: 600;">
             </div>
           </div>
         </div>
 
         <!-- Notes Input -->
-        <div class="field" style="margin-bottom: 1rem;">
+        <div class="field" style="margin-bottom: var(--wo-s3);">
           <input type="text"
                  name="notes"
                  placeholder="How did it feel? (optional)"
-                 class="input-glass"
-                 style="color: #7a7a7a;">
+                 class="wo-input"
+                 style="color: var(--wo-text-mute);">
         </div>
 
         <!-- Submit Button -->
         <button type="submit"
-                class="btn-primary is-fullwidth"
-                style="padding: 1rem 1.5rem; font-size: 1.125rem; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                class="wo-btn wo-btn-primary"
+                style="padding: var(--wo-s3); font-size: var(--wo-fs-body); font-weight: bold; display: flex; align-items: center; justify-content: center; gap: var(--wo-s2);">
           <span>Complete Set</span>
-          <span style="font-size: 1.25rem;">→</span>
+          <span style="font-size: var(--wo-fs-title);">→</span>
         </button>
 
       </form>
@@ -313,36 +311,36 @@
 
     {% when None %}
       <!-- Workout Complete Actions -->
-      <div class="has-text-centered" style="margin-bottom: 5rem;">
-        <div class="glass-card" style="border-radius: 1rem; padding: 2rem;">
-          <div style="font-size: 3.5rem; margin-bottom: 1rem;">🏆</div>
-          <h2 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">Amazing Work!</h2>
-          <p style="color: #b5b5b5; margin-bottom: 1rem;">You completed {{ active_workout_view.total_sets_completed }} sets</p>
-          <div style="font-size: 0.875rem; color: #7a7a7a;">
+      <div class="has-text-centered" style="margin-bottom: calc(var(--wo-s6) + 5rem);">
+        <div class="wo-section" style="padding: var(--wo-s5);">
+          <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">🏆</div>
+          <h2 class="wo-title" style="margin-bottom: var(--wo-s2);">Amazing Work!</h2>
+          <p class="wo-label" style="margin-bottom: var(--wo-s2);">You completed {{ active_workout_view.total_sets_completed }} sets</p>
+          <div class="wo-label">
             Training Duration: {{ active_workout_view.active_workout.duration_display() }}
           </div>
         </div>
         
         <form hx-post="/live-training/{{ active_workout_view.active_workout.id }}/finish"
               hx-swap="none"
-              style="margin-top: 1.5rem;">
+              style="margin-top: var(--wo-s4);">
           
-          <div class="field" style="margin-bottom: 1rem;">
+          <div class="field" style="margin-bottom: var(--wo-s3);">
             <input type="text" 
                    name="notes"
                    placeholder="How did the training feel? (optional)"
-                   class="input-glass"
-                   style="color: #7a7a7a;">
+                   class="wo-input"
+                   style="color: var(--wo-text-mute);">
           </div>
           
           <button type="submit"
-                  class="btn-primary is-fullwidth"
-                  style="padding: 1rem 1.5rem; font-size: 1.125rem; font-weight: bold;">
+                  class="wo-btn wo-btn-primary"
+                  style="padding: var(--wo-s3); font-size: var(--wo-fs-body); font-weight: bold;">
             🏁 Finish Training
           </button>
         </form>
         
-        <button class="btn-secondary is-fullwidth" style="padding: 0.75rem 1.5rem; font-size: 1rem; margin-top: 0.75rem;">
+        <button class="wo-btn" style="padding: var(--wo-s2); font-size: var(--wo-fs-body); margin-top: var(--wo-s2);">
           📊 View Summary
         </button>
       </div>

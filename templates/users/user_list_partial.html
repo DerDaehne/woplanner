@@ -1,8 +1,8 @@
 {% if users.len() == 0 %}
-  <div class="has-text-centered" style="padding: 3rem 0;">
-    <div style="font-size: 5rem; margin-bottom: 1.5rem;" class="float-element">🏋️</div>
-    <p style="color: #d4d4d4; font-size: 1.25rem; margin-bottom: 0.75rem;">No users yet!</p>
-    <p style="color: #7a7a7a; font-size: 0.875rem;">Create your first profile below to get started</p>
+  <div class="has-text-centered" style="padding: var(--wo-s6) 0;">
+    <div style="font-size: var(--wo-fs-num-lg); margin-bottom: var(--wo-s4);">🏋️</div>
+    <p style="color: var(--wo-text-dim); font-size: var(--wo-fs-body); margin-bottom: var(--wo-s2);">No users yet!</p>
+    <p class="wo-label">Create your first profile below to get started</p>
   </div>
 {% else %}
   <div class="columns is-multiline">
@@ -11,24 +11,19 @@
       <button hx-post="/users/{{ user.id }}/select"
               hx-target="#toast-container"
               hx-swap="afterbegin"
-              class="is-fullwidth"
-              style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(25px) saturate(2); border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1); border-radius: 1rem; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s; color: #f5f5f5; display: block; position: relative; overflow: hidden;"
-              onmouseover="this.style.background='rgba(255, 255, 255, 0.08)'; this.style.transform='scale(1.05)'; this.style.borderColor='rgba(255, 255, 255, 0.2)'"
-              onmouseout="this.style.background='rgba(255, 255, 255, 0.06)'; this.style.transform='scale(1)'; this.style.borderColor='rgba(255, 255, 255, 0.12)'">
-        
-        <!-- Glow effect on hover -->
-        
+              class="is-fullwidth wo-btn"
+              style="flex-direction: column; gap: var(--wo-s3); padding: var(--wo-s5); cursor: pointer; display: flex; position: relative; overflow: hidden;">
         
         <!-- Content -->
-        <div class="is-flex is-flex-column is-align-center is-gap-3" style="position: relative;">
+        <div class="is-flex is-flex-column is-align-items-center is-gap-3" style="position: relative;">
           <!-- User Avatar -->
           <div class="is-relative">
-            <div style="width: 5rem; height: 5rem; background: linear-gradient(135deg, rgba(229, 9, 20, 0.2), rgba(153, 27, 27, 0.2)); backdrop-filter: blur(20px); border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #f5f5f5; font-size: 1.75rem; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s;">
+            <div style="width: 5rem; height: 5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-md); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); border: 1px solid var(--wo-line);">
               {{ user.name.chars().next().unwrap_or('U') }}
             </div>
             <!-- Floating badge -->
-            <div style="position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: rgba(0, 209, 178, 0.2); backdrop-filter: blur(10px); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.3s;">
-              <svg style="width: 0.75rem; height: 0.75rem; color: #4ade80;" fill="currentColor" viewBox="0 0 20 20">
+            <div style="position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: var(--wo-done-weak); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+              <svg style="width: 0.75rem; height: 0.75rem; color: var(--wo-ok);" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5l-1.293 1.293a1 1 0 101.414 1.414l2-2a1 1 0 000-1.414z" clip-rule="evenodd"></path>
               </svg>
             </div>
@@ -36,10 +31,10 @@
           
           <!-- User Name -->
           <div>
-            <div style="font-weight: 600; color: #f5f5f5; font-size: 1.125rem; transition: color 0.3s;">
+            <div style="font-weight: 600; color: var(--wo-text); font-size: var(--wo-fs-body);">
               {{ user.name }}
             </div>
-            <div style="font-size: 0.75rem; color: #7a7a7a; margin-top: 0.125rem;">
+            <div class="wo-label">
               Tap to select
             </div>
           </div>
@@ -50,17 +45,14 @@
     
     <!-- Add New User Card -->
     <div class="column is-one-third-tablet is-one-quarter-desktop">
-      <div class="is-fullwidth" style="background: rgba(255, 255, 255, 0.06); backdrop-filter: blur(25px) saturate(2); border: 2px dashed rgba(122, 122, 122, 0.5); border-radius: 1rem; padding: 1.5rem; text-align: center; transition: all 0.3s; color: #7a7a7a;"
-           onmouseover="this.style.borderColor='rgba(229, 9, 20, 0.5)'; this.style.color='#b5b5b5'"
-           onmouseout="this.style.borderColor='rgba(122, 122, 122, 0.5)'; this.style.color='#7a7a7a'">
-        <div class="is-flex is-flex-column is-align-center is-gap-3">
-          <div style="width: 5rem; height: 5rem; border-radius: 1rem; display: flex; align-items: center; justify-content: center; font-size: 2.5rem;">
-            ➕
-          </div>
-          <div>
-            <div style="font-weight: 500; font-size: 0.875rem;">
-              Add New User
-            </div>
+      <div class="is-fullwidth" style="background: var(--wo-raised); border: 2px dashed var(--wo-line-strong); border-radius: var(--wo-radius-md); padding: var(--wo-s5); text-align: center; color: var(--wo-text-mute);"
+           style="display: flex; flex-direction: column; align-items: center; gap: var(--wo-s3);">
+        <div style="width: 5rem; height: 5rem; border-radius: var(--wo-radius-md); display: flex; align-items: center; justify-content: center; font-size: var(--wo-fs-title);">
+          ➕
+        </div>
+        <div>
+          <div class="wo-label">
+            Add New User
           </div>
         </div>
       </div>

@@ -3,84 +3,84 @@
 {% block title %}{{ workout.workout_name }} - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="is-max-desktop" style="max-width: 56rem; margin: 0 auto; padding-bottom: 5rem;">
+<div class="container is-max-desktop" style="padding-bottom: calc(var(--wo-s6) + 5rem);">
   
   <!-- Back Button -->
-  <a href="/history" class="is-flex is-align-center is-gap-2" style="color: #b5b5b5; text-decoration: none; margin-bottom: 1.5rem; transition: color 0.2s;" onmouseover="this.style.color='#f5f5f5'" onmouseout="this.style.color='#b5b5b5'">
+  <a href="/history" class="is-flex is-align-items-center is-gap-2" style="color: var(--wo-text-dim); text-decoration: none; margin-bottom: var(--wo-s4);">
     <span>←</span>
     <span>Back to History</span>
   </a>
 
   <!-- Workout Header -->
-  <div class="glass-card" style="border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem;">
-    <h1 class="is-size-4 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 0.5rem;">{{ workout.workout_name }}</h1>
-    <p style="color: #b5b5b5; margin-bottom: 1rem;">{{ workout.completed_date_display() }}</p>
+  <div class="wo-section">
+    <h1 class="wo-title" style="margin-bottom: var(--wo-s2);">{{ workout.workout_name }}</h1>
+    <p class="wo-label" style="margin-bottom: var(--wo-s4);">{{ workout.completed_date_display() }}</p>
 
     <!-- Stats Grid -->
     <div class="columns is-gapless">
-      <div class="column">
-        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
-          <div class="is-size-4 has-text-weight-bold" style="color: #E50914;">{{ workout.duration_display() }}</div>
-          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Duration</div>
+      <div class="column is-one-third-tablet">
+        <div style="text-align: center;">
+          <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-accent);">{{ workout.duration_display() }}</div>
+          <div class="wo-label">Duration</div>
+        </div>
+      </div>
+      <div class="column is-one-third-tablet">
+        <div style="text-align: center;">
+          <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-ok);">{{ workout.total_sets }}</div>
+          <div class="wo-label">Total Sets</div>
+        </div>
+      </div>
+      <div class="column is-one-third-tablet">
+        <div style="text-align: center;">
+          <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-text);">{{ workout.total_volume_kg as i32 }}</div>
+          <div class="wo-label">Volume (kg)</div>
         </div>
       </div>
       <div class="column">
-        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
-          <div class="is-size-4 has-text-weight-bold" style="color: #4ade80;">{{ workout.total_sets }}</div>
-          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Total Sets</div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
-          <div class="is-size-4 has-text-weight-bold" style="color: #60a5fa;">{{ workout.total_volume_kg as i32 }}</div>
-          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Volume (kg)</div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="glass" style="border-radius: 1rem; padding: 1rem; text-align: center;">
-          <div class="is-size-4 has-text-weight-bold" style="color: #a78bfa;">{{ exercises.len() }}</div>
-          <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">Exercises</div>
+        <div style="text-align: center;">
+          <div class="wo-num" style="font-size: var(--wo-fs-title); color: var(--wo-pr);">{{ exercises.len() }}</div>
+          <div class="wo-label">Exercises</div>
         </div>
       </div>
     </div>
 
     {% match workout.notes %}
       {% when Some with (notes) %}
-        <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(122, 122, 122, 0.3);">
-          <div style="font-size: 0.75rem; color: #b5b5b5; margin-bottom: 0.25rem;">Workout Notes:</div>
-          <p style="font-size: 0.875rem; color: #d4d4d4; font-style: italic;">"{{ notes }}"</p>
+        <div style="margin-top: var(--wo-s3); padding-top: var(--wo-s3); border-top: 1px solid var(--wo-line-strong);">
+          <div class="wo-label">Workout Notes:</div>
+          <p class="wo-meta" style="font-style: italic;">"{{ notes }}"</p>
         </div>
       {% when None %}
     {% endmatch %}
   </div>
 
   <!-- Exercises and Sets -->
-  <div style="margin-bottom: 1rem;">
+  <div>
     {% for exercise in exercises %}
-      <div class="glass-card" style="border-radius: 1rem; padding: 1.25rem; margin-bottom: 1rem;">
-        <h2 class="is-size-5 has-text-weight-bold" style="color: #f5f5f5; margin-bottom: 1rem;">{{ exercise.exercise_name }}</h2>
+      <div class="wo-section">
+        <h2 class="wo-title" style="margin-bottom: var(--wo-s3);">{{ exercise.exercise_name }}</h2>
 
-        <div style="margin-bottom: 0.5rem;">
+        <div>
           {% for set in exercise.sets %}
-            <div class="is-flex is-flex-between is-align-center" style="padding: 0.75rem; background: rgba(255, 255, 255, 0.04); border-radius: 1rem; margin-bottom: 0.5rem;">
-              <div class="is-flex is-align-center is-gap-3">
-                <div style="width: 2rem; height: 2rem; background: rgba(0, 209, 178, 0.2); border-radius: 0.75rem; display: flex; align-items: center; justify-content: center;">
-                  <span style="color: #00d1b2; font-size: 0.875rem; font-weight: bold;">{{ set.set_number }}</span>
+            <div class="wo-row" style="padding: var(--wo-s2) 0; background: var(--wo-raised); border-radius: var(--wo-radius-sm); margin-bottom: var(--wo-s1);">
+              <div class="is-flex is-align-items-center is-gap-3">
+                <div style="width: 2rem; height: 2rem; background: var(--wo-done-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center;">
+                  <span style="color: var(--wo-ok); font-size: var(--wo-fs-body); font-weight: bold;">{{ set.set_number }}</span>
                 </div>
                 <div>
-                  <div style="font-weight: 500; color: #f5f5f5; font-size: 0.875rem;">
+                  <div class="wo-meta">
                     {{ set.weight_display() }} × {{ set.reps }} reps
                   </div>
                   {% match set.notes %}
                     {% when Some with (notes) %}
-                      <div style="font-size: 0.75rem; color: #b5b5b5; margin-top: 0.25rem;">{{ notes }}</div>
+                      <div class="wo-label" style="margin-top: var(--wo-s1);">{{ notes }}</div>
                     {% when None %}
                   {% endmatch %}
                 </div>
               </div>
               {% match set.weight %}
                 {% when Some with (weight) %}
-                  <div style="font-size: 0.75rem; color: #7a7a7a;">
+                  <div class="wo-label">
                     {{ (weight * set.reps as f32) as i32 }}kg
                   </div>
                 {% when None %}
@@ -90,9 +90,9 @@
         </div>
 
         <!-- Exercise Summary -->
-        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(122, 122, 122, 0.3); display: flex; justify-content: space-between; font-size: 0.875rem;">
-          <span style="color: #b5b5b5;">Total Sets:</span>
-          <span style="color: #f5f5f5; font-weight: 500;">{{ exercise.sets.len() }}</span>
+        <div style="margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line-strong); display: flex; justify-content: space-between; font-size: var(--wo-fs-meta);">
+          <span style="color: var(--wo-text-dim);">Total Sets:</span>
+          <span style="color: var(--wo-text); font-weight: 500;">{{ exercise.sets.len() }}</span>
         </div>
       </div>
     {% endfor %}
