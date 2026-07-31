@@ -21,39 +21,4 @@ impl Exercise {
             created_at: chrono::Utc::now().to_rfc3339(),
         }
     }
-
-    /// Extracts YouTube video ID from URL for embedding
-    /// Supports formats: youtube.com/watch?v=ID, youtu.be/ID
-    pub fn youtube_embed_id(&self) -> Option<String> {
-        let url = self.video_url.as_ref()?;
-
-        // Handle youtube.com/watch?v=VIDEO_ID
-        if let Some(pos) = url.find("v=") {
-            let id_start = pos + 2;
-            let id = url[id_start..]
-                .split('&')
-                .next()
-                .unwrap_or("")
-                .to_string();
-            if !id.is_empty() {
-                return Some(id);
-            }
-        }
-
-        // Handle youtu.be/VIDEO_ID
-        if url.contains("youtu.be/") {
-            if let Some(pos) = url.rfind('/') {
-                let id = url[pos + 1..]
-                    .split('?')
-                    .next()
-                    .unwrap_or("")
-                    .to_string();
-                if !id.is_empty() {
-                    return Some(id);
-                }
-            }
-        }
-
-        None
-    }
 }

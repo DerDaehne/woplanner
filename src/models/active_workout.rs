@@ -51,17 +51,27 @@ pub struct WorkoutExerciseDetail {
     pub exercise_video_url: Option<String>,
 }
 
-impl WorkoutExerciseDetail {
-    /// Extracts YouTube video ID from URL for embedding
-    /// Supports formats: youtube.com/watch?v=ID, youtu.be/ID
-    pub fn youtube_embed_id(&self) -> Option<String> {
-        let url = self.exercise_video_url.as_ref()?;
+/// Extracts YouTube video ID from URL for embedding.
+/// Supports formats: youtube.com/watch?v=ID, youtu.be/ID
+pub fn youtube_embed_id(url: &str) -> Option<String> {
+    // Handle youtube.com/watch?v=VIDEO_ID
+    if let Some(pos) = url.find("v=") {
+        let id_start = pos + 2;
+        let id = url[id_start..]
+            .split('&')
+            .next()
+            .unwrap_or("")
+            .to_string();
+        if !id.is_empty() {
+            return Some(id);
+        }
+    }
 
-        // Handle youtube.com/watch?v=VIDEO_ID
-        if let Some(pos) = url.find("v=") {
-            let id_start = pos + 2;
-            let id = url[id_start..]
-                .split('&')
+    // Handle youtu.be/VIDEO_ID
+    if url.contains("youtu.be/") {
+        if let Some(pos) = url.rfind('/') {
+            let id = url[pos + 1..]
+                .split('?')
                 .next()
                 .unwrap_or("")
                 .to_string();
@@ -69,22 +79,14 @@ impl WorkoutExerciseDetail {
                 return Some(id);
             }
         }
+    }
 
-        // Handle youtu.be/VIDEO_ID
-        if url.contains("youtu.be/") {
-            if let Some(pos) = url.rfind('/') {
-                let id = url[pos + 1..]
-                    .split('?')
-                    .next()
-                    .unwrap_or("")
-                    .to_string();
-                if !id.is_empty() {
-                    return Some(id);
-                }
-            }
-        }
+    None
+}
 
-        None
+impl WorkoutExerciseDetail {
+    pub fn youtube_embed_id(&self) -> Option<String> {
+        youtube_embed_id(self.exercise_video_url.as_ref()?)
     }
 }
 
@@ -560,5 +562,48 @@ mod tests {
         };
 
         assert!(active_workout.duration_minutes().is_none());
+    }
+
+    // youtube_embed_id Tests
+    #[test]
+    fn test_youtube_embed_id_standard_url() {
+        assert_eq!(
+            youtube_embed_id("https://www.youtube.com/watch?v=dQw4w9WgXcQ"),
+            Some("dQw4w9WgXcQ".to_string())
+        );
+    }
+
+    #[test]
+    fn test_youtube_embed_id_short_url() {
+        assert_eq!(
+            youtube_embed_id("https://youtu.be/dQw4w9WgXcQ"),
+            Some("dQw4w9WgXcQ".to_string())
+        );
+    }
+
+    #[test]
+    fn test_youtube_embed_id_with_params() {
+        assert_eq!(
+            youtube_embed_id("https://www.youtube.com/watch?v=abc123&list=PLtest&t=42"),
+            Some("abc123".to_string())
+        );
+    }
+
+    #[test]
+    fn test_youtube_embed_id_invalid_url() {
+        assert_eq!(youtube_embed_id("https://example.com/video"), None);
+    }
+
+    #[test]
+    fn test_youtube_embed_id_empty() {
+        assert_eq!(youtube_embed_id(""), None);
+    }
+
+    #[test]
+    fn test_youtube_embed_id_short_with_params() {
+        assert_eq!(
+            youtube_embed_id("https://youtu.be/xyz789?t=30"),
+            Some("xyz789".to_string())
+        );
     }
 }
