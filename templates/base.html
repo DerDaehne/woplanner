@@ -100,8 +100,16 @@
             <div class="wo-dock-label">Settings</div>
           </a>
         </nav>
+        <script>
+          // Aktiven Dock-Eintrag markieren — .wo-dock-item[aria-current="page"] färbt ihn ein.
+          document.querySelectorAll('.wo-dock-item').forEach(function (a) {
+            if (location.pathname.startsWith(a.getAttribute('href'))) {
+              a.setAttribute('aria-current', 'page');
+            }
+          });
+        </script>
       {% when None %}
       {% endmatch %}
-    
+
   </body>
 </html>

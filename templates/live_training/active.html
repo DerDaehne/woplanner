@@ -10,7 +10,7 @@
     {% match active_workout_view.current_exercise %}
       {% when Some with (exercise) %}
         <div class="is-flex is-justify-content-space-between is-align-items-start wo-mb-s2">
-          <div class="is-expanded">
+          <div class="is-flex-grow-1">
             <h1 class="wo-title wo-fs-title wo-mb-s1 wo-leading-tight">
               {{ exercise.exercise_name }}
             </h1>
@@ -24,7 +24,7 @@
           </div>
         </div>
       {% when None %}
-        <div class="has-text-center">
+        <div class="has-text-centered">
           <h1 class="wo-title wo-fs-num-lg wo-color-ok wo-mb-s2">🎉 Workout Complete!</h1>
           <p class="wo-label">{{ active_workout_view.workout_name }}</p>
         </div>
@@ -37,7 +37,7 @@
       <div id="pr-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-pr">
         <div class="is-flex is-align-items-start is-gap-3">
           <div class="wo-fs-title">🏆</div>
-          <div class="is-expanded">
+          <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-pr wo-mb-s2">New Personal Record!</h3>
             <div>
               {% for pr in prs %}
@@ -60,7 +60,7 @@
       <div id="overload-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-text">
         <div class="is-flex is-align-items-start is-gap-3">
           <div class="wo-fs-title">💡</div>
-          <div class="is-expanded">
+          <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-text-bold wo-mb-s2">Trainingstipp</h3>
             <p class="wo-meta">{{ suggestion }}</p>
           </div>
@@ -117,9 +117,9 @@
 
       <!-- Sets Completed -->
       <div class="wo-section">
-        <h3 class="wo-title wo-mb-s3">
-          📊 Sets Completed
-          <span class="is-flex-grow-1 wo-fs-meta-dim">
+        <h3 class="wo-title wo-flex-between wo-mb-s3">
+          <span>📊 Sets Completed</span>
+          <span class="wo-fs-meta-dim">
             {{ current_exercise_sets.len() }} / {{ exercise.target_sets }}
           </span>
         </h3>
@@ -186,7 +186,7 @@
 
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
 
-        <div class="columns is-gapless">
+        <div class="columns is-mobile">
           <div class="column">
             <div class="field">
               <label class="wo-label wo-block wo-mb-s2">

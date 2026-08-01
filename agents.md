@@ -20,8 +20,8 @@ WOPlanner is a Progressive Web App (PWA) for tracking strength training workouts
 
 ### Frontend
 - **Interactivity:** HTMX 1.9.12
-- **Styling:** TailwindCSS (CDN)
-- **Design System:** Glassmorphism with dark theme
+- **Styling:** Bulma 1.0.4, lokal unter `static/css/bulma.min.css`
+- **Design System:** OLED Focus (siehe Notiz `arch-woplanner-styling`)
 - **Icons:** Emoji-based for simplicity
 
 ### Development
@@ -98,49 +98,60 @@ headers.insert("HX-Redirect", HeaderValue::from_static("/path"));
 
 ## Design System
 
-### CSS Classes (Glassmorphism)
+Der verbindliche Stil heißt **OLED Focus**. Die vollständige Spezifikation
+(Tokens, Bulma-Anbindung, Komponentenklassen) steht in der Zettelkasten-Notiz
+`arch-woplanner-styling`; `static/css/style.css` ist die einzige Umsetzung davon.
+
+### CSS Classes
 ```css
-.glass              /* Subtle glass effect */
-.glass-card         /* Prominent card with glass effect */
-.btn-primary        /* Netflix red button */
-.btn-secondary      /* Glass button */
-.input-glass        /* Glass input field */
-.dock               /* Fixed bottom navigation */
+.wo-section         /* Gruppe von Zeilen, getrennt durch Abstand statt Box */
+.wo-row             /* Listeneintrag: flex, space-between, Haarlinie unten */
+.wo-label           /* 11px Versalien, Meta-Beschriftung */
+.wo-meta            /* 13px Sekundärtext */
+.wo-title           /* 20px Überschrift */
+.wo-num / .wo-num-lg /* 40px / 56px Zahlen, tabular-nums */
+.wo-btn             /* volle Breite, min-height 48px */
+.wo-btn-primary     /* Akzentfläche #FF3B30, schwarze Schrift */
+.wo-btn-inline      /* Breite auto, min-height 44px */
+.wo-input           /* schwarzes Feld, Rahmen statt Fläche */
+.wo-alert           /* Meldung mit Akzent-Balken links */
+.wo-dock            /* Navigation an der Bildschirmunterkante */
 ```
 
 ### Component Guidelines
-- **Cards:** Use `.glass-card` with `rounded-2xl` or `rounded-3xl`
-- **Buttons:** Minimum height 44px for touch targets
-- **Icons:** Emoji-based (🏋️💪📊🔥📈) for consistency
-- **Spacing:** Use Tailwind scale (4, 6, 8 for gaps)
-- **Hover Effects:** Subtle `hover:scale-[1.02]` on cards
+- **Flächen:** Es gibt keine Karten. Trennung über Typo-Größe, Schriftgewicht
+  und `--wo-line`-Haarlinien. `--wo-raised` nur für Dock und Modal.
+- **Farben:** Ausschließlich über die `--wo-*`-Tokens. Genau ein Akzent
+  (`--wo-accent`); `--wo-ok`/`--wo-pr` nur für Daten, nie als Dekoration.
+- **Buttons:** Mindesthöhe 48px (`.wo-btn`), inline 44px.
+- **Icons:** Emoji-basiert (🏋️💪📊🔥📈).
+- **Spacing:** Nur die sechs Tokens `--wo-s1` … `--wo-s6`.
+- **Bewegung:** Nur Opazität beim Drücken. Keine Blur-, Schatten- oder
+  Verlaufseffekte.
+- **Neue Klassennamen** vor der Verwendung gegen `bulma.min.css` und
+  `style.css` prüfen — erfundene Namen sind der häufigste Fehler hier.
 
 ## Mobile-First PWA Considerations
 
 ### iOS Safari Quirks
 ```css
-/* Safe area support */
-padding-bottom: calc(80px + env(safe-area-inset-bottom));
-
-/* Fixed positioning fix */
-.dock {
-    position: fixed;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    -webkit-backface-visibility: hidden;
-}
+/* Safe area support — steckt in .wo-dock */
+padding: var(--wo-s2) var(--wo-s2) calc(var(--wo-s2) + env(safe-area-inset-bottom));
 ```
 
 ### Viewport Meta Tag
+`user-scalable=no` ist verboten (WCAG 1.4.4). Korrekt:
 ```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 ```
 
 ### Input Font Size (Prevent Zoom)
+iOS zoomt bei Feldern unter 16px hinein. `.wo-input` setzt deshalb
+`font-size: var(--wo-fs-title)` (20px) — kein `!important` nötig und keins
+erlaubt: in `style.css` ist genau ein `!important` zugelassen, im
+`prefers-reduced-motion`-Block.
 ```css
-input, textarea, select {
-    font-size: 16px !important; /* Prevents iOS auto-zoom */
-}
+.wo-input { font-size: var(--wo-fs-title); }
 ```
 
 ## Database Schema

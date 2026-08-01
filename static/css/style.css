@@ -17,6 +17,8 @@
   /* Semantik — ausschließlich für Daten, nie als Dekoration */
   --wo-pr:          #FFD60A;  /* Personal Record */
   --wo-ok:          #30D158;  /* abgeschlossen */
+  --wo-ok-weak:     #153F22;  /* nur Fläche/Rahmen, nie Text */
+  --wo-text-weak:   #2C2C2E;  /* neutrale Fläche hinter Text */
 
   /* Radius */
   --wo-radius-sm:   6px;
@@ -242,6 +244,7 @@ body {
 .wo-py-s5 { padding-top: var(--wo-s5); padding-bottom: var(--wo-s5); }
 .wo-pt-s2 { padding-top: var(--wo-s2); }
 .wo-pt-s5 { padding-top: var(--wo-s5); }
+.wo-pb-s4 { padding-bottom: var(--wo-s4); }
 .wo-pl-s3 { padding-left: var(--wo-s3); }
 
 /* Margin + Padding combined */
@@ -295,7 +298,7 @@ body {
 /* Background & border */
 .wo-bg-raised { background: var(--wo-raised); }
 .wo-bg-accent-weak { background: var(--wo-accent-weak); }
-.wo-bg-done-weak { background: var(--wo-done-weak); }
+.wo-bg-done-weak { background: var(--wo-ok-weak); }
 .wo-bg-text-weak { background: var(--wo-text-weak); }
 .wo-bg-none { background: none; }
 .wo-border-raised { border: 1px solid var(--wo-raised); }
@@ -310,7 +313,7 @@ body {
 
 /* Border radius */
 .wo-rounded-sm { border-radius: var(--wo-radius-sm); }
-.wo-rounded-md { border-radius: var(--wo-radius-md); }
+.wo-rounded-md { border-radius: var(--wo-radius); }
 .wo-rounded-full { border-radius: 50%; }
 
 /* Overflow */
@@ -348,12 +351,12 @@ body {
 
 /* Specific combined utilities for common patterns */
 .wo-avatar { width: 2.5rem; height: 2.5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); }
-.wo-avatar-lg { width: 5rem; height: 5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-md); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); border: 1px solid var(--wo-line); }
-.wo-badge { position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: var(--wo-done-weak); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.wo-avatar-lg { width: 5rem; height: 5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); border: 1px solid var(--wo-line); }
+.wo-badge { position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: var(--wo-ok-weak); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 .wo-icon-sm { width: 0.5rem; height: 0.5rem; background: var(--wo-ok); border-radius: 50%; }
 .wo-icon-sm-color { width: 0.75rem; height: 0.75rem; color: var(--wo-ok); }
 .wo-icon-btn { display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; }
-.wo-icon-btn-done { background: var(--wo-done-weak); }
+.wo-icon-btn-done { background: var(--wo-ok-weak); }
 .wo-icon-btn-text { background: var(--wo-text-weak); }
 
 /* Status color combos */
@@ -371,7 +374,6 @@ body {
 .wo-color-text-dim-link-mb4 { color: var(--wo-text-dim); text-decoration: none; margin-bottom: var(--wo-s4); }
 .wo-color-text-bold { color: var(--wo-text); font-weight: 600; }
 .wo-color-text-bold-body { color: var(--wo-text); font-weight: 600; font-size: var(--wo-fs-body); }
-.wo-color-text-medium { color: var(--wo-text); font-weight: 500; }
 .wo-color-accent-body { color: var(--wo-accent); font-size: var(--wo-fs-body); }
 .wo-color-ok-body { color: var(--wo-ok); font-size: var(--wo-fs-body); }
 .wo-color-pr-body { color: var(--wo-pr); font-size: var(--wo-fs-body); }
@@ -395,18 +397,12 @@ body {
 /* Spacing combos */
 .wo-mb-s2-flex-center { margin-bottom: var(--wo-s2); display: flex; align-items: center; }
 .wo-mb-s2-block { margin-bottom: var(--wo-s2); display: block; }
-.wo-mb-s1 { margin-bottom: var(--wo-s1); }
 .wo-mb-s2-dblock { margin-bottom: var(--wo-s2); display: block; }
-.wo-mt-s2 { margin-top: var(--wo-s2); }
 .wo-mt-s2-pt2 { margin-top: var(--wo-s2); padding-top: var(--wo-s2); }
 .wo-mt-s2-pt2-border { margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line-strong); }
 .wo-mt-s2-pt2-border-line { margin-top: var(--wo-s2); padding-top: var(--wo-s2); border-top: 1px solid var(--wo-line); }
-.wo-mt-s3 { margin-top: var(--wo-s3); }
 .wo-mt-s3-pt3-border { margin-top: var(--wo-s3); padding-top: var(--wo-s3); border-top: 1px solid var(--wo-line-strong); }
-.wo-mt-s6 { margin-top: var(--wo-s6); }
-.wo-ml-s3 { margin-left: var(--wo-s3); }
 .wo-ml-s3-mute { margin-left: var(--wo-s3); color: var(--wo-text-mute); }
-.wo-mb-s4 { margin-bottom: var(--wo-s4); }
 .wo-mb-s4-border-pr { margin-bottom: var(--wo-s4); border-color: var(--wo-pr); }
 .wo-mb-s4-border-text { margin-bottom: var(--wo-s4); border-color: var(--wo-text); }
 .wo-mb-calc { margin-bottom: calc(var(--wo-s6) + 5rem); }
@@ -415,7 +411,16 @@ body {
 .wo-max-w-32rem { max-width: 32rem; }
 
 /* Row patterns */
-.wo-row-pad { padding: var(--wo-s2) 0; background: var(--wo-raised); border-radius: var(--wo-radius-sm); margin-bottom: var(--wo-s1); }
+.wo-row-pad {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wo-s3);
+  padding: var(--wo-s2) var(--wo-s3);
+  background: var(--wo-raised);
+  border-radius: var(--wo-radius-sm);
+  margin-bottom: var(--wo-s1);
+}
 .wo-card-pad { padding: var(--wo-s3); background: var(--wo-raised); border-radius: var(--wo-radius-sm); min-height: 300px; }
 .wo-center-pad { padding: var(--wo-s6) 0; }
 .wo-center-pad5 { padding: var(--wo-s5); }
@@ -434,7 +439,15 @@ body {
 .wo-transition { transition: background 0.2s; }
 
 /* Link patterns */
-.wo-link { text-decoration: none; display: flex; padding: var(--wo-s3) 0; transition: background 0.2s; }
+.wo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--wo-s3);
+  padding: var(--wo-s3) 0;
+  border-bottom: 1px solid var(--wo-line);
+}
 
 /* === Qualitätsuntergrenze === */
 :focus-visible { outline: 2px solid var(--wo-accent); outline-offset: 2px; }

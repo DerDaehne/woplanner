@@ -50,7 +50,7 @@
       <h3 class="wo-title wo-mb-s3">
         🏆 Personal Records
       </h3>
-      <div class="columns is-gapless">
+      <div class="columns is-mobile">
         <div class="column is-one-third-tablet">
           <div class="wo-text-center">
             <div class="wo-label">Max Weight</div>
@@ -131,6 +131,18 @@
   const ctx = document.getElementById('progressionChart').getContext('2d');
   let currentChart = null;
 
+  // Farben aus den Design-Tokens lesen, damit style.css die einzige Quelle bleibt
+  const token = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const COLORS = {
+    accent: token('--wo-accent'),
+    ok:     token('--wo-ok'),
+    pr:     token('--wo-pr'),
+    line:   token('--wo-line-strong'),
+    mute:   token('--wo-text-mute'),
+    text:   token('--wo-text'),
+    bg:     token('--wo-bg'),
+  };
+
   const chartConfig = {
     type: 'line',
     options: {
@@ -139,28 +151,26 @@
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backgroundColor: COLORS.bg,
           padding: 12,
-          titleColor: '#fff',
-          bodyColor: '#fff',
-          borderColor: '#E50914',
+          titleColor: COLORS.text,
+          bodyColor: COLORS.text,
+          borderColor: COLORS.accent,
           borderWidth: 1
         }
       },
       scales: {
-        x: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(156, 163, 175, 0.1)' } },
-        y: { ticks: { color: '#9ca3af' }, grid: { color: 'rgba(156, 163, 175, 0.1)' }, beginAtZero: true }
+        x: { ticks: { color: COLORS.mute }, grid: { color: COLORS.line } },
+        y: { ticks: { color: COLORS.mute }, grid: { color: COLORS.line }, beginAtZero: true }
       }
     }
   };
 
   function showChart(type) {
     document.querySelectorAll('button[id^="btn-"]').forEach(btn => {
-      btn.classList.remove('btn-primary');
-      btn.classList.add('btn-secondary');
+      btn.classList.remove('wo-btn-primary');
     });
-    document.getElementById('btn-' + type).classList.remove('btn-secondary');
-    document.getElementById('btn-' + type).classList.add('btn-primary');
+    document.getElementById('btn-' + type).classList.add('wo-btn-primary');
 
     if (currentChart) currentChart.destroy();
 
@@ -170,15 +180,15 @@
     if (type === 'weight') {
       data = progressionData.map(d => d.weight);
       label = 'Weight (kg)';
-      color = '#E50914';
+      color = COLORS.accent;
     } else if (type === 'reps') {
       data = progressionData.map(d => d.reps);
       label = 'Reps';
-      color = '#10b981';
+      color = COLORS.ok;
     } else {
       data = progressionData.map(d => d.volume);
       label = 'Volume (kg)';
-      color = '#3b82f6';
+      color = COLORS.pr;
     }
 
     currentChart = new Chart(ctx, {
@@ -196,7 +206,7 @@
           pointRadius: 4,
           pointHoverRadius: 6,
           pointBackgroundColor: color,
-          pointBorderColor: '#fff',
+          pointBorderColor: COLORS.text,
           pointBorderWidth: 2
         }]
       }

@@ -53,7 +53,7 @@
     <form hx-post="/workouts/{{ workout.id }}/schedule" 
           hx-swap="none"
           class="is-flex is-flex-wrap-wrap is-gap-2">
-      <div class="is-expanded wo-w-12rem">
+      <div class="is-flex-grow-1 wo-w-12rem">
         <select name="schedule_type" class="wo-input wo-min-h-44px">
           <option value="manual" {% if workout.schedule_type == "manual" %}selected{% endif %}>Manual</option>
           <option value="rotation" {% if workout.schedule_type == "rotation" %}selected{% endif %}>In Rotation</option>
@@ -97,7 +97,7 @@
       <div>
         {% for exercise in exercises %}
         <div class="wo-row">
-          <div class="is-expanded">
+          <div class="is-flex-grow-1">
             <!-- Exercise Number & Name -->
             <div class="is-flex is-align-items-center is-gap-3 wo-mb-s3">
               <div class="wo-avatar">{{ exercise.position }}</div>
@@ -105,7 +105,7 @@
             </div>
             
             <!-- Target Stats -->
-            <div class="columns is-gapless">
+            <div class="columns is-mobile">
               <div class="column is-one-third-tablet">
                 <div>
                   <div class="wo-label">Sets</div>

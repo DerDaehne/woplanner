@@ -40,8 +40,6 @@
           sqlite
           cargo-watch
           cargo-edit
-          tailwindcss
-          tailwindcss-language-server
           pkg-config
           openssl
         ];
@@ -163,7 +161,7 @@
             echo "  cargo test           - Run tests"
             echo "  cargo clippy         - Run linter"
             echo "  cargo fmt            - Format code"
-            echo "  tailwindcss --help   - TailwindCSS commands"
+            echo "  npm run assets       - Copy bulma/htmx/chart.js into static/"
             echo ""
             echo "Nix commands:"
             echo "  nix build            - Build production package"

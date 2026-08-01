@@ -35,7 +35,7 @@ A Progressive Web App (PWA) for tracking workouts and monitoring strength progre
 
 ### Frontend
 - **[HTMX](https://htmx.org/)**
-- **[TailwindCSS](https://tailwindcss.com/)**
+- **[Bulma](https://bulma.io/)**
 - **[Askama](https://github.com/djc/askama)**
 
 ### Infrastructure
