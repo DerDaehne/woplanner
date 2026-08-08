@@ -9,9 +9,7 @@
   <div class="wo-mb-s4">
     <div class="is-flex is-align-items-center is-gap-3 wo-mb-s2">
       <a href="/exercises" class="wo-color-text-dim-link">
-        <svg class="wo-w-1.5rem wo-h-1.5rem" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-        </svg>
+        <svg class="wo-icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
       </a>
       <h1 class="wo-title wo-color-text">{{ exercise.name }}</h1>
     </div>
@@ -20,7 +18,6 @@
 
   {% if progression_data.len() == 0 %}
     <div class="wo-section wo-text-center-pad5">
-      <div class="wo-fs-title wo-mb-s4">📊</div>
       <h2 class="wo-title wo-mb-s2">No Data Yet</h2>
       <p class="wo-label">Complete some sets of this exercise to see your progression!</p>
     </div>
@@ -48,7 +45,7 @@
     <!-- Personal Records Summary -->
     <div class="wo-section">
       <h3 class="wo-title wo-mb-s3">
-        🏆 Personal Records
+        Personal Records
       </h3>
       <div class="wo-cols wo-cols--3">
         <div>

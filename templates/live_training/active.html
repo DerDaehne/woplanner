@@ -25,7 +25,7 @@
         </div>
       {% when None %}
         <div class="has-text-centered">
-          <h1 class="wo-title wo-color-ok wo-mb-s2">🎉 Workout Complete!</h1>
+          <h1 class="wo-title wo-color-ok wo-mb-s2">Workout Complete!</h1>
           <p class="wo-label">{{ active_workout_view.workout_name }}</p>
         </div>
     {% endmatch %}
@@ -36,19 +36,18 @@
     {% when Some with (prs) %}
       <div id="pr-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-pr">
         <div class="is-flex is-align-items-start is-gap-3">
-          <div class="wo-fs-title">🏆</div>
           <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-pr wo-mb-s2">New Personal Record!</h3>
             <div>
               {% for pr in prs %}
                 <div class="wo-meta wo-flex-center-gap1 wo-mb-s1">
-                  <span class="wo-color-pr">★</span>
+                  
                   <span>{{ pr }}</span>
                 </div>
               {% endfor %}
             </div>
           </div>
-          <button onclick="document.getElementById('pr-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer">×</button>
+          <button onclick="document.getElementById('pr-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
         </div>
       </div>
     {% when None %}
@@ -59,12 +58,11 @@
     {% when Some with (suggestion) %}
       <div id="overload-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-text">
         <div class="is-flex is-align-items-start is-gap-3">
-          <div class="wo-fs-title">💡</div>
           <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-text-bold wo-mb-s2">Trainingstipp</h3>
             <p class="wo-meta">{{ suggestion }}</p>
           </div>
-          <button onclick="document.getElementById('overload-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer">×</button>
+          <button onclick="document.getElementById('overload-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
         </div>
       </div>
     {% when None %}
@@ -82,7 +80,7 @@
           {% when Some with (notes) %}
             <div class="wo-mt-s2-pt2-border">
               <div class="wo-label">Training Notes:</div>
-              <div class="wo-meta wo-color-accent">💡 {{ notes }}</div>
+              <div class="wo-meta wo-color-accent">{{ notes }}</div>
             </div>
           {% when None %}
         {% endmatch %}
@@ -94,7 +92,7 @@
           <details class="wo-section wo-overflow-hidden">
             <summary class="wo-label wo-cursor-pointer wo-flex-between">
               <div class="is-flex is-align-items-center is-gap-2">
-                <span class="wo-fs-body">📹</span>
+                <svg class="wo-icon" aria-hidden="true"><use href="#i-video"/></svg>
                 <span class="wo-font-medium wo-color-text-dim">Video Instructions</span>
               </div>
               <span class="wo-label">▼</span>
@@ -118,7 +116,7 @@
       <!-- Sets Completed -->
       <div class="wo-section">
         <h3 class="wo-title wo-flex-between wo-mb-s3">
-          <span>📊 Sets Completed</span>
+          <span>Sets Completed</span>
           <span class="wo-fs-meta-dim">
             {{ current_exercise_sets.len() }} / {{ exercise.target_sets }}
           </span>
@@ -126,7 +124,6 @@
         
         {% if current_exercise_sets.len() == 0 %}
           <div class="has-text-centered wo-center-pad wo-color-text-dim">
-            <div class="wo-fs-title wo-mb-s2">🎯</div>
             <p class="wo-meta">No sets completed yet</p>
             <p class="wo-label">Start with your first set below</p>
           </div>
@@ -307,7 +304,6 @@
       <!-- Workout Complete Actions -->
       <div class="has-text-centered wo-mb-calc">
         <div class="wo-section wo-p-s5">
-          <div class="wo-fs-title wo-mb-s4">🏆</div>
           <h2 class="wo-title wo-mb-s2">Amazing Work!</h2>
           <p class="wo-label wo-mb-s2">You completed {{ active_workout_view.total_sets_completed }} sets</p>
           <div class="wo-label">
@@ -328,12 +324,12 @@
           
           <button type="submit"
                   class="wo-btn wo-btn-primary wo-btn-lg">
-            🏁 Finish Training
+            Finish Training
           </button>
         </form>
         
         <button class="wo-btn wo-p-s2 wo-fs-body wo-mt-s2">
-          📊 View Summary
+          View Summary
         </button>
       </div>
   {% endmatch %}

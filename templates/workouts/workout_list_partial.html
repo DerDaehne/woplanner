@@ -1,6 +1,5 @@
 {% if workouts.len() == 0 %}
   <div class="has-text-centered wo-center-pad">
-    <div class="wo-fs-title wo-mb-s4">💪</div>
     <p class="wo-color-text-dim-body wo-mb-s2">No workouts yet!</p>
     <p class="wo-label">Create your first workout below to start training</p>
   </div>
@@ -24,11 +23,11 @@
             {% when "weekly" %}
               <span class="tag">{{ workout.day_name().unwrap_or("Weekly".to_string()) }}</span>
             {% when "rotation" %}
-              <span class="tag">🔄 Rotation</span>
+              <span class="tag">Rotation</span>
             {% when "disabled" %}
-              <span class="tag">⏸️ Paused</span>
+              <span class="tag">Paused</span>
             {% when _ %}
-              <span class="tag">🎯 Manual</span>
+              <span class="tag">Manual</span>
           {% endmatch %}
           
           {% match workout.description %}
@@ -42,8 +41,8 @@
       <!-- Right: Action Buttons -->
       <div class="is-flex is-align-items-center is-gap-2 wo-flex-shrink-0">
         <a href="/workouts/{{ workout.id }}" 
-           class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px">
-          👁️
+           class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px" aria-label="View workout">
+          <svg class="wo-icon" aria-hidden="true"><use href="#i-eye"/></svg>
         </a>
         <form hx-post="/start-training" hx-swap="none">
           <input type="hidden" name="workout_id" value="{{ workout.id }}">
@@ -64,7 +63,7 @@
     <!-- Footer info -->
     {% if workout.is_scheduled_today() %}
       <div class="wo-row wo-mt-s2-pt2-border">
-        <span class="wo-fs-meta-ok">⚡ Scheduled for today!</span>
+        <span class="wo-fs-meta-ok">Scheduled for today</span>
       </div>
     {% endif %}
     {% endfor %}

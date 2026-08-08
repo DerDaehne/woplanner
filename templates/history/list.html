@@ -8,7 +8,6 @@
 
   {% if workouts.len() == 0 %}
     <div class="wo-section wo-text-center-pad6">
-      <div class="wo-fs-title wo-mb-s4">📊</div>
       <h2 class="wo-title wo-mb-s2">No Training History Yet</h2>
       <p class="wo-label wo-mb-s4">Complete your first workout to see it here!</p>
       <a href="/workouts" class="wo-btn wo-btn-primary">
@@ -30,15 +29,15 @@
 
             <div class="is-flex is-flex-wrap-wrap is-gap-3">
               <div class="is-flex is-align-items-center is-gap-2">
-                <span>⏱️</span>
+                
                 <span class="wo-meta">{{ workout.duration_display() }}</span>
               </div>
               <div class="is-flex is-align-items-center is-gap-2">
-                <span>🔢</span>
+                
                 <span class="wo-meta">{{ workout.total_sets }} sets</span>
               </div>
               <div class="is-flex is-align-items-center is-gap-2">
-                <span>💪</span>
+                
                 <span class="wo-meta">{{ workout.total_volume_kg as i32 }}kg</span>
               </div>
             </div>

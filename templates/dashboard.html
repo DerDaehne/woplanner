@@ -25,11 +25,11 @@
       {% match active_workout %}
         {% when Some with (workout) %}
           <a href="/live-training/{{ workout.id }}" class="wo-btn wo-btn-primary">
-            🔥 Continue Training
+            Continue Training
           </a>
         {% when None %}
           <a href="/workouts" class="wo-btn wo-btn-primary">
-            💪 Start Training
+            Start Training
           </a>
       {% endmatch %}
     </div>
@@ -43,7 +43,6 @@
     <div>
       <div>
         <div class="wo-row wo-mb-s0">
-          <div class="wo-fs-title">🏆</div>
           <div class="has-text-right">
             <div class="wo-num wo-color-ok">
               {{ stats.total_workouts }}
@@ -60,7 +59,6 @@
     <div>
       <div>
         <div class="wo-row wo-mb-s0">
-          <div class="wo-fs-title">📊</div>
           <div class="has-text-right">
             <div class="wo-num wo-color-text">
               {{ stats.workouts_this_week }}
@@ -79,7 +77,6 @@
     <div>
       <div>
         <div class="wo-row wo-mb-s0">
-          <div class="wo-fs-title">🔥</div>
           <div class="has-text-right">
             <div class="wo-num wo-color-accent">
               {{ stats.current_streak }}
@@ -96,7 +93,6 @@
     <div>
       <div>
         <div class="wo-row wo-mb-s0">
-          <div class="wo-fs-title">⚖️</div>
           <div class="has-text-right">
             <div class="wo-num wo-color-pr">
               {% if stats.total_volume_kg >= 1000.0 %}
@@ -109,7 +105,7 @@
           </div>
         </div>
         <h3 class="wo-meta wo-mt-s2">Total Lifted</h3>
-        <p class="wo-label">Beast mode! 💪</p>
+        
       </div>
     </div>
 
@@ -123,12 +119,11 @@
     <div>
       <div class="wo-section">
         <h2 class="wo-title wo-mb-s4">
-          📈 Recent Activity
+          Recent Activity
         </h2>
         
         {% if recent_workouts.len() == 0 %}
           <div class="has-text-centered wo-center-pad">
-            <div class="wo-fs-title wo-mb-s4">🏋️</div>
             <p class="wo-color-text-dim-body wo-mb-s2">No workouts yet!</p>
             <p class="wo-label">Start your first training to see your progress here</p>
           </div>
@@ -146,9 +141,9 @@
               </div>
             </div>
             <div class="wo-row wo-fs-meta-dim">
-              <span>⏱️ {{ workout.duration_display() }}</span>
-              <span>💪 {{ workout.total_sets }} sets</span>
-              <span>⚖️ {{ workout.total_volume_kg as i32 }}kg</span>
+              <span>{{ workout.duration_display() }}</span>
+              <span>{{ workout.total_sets }} sets</span>
+              <span>{{ workout.total_volume_kg as i32 }}kg</span>
             </div>
             {% endfor %}
           </div>
@@ -166,7 +161,7 @@
     <div>
       <div class="wo-section">
         <h2 class="wo-title wo-mb-s4">
-          ⚡ Quick Actions
+          Quick Actions
         </h2>
         
         <div class="wo-cols">
@@ -174,7 +169,6 @@
             {% when Some with (workout) %}
               <div>
                 <a href="/live-training/{{ workout.id }}" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-                  <div class="wo-fs-title">🔥</div>
                   <div class="wo-color-accent-bold">Continue</div>
                   <div class="wo-label">Resume training</div>
                 </a>
@@ -182,7 +176,6 @@
             {% when None %}
               <div>
                 <a href="/workouts" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-                  <div class="wo-fs-title">💪</div>
                   <div class="wo-color-text-bold">Start Training</div>
                   <div class="wo-label">Begin workout</div>
                 </a>
@@ -191,7 +184,6 @@
           
           <div>
             <a href="/exercises" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-fs-title">📚</div>
               <div class="wo-color-text-bold">Exercises</div>
               <div class="wo-label">{{ exercises.len() }} available</div>
             </a>
@@ -199,7 +191,6 @@
           
           <div>
             <a href="/workouts" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-fs-title">📝</div>
               <div class="wo-color-text-bold">Workouts</div>
               <div class="wo-label">Plan routines</div>
             </a>
@@ -207,7 +198,6 @@
           
           <div>
             <a href="/settings" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-fs-title">⚙️</div>
               <div class="wo-color-text-bold">Settings</div>
               <div class="wo-label">Customize app</div>
             </a>

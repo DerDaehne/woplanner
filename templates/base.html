@@ -28,35 +28,32 @@
   </head>
 
 <body>
-    
+    {% include "icons.html" %}
+
     <!-- Top Bar -->
     <div class="wo-page wo-pt-s5 wo-pb-s4">
       <div class="is-flex is-justify-content-space-between is-align-items-center">
-        <!-- Logo -->
-        <div class="is-flex is-align-items-center is-gap-2">
-          <span class="is-size-4">🏋️</span>
-          <!-- Marke, keine Überschrift: die h1 gehört dem Seiteninhalt -->
-          <a href="/dashboard" class="is-size-4 has-text-weight-bold wo-color-text wo-no-underline">
-            WO<span class="wo-color-accent">Planner</span>
-          </a>
-        </div>
-        
+        <!-- Marke, keine Überschrift: die h1 gehört dem Seiteninhalt -->
+        <a href="/dashboard" class="is-size-4 has-text-weight-bold wo-color-text wo-no-underline">
+          WO<span class="wo-color-accent">Planner</span>
+        </a>
+
         <!-- User Actions -->
         {% match current_user %}
           {% when Some with (user) %}
             <div class="is-flex is-align-items-center is-gap-2">
               <div class="is-mobile-hidden wo-color-text-mute wo-fs-body">
-                Hey {{ user.name }}! 💪
+                {{ user.name }}
               </div>
               <form hx-post="/logout" hx-swap="outerHTML" hx-target="body" class="is-inline-flex">
-                <button type="submit" class="wo-btn wo-btn-inline wo-btn-sm">
-                  🔄
+                <button type="submit" class="wo-btn wo-btn-inline wo-btn-sm" aria-label="Switch user">
+                  <svg class="wo-icon" aria-hidden="true"><use href="#i-switch"/></svg>
                 </button>
               </form>
             </div>
           {% when None %}
             <a href="/users" class="wo-btn wo-btn-primary wo-btn-inline wo-btn-md">
-              🏋️ Get Started
+              Get Started
             </a>
         {% endmatch %}
       </div>
@@ -76,28 +73,28 @@
         <nav class="wo-dock">
           {% if is_dashboard == false %}
             <a href="/dashboard" class="wo-dock-item">
-              <div>←</div>
+              <svg class="wo-icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
               <div class="wo-dock-label">Back</div>
             </a>
           {% endif %}
-          
+
           <a href="/exercises" class="wo-dock-item">
-            <div>📚</div>
+            <svg class="wo-icon" aria-hidden="true"><use href="#i-book"/></svg>
             <div class="wo-dock-label">Exercises</div>
           </a>
 
           <a href="/workouts" class="wo-dock-item">
-            <div>💪</div>
+            <svg class="wo-icon" aria-hidden="true"><use href="#i-dumbbell"/></svg>
             <div class="wo-dock-label">Workouts</div>
           </a>
 
           <a href="/history" class="wo-dock-item">
-            <div>📊</div>
+            <svg class="wo-icon" aria-hidden="true"><use href="#i-chart"/></svg>
             <div class="wo-dock-label">History</div>
           </a>
-          
+
           <a href="/settings" class="wo-dock-item">
-            <div>{{ user.name.chars().next().unwrap_or('U') }}</div>
+            <svg class="wo-icon" aria-hidden="true"><use href="#i-user"/></svg>
             <div class="wo-dock-label">Settings</div>
           </a>
         </nav>
