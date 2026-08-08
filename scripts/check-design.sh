@@ -17,7 +17,7 @@ cd "$(dirname "$0")/.."
 
 # Welche Gesetze geprüft werden. Die Tickets des Epics #703 schalten ihres
 # frei, sobald sie umgesetzt sind: L1,L2,L3,L4,L6.
-ACTIVE_LAWS="${ACTIVE_LAWS:-L2,L3}"
+ACTIVE_LAWS="${ACTIVE_LAWS:-L1,L2,L3}"
 
 # --- Stufe 1: Klassennamen ------------------------------------------------
 ./scripts/check-classes.sh

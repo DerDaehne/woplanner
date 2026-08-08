@@ -16,16 +16,8 @@
         <!-- Content -->
         <div class="is-flex is-flex-direction-column is-align-items-center is-gap-3">
           <!-- User Avatar -->
-          <div class="is-relative">
-            <div class="wo-avatar-lg">
-              {{ user.name.chars().next().unwrap_or('U') }}
-            </div>
-            <!-- Floating badge -->
-            <div class="wo-badge">
-              <svg class="wo-icon-sm-color" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5l-1.293 1.293a1 1 0 101.414 1.414l2-2a1 1 0 000-1.414z" clip-rule="evenodd"></path>
-              </svg>
-            </div>
+          <div class="wo-avatar-lg">
+            {{ user.name.chars().next().unwrap_or('U') }}
           </div>
           
           <!-- User Name -->
@@ -44,7 +36,7 @@
     
     <!-- Add New User Card -->
     <div>
-      <div class="wo-bg-raised wo-border-dashed-line-strong wo-rounded-md wo-text-center-pad5 wo-flex-col-center-gap3 wo-color-text-mute">
+      <div class="wo-border-dashed-line-strong wo-rounded-md wo-text-center-pad5 wo-flex-col-center-gap3 wo-color-text-mute">
         <div class="wo-w-5rem wo-h-5rem wo-rounded-md wo-flex-center wo-fs-title">
           ➕
         </div>

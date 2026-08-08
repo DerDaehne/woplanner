@@ -125,6 +125,15 @@ body {
 }
 .wo-row:last-child { border-bottom: 0; }
 
+/* Satznummer in einer Zeile. Früher eine gefärbte Kachel — Flächen sind
+   dem Dock und dem Sheet vorbehalten, die Ziffer trägt sich selbst. */
+.wo-set-num {
+  flex: 0 0 1.5rem;
+  color: var(--wo-text-mute);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
 /* Zahlen: immer tabular, damit nichts springt */
 .wo-num {
   font-size: var(--wo-fs-num);
@@ -315,13 +324,7 @@ body {
 .wo-min-h-44px { min-height: 44px; }
 .wo-min-h-300px { min-height: 300px; }
 
-/* Background & border */
-.wo-bg-raised { background: var(--wo-raised); }
-.wo-bg-accent-weak { background: var(--wo-accent-weak); }
-.wo-bg-done-weak { background: var(--wo-ok-weak); }
-.wo-bg-text-weak { background: var(--wo-text-weak); }
-.wo-bg-none { background: none; }
-.wo-border-raised { border: 1px solid var(--wo-raised); }
+/* Border — Flächen gibt es nicht mehr, nur Linien (siehe adr-002-design-rack L1) */
 .wo-border-line-strong { border: 1px solid var(--wo-line-strong); }
 .wo-border-line { border: 1px solid var(--wo-line); }
 .wo-border-b-line { border-bottom: 1px solid var(--wo-line); }
@@ -370,14 +373,11 @@ body {
 .wo-aspect-video { position: relative; width: 100%; padding-bottom: 56.25%; }
 
 /* Specific combined utilities for common patterns */
-.wo-avatar { width: 2.5rem; height: 2.5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); }
-.wo-avatar-lg { width: 5rem; height: 5rem; background: var(--wo-accent-weak); border-radius: var(--wo-radius); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); border: 1px solid var(--wo-line); }
-.wo-badge { position: absolute; bottom: -0.25rem; right: -0.25rem; width: 1.5rem; height: 1.5rem; background: var(--wo-ok-weak); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+/* Avatar: Buchstabe mit Rahmen, keine gefärbte Kachel */
+.wo-avatar { width: 2.5rem; height: 2.5rem; border: 1px solid var(--wo-line-strong); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); }
+.wo-avatar-lg { width: 5rem; height: 5rem; border: 1px solid var(--wo-line-strong); border-radius: var(--wo-radius); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); }
 .wo-icon-sm { width: 0.5rem; height: 0.5rem; background: var(--wo-ok); border-radius: 50%; }
-.wo-icon-sm-color { width: 0.75rem; height: 0.75rem; color: var(--wo-ok); }
 .wo-icon-btn { display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; }
-.wo-icon-btn-done { background: var(--wo-ok-weak); }
-.wo-icon-btn-text { background: var(--wo-text-weak); }
 
 /* Status color combos */
 .wo-color-ok { color: var(--wo-ok); }
@@ -412,7 +412,7 @@ body {
 .wo-fs-meta { font-size: var(--wo-fs-meta); }
 .wo-fs-meta-ok { font-size: var(--wo-fs-meta); color: var(--wo-ok); font-weight: 500; }
 .wo-fs-meta-dim { font-size: var(--wo-fs-meta); color: var(--wo-text-dim); }
-.wo-fs-meta-dim-italic { font-size: var(--wo-fs-meta); color: var(--wo-text-dim); font-style: italic; background: var(--wo-raised); border-radius: var(--wo-radius-sm); padding: var(--wo-s3); margin-top: var(--wo-s2); }
+.wo-fs-meta-dim-italic { font-size: var(--wo-fs-meta); color: var(--wo-text-dim); font-style: italic; padding: var(--wo-s2) 0 0 var(--wo-s3); border-left: 2px solid var(--wo-line-strong); margin-top: var(--wo-s2); }
 
 /* Spacing combos */
 .wo-mb-s2-flex-center { margin-bottom: var(--wo-s2); display: flex; align-items: center; }
@@ -431,17 +431,6 @@ body {
 .wo-max-w-32rem { max-width: 32rem; }
 
 /* Row patterns */
-.wo-row-pad {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--wo-s3);
-  padding: var(--wo-s2) var(--wo-s3);
-  background: var(--wo-raised);
-  border-radius: var(--wo-radius-sm);
-  margin-bottom: var(--wo-s1);
-}
-.wo-card-pad { padding: var(--wo-s3); background: var(--wo-raised); border-radius: var(--wo-radius-sm); min-height: 300px; }
 .wo-center-pad { padding: var(--wo-s6) 0; }
 .wo-center-pad5 { padding: var(--wo-s5); }
 .wo-center-pad6 { padding: var(--wo-s6); }

@@ -40,7 +40,7 @@
       </div>
 
       <!-- Chart Container -->
-      <div class="wo-bg-raised wo-rounded-sm wo-p-s3 wo-min-h-300px">
+      <div>
         <canvas id="progressionChart"></canvas>
       </div>
     </div>
@@ -77,11 +77,9 @@
       <h3 class="wo-title wo-mb-s3">Recent Sets</h3>
       <div>
         {% for data in progression_data %}
-          <div class="wo-row-pad">
+          <div class="wo-row">
             <div class="is-flex is-align-items-center is-gap-3">
-              <div class="wo-w-2rem wo-h-2rem wo-bg-text-weak wo-rounded-sm wo-flex-center">
-                <span class="wo-color-text wo-fs-meta wo-font-bold">{{ data.set_number }}</span>
-              </div>
+              <div class="wo-set-num">{{ data.set_number }}</div>
               <div>
                 <div class="wo-meta">
                   {% match data.weight %}

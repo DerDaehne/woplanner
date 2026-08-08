@@ -133,11 +133,9 @@
         {% else %}
           <div>
             {% for set in current_exercise_sets %}
-              <div class="wo-row-pad">
+              <div class="wo-row">
                 <div class="is-flex is-align-items-center is-gap-3">
-                  <div class="wo-w-2rem wo-h-2rem wo-bg-done-weak wo-rounded-sm wo-flex-center">
-                    <span class="wo-color-ok wo-fs-body wo-font-bold">{{ set.set_number }}</span>
-                  </div>
+                  <div class="wo-set-num">{{ set.set_number }}</div>
                   <div>
                     <div class="wo-meta">
                       {% match set.weight %}
@@ -171,7 +169,7 @@
           <button onclick="skipRest()" class="wo-btn wo-btn-inline">
             Skip Rest
           </button>
-          <button onclick="addTime(30)" class="wo-btn wo-btn-inline wo-bg-raised wo-border-line-strong">
+          <button onclick="addTime(30)" class="wo-btn wo-btn-inline wo-border-line-strong">
             +30s
           </button>
         </div>

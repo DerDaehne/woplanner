@@ -62,11 +62,9 @@
 
         <div>
           {% for set in exercise.sets %}
-            <div class="wo-row-pad">
+            <div class="wo-row">
               <div class="is-flex is-align-items-center is-gap-3">
-                <div class="wo-w-2rem wo-h-2rem wo-bg-done-weak wo-rounded-sm wo-flex-center">
-                  <span class="wo-color-ok wo-fs-body wo-font-bold">{{ set.set_number }}</span>
-                </div>
+                <div class="wo-set-num">{{ set.set_number }}</div>
                 <div>
                   <div class="wo-meta">
                     {{ set.weight_display() }} × {{ set.reps }} reps
