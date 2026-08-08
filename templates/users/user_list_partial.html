@@ -4,45 +4,18 @@
     <p class="wo-label">Create your first profile below to get started</p>
   </div>
 {% else %}
-  <div class="wo-cols">
+  <div>
     {% for user in users %}
-    <div>
       <button hx-post="/users/{{ user.id }}/select"
               hx-target="#toast-container"
               hx-swap="afterbegin"
-              class="wo-btn wo-flex-col-center-gap3-pad5 wo-relative wo-overflow-hidden">
-        
-        <!-- Content -->
-        <div class="is-flex is-flex-direction-column is-align-items-center is-gap-3">
-          <!-- User Avatar -->
-          <div class="wo-avatar-lg">
-            {{ user.name.chars().next().unwrap_or('U') }}
-          </div>
-          
-          <!-- User Name -->
-          <div>
-            <div class="wo-color-text-bold-body">
-              {{ user.name }}
-            </div>
-            <div class="wo-label">
-              Tap to select
-            </div>
-          </div>
+              class="wo-row wo-row--button">
+        <div class="wo-avatar">{{ user.name.chars().next().unwrap_or('U') }}</div>
+        <div class="wo-row__main wo-text-left">
+          <div class="wo-color-text-bold-body wo-truncate">{{ user.name }}</div>
         </div>
+        <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
       </button>
-    </div>
     {% endfor %}
-    
-    <!-- Add New User Card -->
-    <div>
-      <div class="wo-border-dashed-line-strong wo-rounded-md wo-text-center-pad5 wo-flex-col-center-gap3 wo-color-text-mute">
-        <svg class="wo-icon" aria-hidden="true"><use href="#i-plus"/></svg>
-        <div>
-          <div class="wo-label">
-            Add New User
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 {% endif %}

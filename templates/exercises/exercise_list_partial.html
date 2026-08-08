@@ -6,36 +6,25 @@
 {% else %}
   <div>
     {% for exercise in exercises %}
-    <div class="wo-row">
-      <div class="is-flex-grow-1">
-        <h3 class="wo-title wo-fs-body wo-mb-s1">
-          {{ exercise.name }}
-        </h3>
-        <span class="wo-label">
-          Added {{ exercise.created_at.split('T').next().unwrap_or(&exercise.created_at) }}
-        </span>
-      </div>
-      
-      <!-- Right: Action Buttons -->
-      <div class="is-flex is-align-items-center is-gap-2 wo-flex-shrink-0">
-        <a href="/exercises/{{ exercise.id }}/progression" class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px" aria-label="Progression">
-          <svg class="wo-icon" aria-hidden="true"><use href="#i-chart"/></svg>
-        </a>
-        <button class="wo-btn wo-btn-primary wo-btn-inline wo-fs-meta">
-          Add to Workout
-        </button>
-      </div>
-    </div>
-    
-    <!-- Instructions - Expandable -->
-    <details class="wo-mt-s2">
-      <summary class="wo-label">
-        View instructions
-      </summary>
-      <div class="wo-mt-s2 wo-pl-s3 wo-fs-meta-dim wo-border-left-line-strong">
-        {{ exercise.instructions }}
-      </div>
-    </details>
+      <a href="/exercises/{{ exercise.id }}/progression" class="wo-row">
+        <div class="wo-row__main">
+          <div class="wo-color-text-bold-body wo-truncate">{{ exercise.name }}</div>
+          <div class="wo-label">
+            Added {{ exercise.created_at.split('T').next().unwrap_or(&exercise.created_at) }}
+          </div>
+        </div>
+        <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+      </a>
+
+      <!-- Instructions - Expandable -->
+      <details class="wo-mb-s3">
+        <summary class="wo-label wo-cursor-pointer wo-min-h-44px">
+          View instructions
+        </summary>
+        <div class="wo-mt-s2 wo-pl-s3 wo-fs-meta-dim wo-border-left-line-strong">
+          {{ exercise.instructions }}
+        </div>
+      </details>
     {% endfor %}
   </div>
 {% endif %}

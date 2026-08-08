@@ -6,63 +6,27 @@
 {% else %}
   <div>
     {% for workout in workouts %}
-    <div class="wo-row">
-      <div class="is-flex-grow-1">
-        <div class="is-flex is-align-items-center is-gap-2 wo-mb-s1">
-          <h3 class="wo-title wo-fs-body">
-            {{ workout.name }}
-          </h3>
+      <a href="/workouts/{{ workout.id }}" class="wo-row">
+        <div class="wo-row__main">
+          <div class="wo-color-text-bold-body wo-truncate">{{ workout.name }}</div>
+          <div class="wo-label">
+            {% match workout.schedule_type.as_str() %}
+              {% when "weekly" %}
+                {{ workout.day_name().unwrap_or("Weekly".to_string()) }}
+              {% when "rotation" %}
+                Rotation
+              {% when "disabled" %}
+                Paused
+              {% when _ %}
+                Manual
+            {% endmatch %}
+            {% if workout.is_scheduled_today() %}
+              &middot; Today
+            {% endif %}
           </div>
-        
-        <!-- Schedule Tags -->
-        <div class="is-flex is-flex-wrap-wrap is-gap-2 is-align-items-center">
-          {% match workout.schedule_type.as_str() %}
-            {% when "weekly" %}
-              <span class="tag">{{ workout.day_name().unwrap_or("Weekly".to_string()) }}</span>
-            {% when "rotation" %}
-              <span class="tag">Rotation</span>
-            {% when "disabled" %}
-              <span class="tag">Paused</span>
-            {% when _ %}
-              <span class="tag">Manual</span>
-          {% endmatch %}
-          
-          {% match workout.description %}
-            {% when Some with (desc) %}
-              <span class="is-mobile-hidden wo-label wo-fs-meta">{{ desc }}</span>
-            {% when None %}
-          {% endmatch %}
         </div>
-      </div>
-      
-      <!-- Right: Action Buttons -->
-      <div class="is-flex is-align-items-center is-gap-2 wo-flex-shrink-0">
-        <a href="/workouts/{{ workout.id }}" 
-           class="wo-btn wo-btn-inline wo-p-s2 wo-min-h-44px" aria-label="View workout">
-          <svg class="wo-icon" aria-hidden="true"><use href="#i-eye"/></svg>
-        </a>
-        <form hx-post="/start-training" hx-swap="none">
-          <input type="hidden" name="workout_id" value="{{ workout.id }}">
-          <button type="submit" class="wo-btn wo-btn-primary wo-btn-inline">
-            Start
-          </button>
-        </form>
-      </div>
-    </div>
-    
-    <!-- Mobile description -->
-    {% match workout.description %}
-      {% when Some with (desc) %}
-        <div class="is-tablet-hidden wo-label wo-mt-s1">{{ desc }}</div>
-      {% when None %}
-    {% endmatch %}
-    
-    <!-- Footer info -->
-    {% if workout.is_scheduled_today() %}
-      <div class="wo-row wo-mt-s2-pt2-border">
-        <span class="wo-meta">Scheduled for today</span>
-      </div>
-    {% endif %}
+        <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+      </a>
     {% endfor %}
   </div>
 {% endif %}

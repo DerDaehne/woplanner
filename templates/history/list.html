@@ -17,43 +17,18 @@
   {% else %}
     <div>
       {% for workout in workouts %}
-        <a href="/history/{{ workout.id }}"
-           class="wo-link">
-          <div class="is-flex-grow-1">
-            <h3 class="wo-title wo-fs-body wo-mb-s1">
+        <a href="/history/{{ workout.id }}" class="wo-row">
+          <div class="wo-row__main">
+            <div class="wo-color-text-bold-body wo-truncate">
               {{ workout.workout_name }}
-            </h3>
-            <div class="wo-label wo-mb-s2">
+            </div>
+            <div class="wo-label">
               {{ workout.completed_date_display() }}
+              &middot; {{ workout.total_sets }} sets
+              &middot; {{ workout.total_volume_kg as i32 }}kg
             </div>
-
-            <div class="is-flex is-flex-wrap-wrap is-gap-3">
-              <div class="is-flex is-align-items-center is-gap-2">
-                
-                <span class="wo-meta">{{ workout.duration_display() }}</span>
-              </div>
-              <div class="is-flex is-align-items-center is-gap-2">
-                
-                <span class="wo-meta">{{ workout.total_sets }} sets</span>
-              </div>
-              <div class="is-flex is-align-items-center is-gap-2">
-                
-                <span class="wo-meta">{{ workout.total_volume_kg as i32 }}kg</span>
-              </div>
-            </div>
-
-            {% match workout.notes %}
-              {% when Some with (notes) %}
-                <div class="wo-mt-s2-pt2-border">
-                  <p class="wo-label wo-italic">"{{ notes }}"</p>
-                </div>
-              {% when None %}
-            {% endmatch %}
           </div>
-
-          <div class="wo-ml-s3 wo-color-text-mute">
-            <span class="wo-fs-title">→</span>
-          </div>
+          <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
         </a>
       {% endfor %}
     </div>
