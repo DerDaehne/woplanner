@@ -12,10 +12,7 @@
           <h3 class="wo-title wo-fs-body">
             {{ workout.name }}
           </h3>
-          {% if workout.is_active.unwrap_or(true) %}
-            <div class="wo-icon-sm"></div>
-          {% endif %}
-        </div>
+          </div>
         
         <!-- Schedule Tags -->
         <div class="is-flex is-flex-wrap-wrap is-gap-2 is-align-items-center">
@@ -63,7 +60,7 @@
     <!-- Footer info -->
     {% if workout.is_scheduled_today() %}
       <div class="wo-row wo-mt-s2-pt2-border">
-        <span class="wo-fs-meta-ok">Scheduled for today</span>
+        <span class="wo-meta">Scheduled for today</span>
       </div>
     {% endif %}
     {% endfor %}

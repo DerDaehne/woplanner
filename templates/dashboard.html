@@ -14,7 +14,7 @@
     {% match active_workout %}
       {% when Some with (workout) %}
         <div class="wo-alert wo-mt-s2">
-          <span class="wo-color-accent-bold wo-mr-s2">Training in progress</span>
+          <span class="wo-color-text-bold wo-mr-s2">Training in progress</span>
           <span class="wo-fs-body">{{ workout.duration_display() }}</span>
         </div>
       {% when None %}
@@ -44,7 +44,7 @@
       <div>
         <div class="wo-row wo-mb-s0">
           <div class="has-text-right">
-            <div class="wo-num wo-color-ok">
+            <div class="wo-num">
               {{ stats.total_workouts }}
             </div>
             <div class="wo-label">TOTAL</div>
@@ -78,7 +78,7 @@
       <div>
         <div class="wo-row wo-mb-s0">
           <div class="has-text-right">
-            <div class="wo-num wo-color-accent">
+            <div class="wo-num">
               {{ stats.current_streak }}
             </div>
             <div class="wo-label">DAYS</div>
@@ -94,7 +94,7 @@
       <div>
         <div class="wo-row wo-mb-s0">
           <div class="has-text-right">
-            <div class="wo-num wo-color-pr">
+            <div class="wo-num">
               {% if stats.total_volume_kg >= 1000.0 %}
                 {{ (stats.total_volume_kg / 1000.0) as i32 }}.{{ ((stats.total_volume_kg / 100.0) as i32) % 10 }}t
               {% else %}
@@ -169,7 +169,7 @@
             {% when Some with (workout) %}
               <div>
                 <a href="/live-training/{{ workout.id }}" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-                  <div class="wo-color-accent-bold">Continue</div>
+                  <div class="wo-color-text-bold">Continue</div>
                   <div class="wo-label">Resume training</div>
                 </a>
               </div>

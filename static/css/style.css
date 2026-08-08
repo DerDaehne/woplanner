@@ -389,7 +389,6 @@ body {
 /* Avatar: Buchstabe mit Rahmen, keine gefärbte Kachel */
 .wo-avatar { width: 2.5rem; height: 2.5rem; border: 1px solid var(--wo-line-strong); border-radius: var(--wo-radius-sm); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); }
 .wo-avatar-lg { width: 5rem; height: 5rem; border: 1px solid var(--wo-line-strong); border-radius: var(--wo-radius); display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--wo-text); font-size: var(--wo-fs-title); }
-.wo-icon-sm { width: 0.5rem; height: 0.5rem; background: var(--wo-ok); border-radius: 50%; }
 .wo-icon-btn { display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; }
 
 /* Status color combos */
@@ -407,23 +406,14 @@ body {
 .wo-color-text-dim-link-mb4 { color: var(--wo-text-dim); text-decoration: none; margin-bottom: var(--wo-s4); }
 .wo-color-text-bold { color: var(--wo-text); font-weight: 600; }
 .wo-color-text-bold-body { color: var(--wo-text); font-weight: 600; font-size: var(--wo-fs-body); }
-.wo-color-accent-body { color: var(--wo-accent); font-size: var(--wo-fs-body); }
-.wo-color-ok-body { color: var(--wo-ok); font-size: var(--wo-fs-body); }
-.wo-color-pr-body { color: var(--wo-pr); font-size: var(--wo-fs-body); }
 
 /* Font size combos */
 .wo-fs-title { font-size: var(--wo-fs-title); }
-.wo-fs-title-accent { font-size: var(--wo-fs-title); color: var(--wo-accent); }
-.wo-fs-title-ok { font-size: var(--wo-fs-title); color: var(--wo-ok); }
-.wo-fs-title-pr { font-size: var(--wo-fs-title); color: var(--wo-pr); }
 .wo-fs-title-text { font-size: var(--wo-fs-title); color: var(--wo-text); }
 .wo-fs-num-lg { font-size: var(--wo-fs-num-lg); }
-.wo-fs-num-lg-accent { font-size: var(--wo-fs-num-lg); color: var(--wo-accent); }
-.wo-fs-num-lg-ok { font-size: var(--wo-fs-num-lg); color: var(--wo-ok); }
 .wo-fs-body { font-size: var(--wo-fs-body); }
 .wo-fs-body-bold { font-size: var(--wo-fs-body); font-weight: 600; }
 .wo-fs-meta { font-size: var(--wo-fs-meta); }
-.wo-fs-meta-ok { font-size: var(--wo-fs-meta); color: var(--wo-ok); font-weight: 500; }
 .wo-fs-meta-dim { font-size: var(--wo-fs-meta); color: var(--wo-text-dim); }
 .wo-fs-meta-dim-italic { font-size: var(--wo-fs-meta); color: var(--wo-text-dim); font-style: italic; padding: var(--wo-s2) 0 0 var(--wo-s3); border-left: 2px solid var(--wo-line-strong); margin-top: var(--wo-s2); }
 

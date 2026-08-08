@@ -51,19 +51,19 @@
         <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Weight</div>
-            <div class="wo-num wo-fs-title wo-color-accent" id="max-weight">-</div>
+            <div class="wo-num wo-fs-title wo-color-pr" id="max-weight">-</div>
           </div>
         </div>
         <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Reps</div>
-            <div class="wo-num wo-fs-title wo-color-accent" id="max-reps">-</div>
+            <div class="wo-num wo-fs-title wo-color-pr" id="max-reps">-</div>
           </div>
         </div>
         <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Volume</div>
-            <div class="wo-num wo-fs-title wo-color-accent" id="max-volume">-</div>
+            <div class="wo-num wo-fs-title wo-color-pr" id="max-volume">-</div>
           </div>
         </div>
       </div>
@@ -170,21 +170,16 @@
     if (currentChart) currentChart.destroy();
 
     let labels = progressionData.map((d, i) => `Set ${i + 1}`);
-    let data, label, color;
 
-    if (type === 'weight') {
-      data = progressionData.map(d => d.weight);
-      label = 'Weight (kg)';
-      color = COLORS.accent;
-    } else if (type === 'reps') {
-      data = progressionData.map(d => d.reps);
-      label = 'Reps';
-      color = COLORS.ok;
-    } else {
-      data = progressionData.map(d => d.volume);
-      label = 'Volume (kg)';
-      color = COLORS.pr;
-    }
+    // Immer nur eine Reihe sichtbar, also immer dieselbe Farbe. Rot, Grün und
+    // Gelb sind Zuständen vorbehalten und taugen nicht als Serienfarben.
+    const color = COLORS.text;
+    const series = {
+      weight: { data: progressionData.map(d => d.weight), label: 'Weight (kg)' },
+      reps:   { data: progressionData.map(d => d.reps),   label: 'Reps' },
+      volume: { data: progressionData.map(d => d.volume), label: 'Volume (kg)' },
+    }[type];
+    const { data, label } = series;
 
     currentChart = new Chart(ctx, {
       ...chartConfig,

@@ -17,7 +17,7 @@
             <p class="wo-label">{{ active_workout_view.workout_name }}</p>
           </div>
           <div class="has-text-right wo-ml-s3">
-            <div class="wo-num wo-fs-title wo-color-accent">
+            <div class="wo-num wo-fs-title">
               {{ active_workout_view.progress_percent as i32 }}%
             </div>
             <div class="wo-label">Progress</div>
@@ -80,7 +80,7 @@
           {% when Some with (notes) %}
             <div class="wo-mt-s2-pt2-border">
               <div class="wo-label">Training Notes:</div>
-              <div class="wo-meta wo-color-accent">{{ notes }}</div>
+              <div class="wo-meta">{{ notes }}</div>
             </div>
           {% when None %}
         {% endmatch %}
@@ -161,7 +161,7 @@
       <!-- Rest Timer (Initially Hidden) -->
       <div id="rest-timer" class="wo-section wo-text-center hidden">
         <div class="wo-label wo-mb-s2">Rest Time</div>
-        <div id="timer-display" class="wo-title wo-fs-num-lg wo-color-accent wo-mb-s3">0:00</div>
+        <div id="timer-display" class="wo-title wo-fs-num-lg wo-mb-s3">0:00</div>
         <div class="is-flex is-gap-3 is-justify-content-center">
           <button onclick="skipRest()" class="wo-btn wo-btn-inline">
             Skip Rest
