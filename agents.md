@@ -98,7 +98,16 @@ headers.insert("HX-Redirect", HeaderValue::from_static("/path"));
 
 ## Design System
 
-Der verbindliche Stil heißt **OLED Focus**. Die vollständige Spezifikation
+> **In Überarbeitung (Stand 2026-08-08).** Die Tokens unten gelten weiter, die
+> **Seitenstruktur nicht**. Verbindlich für neues Markup ist
+> `adr-002-design-rack` (Zettelkasten) mit den Gesetzen L1–L10, umgesetzt über
+> Epic #703. Kurzfassung: ein Layout-Container `.wo-page` mit seitlichem Rand,
+> **kein** Bulma `.columns` im Markup (negative Ränder ⇒ horizontales Scrollen),
+> eine `h1` pro Seite in 20px, keine Karten und erst recht keine verschachtelten,
+> genau ein Akzent pro Bildschirm, SVG-Icons statt Emoji, Anlege-Formulare im
+> `<dialog>`-Sheet statt dauerhaft offen.
+
+Der bisherige Stil heißt **OLED Focus**. Die vollständige Spezifikation
 (Tokens, Bulma-Anbindung, Komponentenklassen) steht in der Zettelkasten-Notiz
 `arch-woplanner-styling`; `static/css/style.css` ist die einzige Umsetzung davon.
 

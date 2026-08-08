@@ -3,21 +3,11 @@
 {% block title %}Workouts - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop">
+<div>
   
-  <!-- Hero Section -->
-  <div class="wo-section wo-text-center">
-    <h1 class="wo-title wo-fs-num-lg wo-mb-s2">
-      Your Workouts
-    </h1>
-    <p class="wo-meta wo-fs-body">Create and manage your training routines</p>
-  </div>
-
   <!-- Workouts List Container -->
   <div id="workout-list" class="wo-section">
-    <h2 class="wo-title wo-mb-s4">
-      🏋️ Available Workouts
-    </h2>
+    <h1 class="wo-title wo-mb-s4">Workouts</h1>
     {% include "workouts/workout_list_partial.html" %}
   </div>
 

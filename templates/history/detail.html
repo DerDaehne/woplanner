@@ -3,7 +3,7 @@
 {% block title %}{{ workout.workout_name }} - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop wo-pb-calc">
+<div>
   
   <!-- Back Button -->
   <a href="/history" class="is-flex is-align-items-center is-gap-2 wo-color-text-dim-link wo-mb-s4">
@@ -17,26 +17,26 @@
     <p class="wo-label wo-mb-s4">{{ workout.completed_date_display() }}</p>
 
     <!-- Stats Grid -->
-    <div class="columns is-mobile is-multiline">
-      <div class="column is-half-mobile is-one-third-tablet">
+    <div class="wo-cols">
+      <div>
         <div class="wo-text-center">
           <div class="wo-num wo-fs-title wo-color-accent">{{ workout.duration_display() }}</div>
           <div class="wo-label">Duration</div>
         </div>
       </div>
-      <div class="column is-half-mobile is-one-third-tablet">
+      <div>
         <div class="wo-text-center">
           <div class="wo-num wo-fs-title wo-color-ok">{{ workout.total_sets }}</div>
           <div class="wo-label">Total Sets</div>
         </div>
       </div>
-      <div class="column is-half-mobile is-one-third-tablet">
+      <div>
         <div class="wo-text-center">
           <div class="wo-num wo-fs-title wo-color-text">{{ workout.total_volume_kg as i32 }}</div>
           <div class="wo-label">Volume (kg)</div>
         </div>
       </div>
-      <div class="column is-half-mobile is-one-third-tablet">
+      <div>
         <div class="wo-text-center">
           <div class="wo-num wo-fs-title wo-color-pr">{{ exercises.len() }}</div>
           <div class="wo-label">Exercises</div>

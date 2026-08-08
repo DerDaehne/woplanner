@@ -30,14 +30,15 @@
 <body>
     
     <!-- Top Bar -->
-    <div class="container is-max-desktop wo-pt-s5 wo-pb-s4">
+    <div class="wo-page wo-pt-s5 wo-pb-s4">
       <div class="is-flex is-justify-content-space-between is-align-items-center">
         <!-- Logo -->
         <div class="is-flex is-align-items-center is-gap-2">
           <span class="is-size-4">🏋️</span>
-          <h1 class="is-size-4 has-text-weight-bold wo-color-text">
+          <!-- Marke, keine Überschrift: die h1 gehört dem Seiteninhalt -->
+          <a href="/dashboard" class="is-size-4 has-text-weight-bold wo-color-text wo-no-underline">
             WO<span class="wo-color-accent">Planner</span>
-          </h1>
+          </a>
         </div>
         
         <!-- User Actions -->
@@ -62,7 +63,7 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container is-max-desktop wo-pb-calc4">
+    <main class="wo-page wo-pb-calc4">
       {% block content %}{% endblock %}
     </main>
     

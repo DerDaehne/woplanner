@@ -3,7 +3,7 @@
 {% block title %}{{ exercise.name }} - Progression - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop wo-pb-calc">
+<div>
 
   <!-- Header -->
   <div class="wo-mb-s4">
@@ -20,7 +20,7 @@
 
   {% if progression_data.len() == 0 %}
     <div class="wo-section wo-text-center-pad5">
-      <div class="wo-fs-num-lg wo-mb-s4">📊</div>
+      <div class="wo-fs-title wo-mb-s4">📊</div>
       <h2 class="wo-title wo-mb-s2">No Data Yet</h2>
       <p class="wo-label">Complete some sets of this exercise to see your progression!</p>
     </div>
@@ -50,20 +50,20 @@
       <h3 class="wo-title wo-mb-s3">
         🏆 Personal Records
       </h3>
-      <div class="columns is-mobile">
-        <div class="column is-one-third-tablet">
+      <div class="wo-cols wo-cols--3">
+        <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Weight</div>
             <div class="wo-num wo-fs-title wo-color-accent" id="max-weight">-</div>
           </div>
         </div>
-        <div class="column is-one-third-tablet">
+        <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Reps</div>
             <div class="wo-num wo-fs-title wo-color-accent" id="max-reps">-</div>
           </div>
         </div>
-        <div class="column is-one-third-tablet">
+        <div>
           <div class="wo-text-center">
             <div class="wo-label">Max Volume</div>
             <div class="wo-num wo-fs-title wo-color-accent" id="max-volume">-</div>

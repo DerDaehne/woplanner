@@ -3,7 +3,7 @@
 {% block title %}Live Training - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop wo-max-w-32rem wo-pb-calc">
+<div>
 
   <!-- Header -->
   <div class="wo-mb-s4">
@@ -25,7 +25,7 @@
         </div>
       {% when None %}
         <div class="has-text-centered">
-          <h1 class="wo-title wo-fs-num-lg wo-color-ok wo-mb-s2">🎉 Workout Complete!</h1>
+          <h1 class="wo-title wo-color-ok wo-mb-s2">🎉 Workout Complete!</h1>
           <p class="wo-label">{{ active_workout_view.workout_name }}</p>
         </div>
     {% endmatch %}
@@ -186,8 +186,8 @@
 
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
 
-        <div class="columns is-mobile">
-          <div class="column">
+        <div class="wo-cols">
+          <div>
             <div class="field">
               <label class="wo-label wo-block wo-mb-s2">
                 Weight (kg)
@@ -207,7 +207,7 @@
             </div>
           </div>
 
-          <div class="column">
+          <div>
             <div class="field">
               <label class="wo-label wo-block wo-mb-s2">
                 Reps
@@ -309,7 +309,7 @@
       <!-- Workout Complete Actions -->
       <div class="has-text-centered wo-mb-calc">
         <div class="wo-section wo-p-s5">
-          <div class="wo-fs-num-lg wo-mb-s4">🏆</div>
+          <div class="wo-fs-title wo-mb-s4">🏆</div>
           <h2 class="wo-title wo-mb-s2">Amazing Work!</h2>
           <p class="wo-label wo-mb-s2">You completed {{ active_workout_view.total_sets_completed }} sets</p>
           <div class="wo-label">

@@ -3,15 +3,12 @@
 {% block title %}Training History - WOPlanner{% endblock %}
 
 {% block content %}
-<div class="container is-max-desktop wo-pb-calc">
-  <div class="wo-mb-s4">
-    <h1 class="wo-title wo-fs-num-lg wo-mb-s2">Training History</h1>
-    <p class="wo-label">Your past workout sessions</p>
-  </div>
+<div>
+  <h1 class="wo-title wo-mb-s4">History</h1>
 
   {% if workouts.len() == 0 %}
     <div class="wo-section wo-text-center-pad6">
-      <div class="wo-fs-num-lg wo-mb-s4">📊</div>
+      <div class="wo-fs-title wo-mb-s4">📊</div>
       <h2 class="wo-title wo-mb-s2">No Training History Yet</h2>
       <p class="wo-label wo-mb-s4">Complete your first workout to see it here!</p>
       <a href="/workouts" class="wo-btn wo-btn-primary">
