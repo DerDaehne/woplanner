@@ -6,7 +6,7 @@
 <div>
   
   <!-- Back Button -->
-  <a href="/history" class="wo-tap is-gap-2 wo-color-text-dim-link wo-mb-s4">
+  <a href="/history" class="wo-tap is-gap-2 wo-color-text-dim wo-no-underline wo-mb-s4">
     <span>←</span>
     <span>Back to History</span>
   </a>
@@ -50,9 +50,9 @@
 
     {% match workout.notes_display() %}
       {% when Some with (notes) %}
-        <div class="wo-mt-s3-pt3-border">
+        <div class="wo-divider-top">
           <div class="wo-label">Workout Notes</div>
-          <p class="wo-meta wo-italic">{{ notes }}</p>
+          <p class="wo-note">{{ notes }}</p>
         </div>
       {% when None %}
     {% endmatch %}
@@ -92,9 +92,9 @@
         </div>
 
         <!-- Exercise Summary -->
-        <div class="wo-mt-s2-pt2-border-line wo-flex-between wo-fs-meta">
+        <div class="wo-divider-top wo-flex-between wo-fs-meta">
           <span class="wo-color-text-dim">Total Sets:</span>
-          <span class="wo-color-text-medium">{{ exercise.sets.len() }}</span>
+          <span class="wo-color-text-bold">{{ exercise.sets.len() }}</span>
         </div>
       </div>
     {% endfor %}

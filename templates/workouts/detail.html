@@ -48,7 +48,7 @@
   <div class="wo-section">
     <button class="wo-row wo-row--button wo-text-left"
             onclick="document.getElementById('sheet-schedule').showModal()">
-      <span class="wo-row__main wo-color-text-bold-body">Schedule</span>
+      <span class="wo-row__main wo-color-text-bold wo-fs-body">Schedule</span>
       <span class="wo-row__value">
         {% match workout.schedule_type.as_str() %}
           {% when "weekly" %}{{ workout.day_name().unwrap_or("Weekly".to_string()) }}
@@ -112,8 +112,8 @@
     </div>
 
     {% if exercises.len() == 0 %}
-      <div class="has-text-centered wo-center-pad">
-        <p class="wo-color-text-dim-body wo-mb-s2">No exercises yet!</p>
+      <div class="wo-empty">
+        <p class="wo-color-text-dim wo-fs-body wo-mb-s2">No exercises yet!</p>
         <p class="wo-label">Add exercises below to build your workout</p>
       </div>
     {% else %}
@@ -153,7 +153,7 @@
             <!-- Notes if any -->
             {% match exercise.notes %}
               {% when Some with (notes) %}
-                <div class="wo-fs-meta-dim-italic">
+                <div class="wo-note">
                   {{ notes }}
                 </div>
               {% when None %}
@@ -162,7 +162,7 @@
             <!-- Instructions -->
             <details class="wo-mt-s2">
               <summary class="wo-label">View instructions</summary>
-              <p class="wo-mt-s2-pt2-border-line wo-pl-s3 wo-fs-meta-dim">
+              <p class="wo-divider-top wo-pl-s3 wo-fs-meta-dim">
                 {{ exercise.exercise_instructions }}
               </p>
             </details>

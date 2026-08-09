@@ -7,7 +7,7 @@
   <h1 class="wo-title wo-mb-s4">History</h1>
 
   {% if workouts.len() == 0 %}
-    <div class="wo-section wo-text-center-pad6">
+    <div class="wo-section wo-empty">
       <h2 class="wo-title wo-mb-s2">No Training History Yet</h2>
       <p class="wo-label wo-mb-s4">Complete your first workout to see it here!</p>
       <a href="/workouts" class="wo-btn wo-btn-primary">
@@ -19,7 +19,7 @@
       {% for workout in workouts %}
         <a href="/history/{{ workout.id }}" class="wo-row">
           <div class="wo-row__main">
-            <div class="wo-color-text-bold-body wo-truncate">
+            <div class="wo-color-text-bold wo-fs-body wo-truncate">
               {{ workout.workout_name }}
             </div>
             <div class="wo-label">

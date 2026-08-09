@@ -11,7 +11,7 @@
       {% when Some with (exercise) %}
         <div class="is-flex is-justify-content-space-between is-align-items-start wo-mb-s2">
           <div class="is-flex-grow-1">
-            <h1 class="wo-title wo-fs-title wo-mb-s1 wo-leading-tight">
+            <h1 class="wo-title wo-fs-title wo-mb-s1">
               {{ exercise.exercise_name }}
             </h1>
             <p class="wo-label">{{ active_workout_view.workout_name }}</p>
@@ -34,20 +34,20 @@
   <!-- PR Notifications -->
   {% match pr_notifications %}
     {% when Some with (prs) %}
-      <div id="pr-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-pr">
+      <div id="pr-banner" class="wo-alert wo-mb-s4 wo-alert--pr">
         <div class="is-flex is-align-items-start is-gap-3">
           <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-pr wo-mb-s2">New Personal Record!</h3>
             <div>
               {% for pr in prs %}
-                <div class="wo-meta wo-flex-center-gap1 wo-mb-s1">
+                <div class="wo-meta wo-mb-s1">
                   
                   <span>{{ pr }}</span>
                 </div>
               {% endfor %}
             </div>
           </div>
-          <button onclick="document.getElementById('pr-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
+          <button onclick="document.getElementById('pr-banner').remove()" class="wo-color-text-dim wo-no-underline wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
         </div>
       </div>
     {% when None %}
@@ -56,13 +56,13 @@
   <!-- Overload Suggestions -->
   {% match overload_suggestion %}
     {% when Some with (suggestion) %}
-      <div id="overload-banner" class="wo-alert wo-mb-s4 wo-mb-s4-border-text">
+      <div id="overload-banner" class="wo-alert wo-mb-s4 wo-alert--text">
         <div class="is-flex is-align-items-start is-gap-3">
           <div class="is-flex-grow-1">
             <h3 class="wo-title wo-fs-body wo-color-text-bold wo-mb-s2">Trainingstipp</h3>
             <p class="wo-meta">{{ suggestion }}</p>
           </div>
-          <button onclick="document.getElementById('overload-banner').remove()" class="wo-color-text-dim-link wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
+          <button onclick="document.getElementById('overload-banner').remove()" class="wo-color-text-dim wo-no-underline wo-fs-title wo-cursor-pointer" aria-label="Dismiss">×</button>
         </div>
       </div>
     {% when None %}
@@ -73,12 +73,12 @@
       
       <!-- Exercise Instructions -->
       <div class="wo-section">
-        <div class="wo-meta wo-leading-relaxed">
+        <div class="wo-prose">
           {{ exercise.exercise_instructions }}
         </div>
         {% match exercise.notes %}
           {% when Some with (notes) %}
-            <div class="wo-mt-s2-pt2-border">
+            <div class="wo-divider-top">
               <div class="wo-label">Training Notes:</div>
               <div class="wo-meta">{{ notes }}</div>
             </div>
@@ -93,7 +93,7 @@
             <summary class="wo-label wo-cursor-pointer wo-flex-between">
               <div class="is-flex is-align-items-center is-gap-2">
                 <svg class="wo-icon" aria-hidden="true"><use href="#i-video"/></svg>
-                <span class="wo-font-medium wo-color-text-dim">Video Instructions</span>
+                <span class="wo-color-text-dim">Video Instructions</span>
               </div>
               <span class="wo-label">▼</span>
             </summary>
@@ -123,7 +123,7 @@
         </h3>
         
         {% if current_exercise_sets.len() == 0 %}
-          <div class="has-text-centered wo-center-pad wo-color-text-dim">
+          <div class="wo-empty wo-color-text-dim">
             <p class="wo-meta">No sets completed yet</p>
             <p class="wo-label">Start with your first set below</p>
           </div>
@@ -176,7 +176,7 @@
       <form id="set-form"
             hx-post="/live-training/{{ active_workout_view.active_workout.id }}/complete-set"
             hx-swap="none"
-            class="wo-mb-calc"
+           
             onsubmit="handleWeightField(event)">
 
         <input type="hidden" name="exercise_id" value="{{ exercise.exercise_id }}">
@@ -229,7 +229,7 @@
 
         <!-- Submit Button -->
         <button type="submit"
-                class="wo-btn wo-btn-primary wo-btn-lg-center">
+                class="wo-btn wo-btn-primary">
           <span>Complete Set</span>
           <span class="wo-fs-title">→</span>
         </button>
@@ -302,8 +302,8 @@
 
     {% when None %}
       <!-- Workout Complete Actions -->
-      <div class="has-text-centered wo-mb-calc">
-        <div class="wo-section wo-p-s5">
+      <div class="has-text-centered">
+        <div class="wo-section">
           <h2 class="wo-title wo-mb-s2">Amazing Work!</h2>
           <p class="wo-label wo-mb-s2">You completed {{ active_workout_view.total_sets_completed }} sets</p>
           <div class="wo-label">
@@ -323,7 +323,7 @@
           </div>
           
           <button type="submit"
-                  class="wo-btn wo-btn-primary wo-btn-lg">
+                  class="wo-btn wo-btn-primary">
             Finish Training
           </button>
         </form>

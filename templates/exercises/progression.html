@@ -8,7 +8,7 @@
   <!-- Header -->
   <div class="wo-mb-s4">
     <div class="is-flex is-align-items-center is-gap-3 wo-mb-s2">
-      <a href="/exercises" class="wo-tap wo-color-text-dim-link" aria-label="Back to exercises">
+      <a href="/exercises" class="wo-tap wo-color-text-dim wo-no-underline" aria-label="Back to exercises">
         <svg class="wo-icon" aria-hidden="true"><use href="#i-arrow-left"/></svg>
       </a>
       <h1 class="wo-title wo-color-text">{{ exercise.name }}</h1>
@@ -17,7 +17,7 @@
   </div>
 
   {% if progression_data.len() == 0 %}
-    <div class="wo-section wo-text-center-pad5">
+    <div class="wo-section wo-empty">
       <h2 class="wo-title wo-mb-s2">No Data Yet</h2>
       <p class="wo-label">Complete some sets of this exercise to see your progression!</p>
     </div>
