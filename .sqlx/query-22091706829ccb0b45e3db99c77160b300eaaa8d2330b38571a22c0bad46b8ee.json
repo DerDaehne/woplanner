@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT COUNT(*) as \"c!: i32\" FROM exercises",
+  "describe": {
+    "columns": [
+      {
+        "name": "c!: i32",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "22091706829ccb0b45e3db99c77160b300eaaa8d2330b38571a22c0bad46b8ee"
+}

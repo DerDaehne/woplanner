@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT we.position as \"position: i32\", e.name\n               FROM workout_exercises we JOIN exercises e ON e.id = we.exercise_id\n               WHERE we.workout_id = ? ORDER BY we.position",
+  "describe": {
+    "columns": [
+      {
+        "name": "position: i32",
+        "ordinal": 0,
+        "type_info": "Integer"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "bdf32aabd0f2f24c126c2866544df3fe4aef230e74fd7157cf3a9d83c3554197"
+}

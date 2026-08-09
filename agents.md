@@ -149,6 +149,45 @@ erzeugt keinen Fehler. Was das Skript nicht prüft, ist nicht bewiesen.
 - **Bewegung:** Nur Opazität beim Drücken. Keine Blur-, Schatten- oder
   Verlaufseffekte.
 
+## Trainingspläne als YAML
+
+Ein Plan verlässt die App über `GET /workouts/{id}/export` und kommt über
+`POST /workouts/import` (Feld `yaml`) zurück — im UI über den zweiten Knopf
+neben „+" auf `/workouts`. Zweck: Pläne außerhalb der App erarbeiten, etwa von
+einem Sprachmodell, und ohne Abtippen importieren.
+
+**Wenn du einen Plan erzeugen sollst, halte dich exakt an diese Form:**
+
+```yaml
+version: 1                                   # Pflicht
+name: Push Day                               # Pflicht, max. 100 Zeichen
+description: Brust, Schultern, Trizeps       # optional
+schedule:                                    # optional, Standard: manual
+  type: rotation                             # manual | rotation | weekly | disabled
+  day: null                                  # 0 = Sonntag … 6 = Samstag, nur bei weekly
+exercises:                                   # 1 bis 50
+  - name: Bench Press                        # Pflicht
+    instructions: |                          # Pflicht, wenn die Übung neu ist
+      Auf die Bank legen, Hantel zur Brust führen,
+      explosiv nach oben drücken.
+    video_url: https://www.youtube.com/watch?v=xyz   # optional
+    sets: 4                                  # 1 bis 50, Standard 3
+    weight: 80.0                             # optional; fehlt = Körpergewicht
+    notes: Aufwärmsatz mit 60 kg             # optional
+```
+
+Regeln, die beim Erzeugen zählen:
+
+- **Keine IDs, keine Zeitstempel, kein Nutzerbezug.** Ein Plan ist eine Vorlage.
+- **Keine `position`.** Die Reihenfolge der Liste ist die Reihenfolge im Plan.
+- Übungen werden über den **Namen** zugeordnet (getrimmt, ohne Groß-/Kleinschreibung). Existiert die Übung, wird sie verwendet und ihre vorhandene Anleitung **nicht** überschrieben. Existiert sie nicht, ist `instructions` Pflicht.
+- Der Leser versteht nur Block-Stil. Kein `{a: 1}`, keine Anker, keine Tabs, kein `---`. Unbekannte Felder sind ein Fehler, kein stilles Ignorieren.
+- Fehlermeldungen nennen die Stelle: `exercise 2 'Lunge': sets must be between 1 and 50`.
+
+Vollständige Begründung: Notiz `concept-workout-yaml`.
+Implementierung: `src/workout_yaml.rs` (Format plus Parser, ohne Fremdbibliothek —
+crates.io ist in dieser Umgebung nicht erreichbar).
+
 ## Mobile-First PWA Considerations
 
 ### iOS Safari Quirks

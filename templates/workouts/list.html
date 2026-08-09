@@ -8,10 +8,16 @@
   <div class="wo-section">
     <div class="wo-flex-between wo-mb-s4">
       <h1 class="wo-title">Workouts</h1>
-      <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Create workout"
-              onclick="document.getElementById('sheet-workout').showModal()">
-        <svg class="wo-icon" aria-hidden="true"><use href="#i-plus"/></svg>
-      </button>
+      <div class="is-flex is-gap-2">
+        <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Import plan from YAML"
+                onclick="document.getElementById('sheet-import').showModal()">
+          <svg class="wo-icon" aria-hidden="true"><use href="#i-book"/></svg>
+        </button>
+        <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Create workout"
+                onclick="document.getElementById('sheet-workout').showModal()">
+          <svg class="wo-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- Ziel des HTMX-Swaps: enthält NUR die Liste, sonst würde die
@@ -61,6 +67,34 @@
 
     <button type="submit" class="wo-btn wo-btn-primary">
       Create Workout
+    </button>
+  </form>
+</dialog>
+
+<dialog id="sheet-import" class="wo-sheet">
+  <div class="wo-flex-between wo-mb-s4">
+    <h2 class="wo-title">Import Plan</h2>
+    <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Close"
+            onclick="this.closest('dialog').close()">&times;</button>
+  </div>
+
+  <!-- Textarea statt Datei-Upload: der Anwendungsfall ist „Plan aus einem
+       Chat kopieren". Format siehe Notiz concept-workout-yaml. -->
+  <form hx-post="/workouts/import" hx-swap="none">
+    <div class="field wo-mb-s4">
+      <label for="yaml" class="wo-label wo-mb-s2 wo-block">
+        Plan as YAML
+      </label>
+      <textarea id="yaml"
+                name="yaml"
+                rows="12"
+                required
+                placeholder="version: 1&#10;name: Push Day&#10;exercises:&#10;  - name: Bench Press&#10;    sets: 4&#10;    weight: 80"
+                class="wo-input wo-resize-none wo-fs-meta"></textarea>
+    </div>
+
+    <button type="submit" class="wo-btn wo-btn-primary">
+      Import Plan
     </button>
   </form>
 </dialog>

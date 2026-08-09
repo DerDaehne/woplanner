@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT instructions FROM exercises WHERE id = 'ex-1'",
+  "describe": {
+    "columns": [
+      {
+        "name": "instructions",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "995c71072eb9ca4dc0064164a6d5ffa00bb4aef75b2501c04a946d2accc27285"
+}

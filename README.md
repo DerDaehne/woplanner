@@ -136,7 +136,7 @@ PORT=3000
 - [ ] workout templates
 - [ ] progressive overload suggestions
 - [ ] full offline support
-- [ ] export/import data
+- [x] export/import data (Trainingspläne als YAML)
 
 ---
 

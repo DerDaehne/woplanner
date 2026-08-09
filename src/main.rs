@@ -4,6 +4,7 @@ mod filters;
 mod handlers;
 mod models;
 mod templates;
+mod workout_yaml;
 
 use axum::{
     Router,

@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id FROM exercises WHERE lower(trim(name)) = lower(trim(?)) LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "560a0b384cb52badd7aa1fc72009ebdaa92aa9781f68081aa47450e12ee9bd97"
+}
