@@ -38,23 +38,14 @@
           WO<span class="wo-color-text-mute">Planner</span>
         </a>
 
-        <!-- User Actions -->
+        <!-- Nur der Name. Der Nutzerwechsel hat genau einen Einstieg: den
+             Dock-Eintrag „Profile". Der frühere Knopf hier daneben war der
+             zweite Weg zur selben Sache, und der „Get Started"-Knopf ohne
+             Sitzung zeigte auf /users — die Seite, auf der man bereits stand. -->
         {% match current_user %}
           {% when Some with (user) %}
-            <div class="is-flex is-align-items-center is-gap-2">
-              <div class="is-mobile-hidden wo-color-text-mute wo-fs-body">
-                {{ user.name }}
-              </div>
-              <form hx-post="/logout" hx-swap="outerHTML" hx-target="body" class="is-inline-flex">
-                <button type="submit" class="wo-btn wo-btn-inline wo-btn-sm" aria-label="Switch user">
-                  <svg class="wo-icon" aria-hidden="true"><use href="#i-switch"/></svg>
-                </button>
-              </form>
-            </div>
+            <div class="wo-color-text-mute wo-fs-body">{{ user.name }}</div>
           {% when None %}
-            <a href="/users" class="wo-btn wo-btn-primary wo-btn-inline wo-btn-md">
-              Get Started
-            </a>
         {% endmatch %}
       </div>
     </div>
@@ -69,7 +60,7 @@
     
     <!-- Dock Navigation -->
     {% match current_user %}
-      {% when Some with (user) %}
+      {% when Some with (_user) %}
         <nav class="wo-dock">
           {% if is_dashboard == false %}
             <a href="/dashboard" class="wo-dock-item">
@@ -93,9 +84,10 @@
             <div class="wo-dock-label">History</div>
           </a>
 
-          <a href="/settings" class="wo-dock-item">
+          <!-- /settings existiert nicht und lieferte 404 als rohes JSON. -->
+          <a href="/users" class="wo-dock-item">
             <svg class="wo-icon" aria-hidden="true"><use href="#i-user"/></svg>
-            <div class="wo-dock-label">Settings</div>
+            <div class="wo-dock-label">Profile</div>
           </a>
         </nav>
         <script>

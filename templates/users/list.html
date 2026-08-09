@@ -20,6 +20,16 @@
       {% include "users/user_list_partial.html" %}
     </div>
   </div>
+
+  <!-- Einziger Einstieg zum Abmelden, seit der Knopf aus der Kopfzeile
+       verschwunden ist. -->
+  {% match current_user %}
+    {% when Some with (user) %}
+      <form hx-post="/logout" hx-swap="outerHTML" hx-target="body">
+        <button type="submit" class="wo-btn">Sign out {{ user.name }}</button>
+      </form>
+    {% when None %}
+  {% endmatch %}
 </div>
 
 <dialog id="sheet-user" class="wo-sheet">
