@@ -39,13 +39,12 @@ pub struct CompletedWorkoutWithName {
 }
 
 impl CompletedWorkoutWithName {
-    pub fn duration_display(&self) -> String {
-        let mins = self.total_duration_minutes;
-        if mins < 60 {
-            format!("{}m", mins)
-        } else {
-            format!("{}h {}m", mins / 60, mins % 60)
-        }
+    pub fn duration_display(&self) -> Option<String> {
+        crate::models::active_workout::duration_display(self.total_duration_minutes)
+    }
+
+    pub fn notes_display(&self) -> Option<&str> {
+        crate::models::active_workout::notes_display(&self.notes)
     }
 
     pub fn completed_date_display(&self) -> String {

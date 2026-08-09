@@ -35,177 +35,72 @@
     </div>
   </div>
 
-  <!-- Stats Grid -->
+  <!-- Kennzahlen: Wert und genau ein Label. Vorher standen darunter noch eine
+       Beschreibung und ein Aufmunterungssatz — drei Zeilen für eine Zahl. -->
   <div class="wo-section">
     <div class="wo-cols">
-    
-    <!-- Total Workouts -->
-    <div>
       <div>
-        <div class="wo-row wo-mb-s0">
-          <div class="has-text-right">
-            <div class="wo-num">
-              {{ stats.total_workouts }}
-            </div>
-            <div class="wo-label">TOTAL</div>
-          </div>
+        <div class="wo-num">{{ stats.total_workouts }}</div>
+        <div class="wo-label">Workouts</div>
+      </div>
+
+      <div>
+        <div class="wo-num">{{ stats.workouts_this_week }}</div>
+        <div class="wo-label">This week</div>
+      </div>
+
+      <div>
+        <div class="wo-num">{{ stats.current_streak }}</div>
+        <div class="wo-label">Day streak</div>
+      </div>
+
+      <div>
+        <div class="wo-num">
+          {% if stats.total_volume_kg >= 1000.0 %}
+            {{ (stats.total_volume_kg / 1000.0) as i32 }}.{{ ((stats.total_volume_kg / 100.0) as i32) % 10 }}t
+          {% else %}
+            {{ stats.total_volume_kg as i32 }}kg
+          {% endif %}
         </div>
-        <h3 class="wo-meta wo-mt-s2">Completed Workouts</h3>
-        <p class="wo-label">All time record</p>
+        <div class="wo-label">Total volume</div>
       </div>
     </div>
-
-    <!-- This Week -->
-    <div>
-      <div>
-        <div class="wo-row wo-mb-s0">
-          <div class="has-text-right">
-            <div class="wo-num wo-color-text">
-              {{ stats.workouts_this_week }}
-            </div>
-            <div class="wo-label">THIS WEEK</div>
-          </div>
-        </div>
-        <h3 class="wo-meta wo-mt-s2">Weekly Progress</h3>
-        <div class="wo-progress wo-mt-s2">
-          <span style="width: {% if stats.workouts_this_week >= 3 %}100{% else %}{{ stats.workouts_this_week * 33 }}{% endif %}%"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Current Streak -->
-    <div>
-      <div>
-        <div class="wo-row wo-mb-s0">
-          <div class="has-text-right">
-            <div class="wo-num">
-              {{ stats.current_streak }}
-            </div>
-            <div class="wo-label">DAYS</div>
-          </div>
-        </div>
-        <h3 class="wo-meta wo-mt-s2">Current Streak</h3>
-        <p class="wo-label">Keep it going!</p>
-      </div>
-    </div>
-
-    <!-- Total Volume -->
-    <div>
-      <div>
-        <div class="wo-row wo-mb-s0">
-          <div class="has-text-right">
-            <div class="wo-num">
-              {% if stats.total_volume_kg >= 1000.0 %}
-                {{ (stats.total_volume_kg / 1000.0) as i32 }}.{{ ((stats.total_volume_kg / 100.0) as i32) % 10 }}t
-              {% else %}
-                {{ stats.total_volume_kg as i32 }}kg
-              {% endif %}
-            </div>
-            <div class="wo-label">VOLUME</div>
-          </div>
-        </div>
-        <h3 class="wo-meta wo-mt-s2">Total Lifted</h3>
-        
-      </div>
-    </div>
-
-  </div>
   </div>
 
-  <!-- Recent Activity & Quick Actions Grid -->
-  <div>
-    
-    <!-- Recent Workouts -->
-    <div>
-      <div class="wo-section">
-        <h2 class="wo-title wo-mb-s4">
-          Recent Activity
-        </h2>
-        
-        {% if recent_workouts.len() == 0 %}
-          <div class="has-text-centered wo-center-pad">
-            <p class="wo-color-text-dim-body wo-mb-s2">No workouts yet!</p>
-            <p class="wo-label">Start your first training to see your progress here</p>
-          </div>
-        {% else %}
-          <div>
-            {% for workout in recent_workouts %}
-            <div class="wo-row">
-              <div>
-                <div class="wo-meta">Training Completed</div>
-                <div class="wo-label">
-                  {% match stats.last_workout %}
-                    {% when Some with (when) %}{{ when }}{% when None %}Recently
-                  {% endmatch %}
-                </div>
+  <!-- Recent Activity.
+       Der frühere „Quick Actions"-Block stand hier daneben und wiederholte
+       den Start-Button von oben sowie drei der vier Dock-Einträge. -->
+  <div class="wo-section">
+    <h2 class="wo-title wo-mb-s4">Recent Activity</h2>
+
+    {% if recent_workouts.len() == 0 %}
+      <div class="has-text-centered wo-center-pad">
+        <p class="wo-color-text-dim-body wo-mb-s2">No workouts yet!</p>
+        <p class="wo-label">Start your first training to see your progress here</p>
+      </div>
+    {% else %}
+      <div>
+        {% for workout in recent_workouts %}
+          <a href="/history/{{ workout.id }}" class="wo-row">
+            <div class="wo-row__main">
+              <div class="wo-color-text-bold-body wo-truncate">{{ workout.workout_name }}</div>
+              <div class="wo-label">
+                {{ workout.completed_date_display() }}
+                &middot; {{ workout.total_sets }} sets
+                &middot; {{ workout.total_volume_kg as i32 }}kg
               </div>
             </div>
-            <div class="wo-row wo-fs-meta-dim">
-              <span>{{ workout.duration_display() }}</span>
-              <span>{{ workout.total_sets }} sets</span>
-              <span>{{ workout.total_volume_kg as i32 }}kg</span>
-            </div>
-            {% endfor %}
-          </div>
-          
-          <div class="has-text-centered wo-mt-s3">
-            <a href="/history" class="wo-tap wo-meta wo-no-underline">
-              View workout history →
-            </a>
-          </div>
-        {% endif %}
+            <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+          </a>
+        {% endfor %}
       </div>
-    </div>
 
-    <!-- Quick Actions -->
-    <div>
-      <div class="wo-section">
-        <h2 class="wo-title wo-mb-s4">
-          Quick Actions
-        </h2>
-        
-        <div class="wo-cols">
-          {% match active_workout %}
-            {% when Some with (workout) %}
-              <div>
-                <a href="/live-training/{{ workout.id }}" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-                  <div class="wo-color-text-bold">Continue</div>
-                  <div class="wo-label">Resume training</div>
-                </a>
-              </div>
-            {% when None %}
-              <div>
-                <a href="/workouts" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-                  <div class="wo-color-text-bold">Start Training</div>
-                  <div class="wo-label">Begin workout</div>
-                </a>
-              </div>
-          {% endmatch %}
-          
-          <div>
-            <a href="/exercises" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-color-text-bold">Exercises</div>
-              <div class="wo-label">{{ exercises.len() }} available</div>
-            </a>
-          </div>
-          
-          <div>
-            <a href="/workouts" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-color-text-bold">Workouts</div>
-              <div class="wo-label">Plan routines</div>
-            </a>
-          </div>
-          
-          <div>
-            <a href="/settings" class="wo-btn wo-text-center wo-flex-col-center-gap3">
-              <div class="wo-color-text-bold">Settings</div>
-              <div class="wo-label">Customize app</div>
-            </a>
-          </div>
-        </div>
+      <div class="has-text-centered wo-mt-s3">
+        <a href="/history" class="wo-tap wo-meta wo-no-underline">
+          View workout history →
+        </a>
       </div>
-    </div>
-
+    {% endif %}
   </div>
 
 </div>

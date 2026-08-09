@@ -41,6 +41,14 @@ pub struct ProgressionDataPoint {
     pub set_number: i32,
 }
 
+/// RFC-3339 aus der Datenbank auf ein lesbares Datum kürzen.
+/// Nicht parsebare Werte fallen weg statt roh zu erscheinen.
+fn format_date(raw: &str) -> String {
+    chrono::DateTime::parse_from_rfc3339(raw)
+        .map(|d| d.format("%b %d, %Y").to_string())
+        .unwrap_or_default()
+}
+
 #[derive(Template)]
 #[template(path = "exercises/progression.html")]
 pub struct ExerciseProgressionTemplate {
@@ -167,7 +175,10 @@ pub async fn show_exercise_progression(
     let progression_data_vec: Vec<ProgressionDataPoint> = progression_data
         .into_iter()
         .map(|row| ProgressionDataPoint {
-            date: row.date,
+            // In Rust formatieren, nicht roh durchreichen: die Spalte enthält
+            // RFC-3339 mit Nanosekunden, das stand so in der Zeile
+            // ("2025-11-06T13:27:24.856992504+00:00").
+            date: format_date(&row.date),
             weight: row.weight,
             reps: row.reps,
             volume: row.weight.map(|w| w * row.reps as f32),

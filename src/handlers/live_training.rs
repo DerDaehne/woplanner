@@ -360,7 +360,9 @@ pub async fn complete_set(
         form.weight,
         form.reps,
     );
-    completed_set.notes = form.notes;
+    // Leere Eingabe ist keine Notiz — sonst landet "" statt NULL in der DB
+    // und das Template rendert ein einsames Paar Anführungszeichen.
+    completed_set.notes = form.notes.filter(|n| !n.trim().is_empty());
 
     sqlx::query!(
         "INSERT INTO completed_sets (id, active_workout_id, exercise_id, set_number, weight, reps, notes, completed_at, created_at)
@@ -440,8 +442,10 @@ pub async fn finish_training(
     .await
     .unwrap_or(0.0);
 
+    // Leere Eingabe ist keine Notiz — siehe complete_set weiter oben.
+    let notes = form.notes.filter(|n| !n.trim().is_empty());
     let completed_workout =
-        CompletedWorkout::new(active_workout, total_sets, total_volume_kg, form.notes);
+        CompletedWorkout::new(active_workout, total_sets, total_volume_kg, notes);
 
     sqlx::query!(
         r#"INSERT INTO completed_workouts

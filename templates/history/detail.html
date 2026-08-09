@@ -18,12 +18,16 @@
 
     <!-- Stats Grid -->
     <div class="wo-cols">
-      <div>
-        <div class="wo-text-center">
-          <div class="wo-num wo-fs-title">{{ workout.duration_display() }}</div>
-          <div class="wo-label">Duration</div>
-        </div>
-      </div>
+      {% match workout.duration_display() %}
+        {% when Some with (duration) %}
+          <div>
+            <div class="wo-text-center">
+              <div class="wo-num wo-fs-title">{{ duration }}</div>
+              <div class="wo-label">Duration</div>
+            </div>
+          </div>
+        {% when None %}
+      {% endmatch %}
       <div>
         <div class="wo-text-center">
           <div class="wo-num wo-fs-title">{{ workout.total_sets }}</div>
@@ -44,11 +48,11 @@
       </div>
     </div>
 
-    {% match workout.notes %}
+    {% match workout.notes_display() %}
       {% when Some with (notes) %}
         <div class="wo-mt-s3-pt3-border">
-          <div class="wo-label">Workout Notes:</div>
-          <p class="wo-meta wo-italic">"{{ notes }}"</p>
+          <div class="wo-label">Workout Notes</div>
+          <p class="wo-meta wo-italic">{{ notes }}</p>
         </div>
       {% when None %}
     {% endmatch %}

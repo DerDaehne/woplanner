@@ -1,5 +1,6 @@
 use crate::error::AppError;
-use crate::models::{ActiveWorkout, CompletedWorkout, Exercise, User};
+use crate::handlers::history::CompletedWorkoutWithName;
+use crate::models::{ActiveWorkout, User};
 use askama::Template;
 use axum::{
     Form, Router,
@@ -36,8 +37,7 @@ pub struct UserListPartialTemplate {
 pub struct DashboardTemplate {
     pub user: User,
     pub current_user: Option<User>,
-    pub exercises: Vec<Exercise>,
-    pub recent_workouts: Vec<CompletedWorkout>,
+    pub recent_workouts: Vec<CompletedWorkoutWithName>,
     pub active_workout: Option<ActiveWorkout>,
     pub stats: DashboardStats,
     pub is_dashboard: bool,
@@ -48,7 +48,6 @@ pub struct DashboardStats {
     pub current_streak: i32,
     pub workouts_this_week: i32,
     pub total_workouts: i32,
-    pub last_workout: Option<String>,
     pub total_volume_kg: f32,
 }
 
@@ -173,22 +172,22 @@ pub async fn dashboard(
         None => return Ok(Html(r#"<p>Session invalid. <a href="/users">Please log in again</a></p>"#.to_string()).into_response()),
     };
 
+    // Mit Workout-Namen, damit die Zeile im Dashboard denselben Aufbau hat
+    // wie die History-Liste: Name oben, Datum und Kennzahlen darunter.
     let recent_workouts = sqlx::query_as!(
-        CompletedWorkout,
+        CompletedWorkoutWithName,
         r#"SELECT
-            id,
-            user_id,
-            workout_id,
-            started_at,
-            completed_at,
-            total_duration_minutes as "total_duration_minutes: i32",
-            total_sets as "total_sets: i32",
-            total_volume_kg as "total_volume_kg: f32",
-            notes,
-            created_at
-            FROM completed_workouts
-            WHERE user_id = ?
-            ORDER BY completed_at DESC LIMIT 3"#,
+            cw.id as "id!",
+            w.name as "workout_name!",
+            cw.completed_at as "completed_at!",
+            cw.total_duration_minutes as "total_duration_minutes: i32",
+            cw.total_sets as "total_sets: i32",
+            cw.total_volume_kg as "total_volume_kg: f32",
+            cw.notes
+            FROM completed_workouts cw
+            JOIN workouts w ON w.id = cw.workout_id
+            WHERE cw.user_id = ?
+            ORDER BY cw.completed_at DESC LIMIT 3"#,
         user.id
     )
     .fetch_all(&database_pool)
@@ -235,36 +234,16 @@ pub async fn dashboard(
         0
     };
 
-    let last_workout = recent_workouts.first().map(|w| {
-        let completed = chrono::DateTime::parse_from_rfc3339(&w.completed_at)
-            .unwrap_or_else(|_| chrono::Utc::now().into());
-        let now = chrono::Utc::now();
-        let diff = now.signed_duration_since(completed).num_days();
-
-        match diff {
-            0 => "Today".to_string(),
-            1 => "Yesterday".to_string(),
-            n => format!("{} days ago", n),
-        }
-    });
-
     let stats = DashboardStats {
         current_streak,
         workouts_this_week,
         total_workouts,
-        last_workout,
         total_volume_kg,
     };
-
-    let exercises =
-        sqlx::query_as!(Exercise, "SELECT id, name, instructions, video_url, created_at FROM exercises ORDER BY name LIMIT 3")
-            .fetch_all(&database_pool)
-            .await?;
 
     let template = DashboardTemplate {
         user: user.clone(),
         current_user: Some(user),
-        exercises,
         recent_workouts,
         active_workout,
         stats,

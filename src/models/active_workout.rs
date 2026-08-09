@@ -111,6 +111,30 @@ pub struct CompletedSetDetail {
     pub exercise_instructions: String,
 }
 
+/// Trainingsdauer für die Anzeige, oder `None` wenn sie nichts aussagt.
+///
+/// `0` heißt „nicht gemessen" und erschien bisher als „0m" — auf sieben von
+/// acht Einträgen der Seed-Datenbank. Werte über einem Tag entstehen, wenn ein
+/// Training offen blieb und Tage später abgeschlossen wurde; „526h 36m" hilft
+/// niemandem weiter.
+///
+/// Frei stehende Funktion, weil zwei Typen dieselbe Anzeige brauchen:
+/// `CompletedWorkout` und `handlers::history::CompletedWorkoutWithName`.
+pub fn duration_display(total_minutes: i32) -> Option<String> {
+    const MAX_PLAUSIBLE_MINUTES: i32 = 24 * 60;
+    match total_minutes {
+        m if m <= 0 || m > MAX_PLAUSIBLE_MINUTES => None,
+        m if m < 60 => Some(format!("{}m", m)),
+        m => Some(format!("{}h {}m", m / 60, m % 60)),
+    }
+}
+
+/// Notiz ohne leere Zeichenketten. Die Datenbank enthält `''` statt NULL,
+/// wodurch `Some("")` im Template als einsames Paar Anführungszeichen erschien.
+pub fn notes_display(notes: &Option<String>) -> Option<&str> {
+    notes.as_deref().map(str::trim).filter(|n| !n.is_empty())
+}
+
 impl CompletedWorkout {
     pub fn new(
         active_workout: ActiveWorkout,
@@ -139,13 +163,12 @@ impl CompletedWorkout {
         }
     }
 
-    pub fn duration_display(&self) -> String {
-        let mins = self.total_duration_minutes;
-        if mins < 60 {
-            format!("{}m", mins)
-        } else {
-            format!("{}h {}m", mins / 60, mins % 60)
-        }
+    pub fn duration_display(&self) -> Option<String> {
+        duration_display(self.total_duration_minutes)
+    }
+
+    pub fn notes_display(&self) -> Option<&str> {
+        notes_display(&self.notes)
     }
 
     #[allow(dead_code)]
@@ -393,7 +416,7 @@ mod tests {
             notes: None,
             created_at: "2025-01-01T12:45:00Z".to_string(),
         };
-        assert_eq!(workout.duration_display(), "45m");
+        assert_eq!(workout.duration_display().as_deref(), Some("45m"));
     }
 
     #[test]
@@ -410,7 +433,7 @@ mod tests {
             notes: None,
             created_at: "2025-01-01T14:30:00Z".to_string(),
         };
-        assert_eq!(workout.duration_display(), "2h 30m");
+        assert_eq!(workout.duration_display().as_deref(), Some("2h 30m"));
     }
 
     #[test]
@@ -427,7 +450,7 @@ mod tests {
             notes: None,
             created_at: "2025-01-01T13:00:00Z".to_string(),
         };
-        assert_eq!(workout.duration_display(), "1h 0m");
+        assert_eq!(workout.duration_display().as_deref(), Some("1h 0m"));
     }
 
     #[test]
