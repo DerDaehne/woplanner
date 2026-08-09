@@ -21,8 +21,8 @@ WOPlanner is a Progressive Web App (PWA) for tracking strength training workouts
 ### Frontend
 - **Interactivity:** HTMX 1.9.12
 - **Styling:** Bulma 1.0.4, lokal unter `static/css/bulma.min.css`
-- **Design System:** OLED Focus (siehe Notiz `arch-woplanner-styling`)
-- **Icons:** Emoji-based for simplicity
+- **Design System:** Rack (Notizen `adr-002-design-rack`, `arch-woplanner-styling`)
+- **Icons:** Inline-SVG-Sprite in `templates/icons.html`, keine Emoji
 
 ### Development
 - **Build Tool:** Cargo
@@ -98,47 +98,56 @@ headers.insert("HX-Redirect", HeaderValue::from_static("/path"));
 
 ## Design System
 
-> **In Überarbeitung (Stand 2026-08-08).** Die Tokens unten gelten weiter, die
-> **Seitenstruktur nicht**. Verbindlich für neues Markup ist
-> `adr-002-design-rack` (Zettelkasten) mit den Gesetzen L1–L10, umgesetzt über
-> Epic #703. Kurzfassung: ein Layout-Container `.wo-page` mit seitlichem Rand,
-> **kein** Bulma `.columns` im Markup (negative Ränder ⇒ horizontales Scrollen),
-> eine `h1` pro Seite in 20px, keine Karten und erst recht keine verschachtelten,
-> genau ein Akzent pro Bildschirm, SVG-Icons statt Emoji, Anlege-Formulare im
-> `<dialog>`-Sheet statt dauerhaft offen.
+Der verbindliche Stil heißt **Rack**. Farb- und Größentokens stehen in der
+Notiz `arch-woplanner-styling`, die zehn Struktur-Gesetze in
+`adr-002-design-rack`. `static/css/style.css` ist die einzige Umsetzung.
 
-Der bisherige Stil heißt **OLED Focus**. Die vollständige Spezifikation
-(Tokens, Bulma-Anbindung, Komponentenklassen) steht in der Zettelkasten-Notiz
-`arch-woplanner-styling`; `static/css/style.css` ist die einzige Umsetzung davon.
+**Vor jeder UI-Änderung `./scripts/check-design.sh` laufen lassen** — es prüft
+die Gesetze L1, L2, L3, L4 und L6 im Headless-Chromium gegen die laufende App
+und die Klassennamen in beide Richtungen. CSS scheitert lautlos: eine Regel mit
+undefiniertem Custom Property wird verworfen, ein erfundener Klassenname
+erzeugt keinen Fehler. Was das Skript nicht prüft, ist nicht bewiesen.
 
-### CSS Classes
+### Die zehn Gesetze in Kurzform
+
+| | |
+|---|---|
+| **L1** | Eine Fläche. `--wo-raised` nur für `.wo-dock` und `.wo-sheet`, sonst Haarlinien. Keine Fläche in einer Fläche. |
+| **L2** | `.wo-page` ist der einzige Layout-Container. **Kein Bulma `.columns` im Markup** — dessen negative Außenränder erzeugen 12px horizontales Scrollen. Mehrspaltig: `.wo-cols`. |
+| **L3** | Genau eine `h1` pro Seite, 20px, kein Hero. 56px (`--wo-fs-num-lg`) ist Daten vorbehalten. |
+| **L4** | `.wo-row` ist die Grundeinheit; die ganze Zeile ist das Tap-Ziel, min. 56px. Kein Bedienelement unter 44px. |
+| **L5** | Ein Akzent pro Bildschirm. Zahlen sind weiß. `--wo-pr` nur für Personal Records, `--wo-ok` nur für Abgeschlossenes. |
+| **L6** | Icons aus `templates/icons.html` (`<use href="#i-…"/>`), niemals Emoji im Chrome. |
+| **L7** | Anlege-Formulare in `<dialog class="wo-sheet">`, ausgelöst über einen „+"-Knopf. Listenseiten zeigen Listen. |
+| **L8** | Komponentenklassen statt Utility-Kombinationen. Kein `wo-color-x-size-y` — Farbe und Größe sind zwei Klassen. |
+| **L9** | Fehlende Werte weglassen, nicht als `""`, `0m` oder `-` rendern. Daten in Rust formatieren, nie roh durchreichen. |
+| **L10** | Jedes Gesetz hat eine Prüfung in `scripts/check-design.sh`. |
+
+### Komponentenklassen
 ```css
+.wo-page            /* der einzige Layout-Container: Rand, Breite, Dock-Abstand */
+.wo-cols            /* 2 Spalten (Grid), .wo-cols--3 für drei */
 .wo-section         /* Gruppe von Zeilen, getrennt durch Abstand statt Box */
-.wo-row             /* Listeneintrag: flex, space-between, Haarlinie unten */
-.wo-label           /* 11px Versalien, Meta-Beschriftung */
-.wo-meta            /* 13px Sekundärtext */
-.wo-title           /* 20px Überschrift */
-.wo-num / .wo-num-lg /* 40px / 56px Zahlen, tabular-nums */
-.wo-btn             /* volle Breite, min-height 48px */
-.wo-btn-primary     /* Akzentfläche #FF3B30, schwarze Schrift */
-.wo-btn-inline      /* Breite auto, min-height 44px */
-.wo-input           /* schwarzes Feld, Rahmen statt Fläche */
-.wo-alert           /* Meldung mit Akzent-Balken links */
-.wo-dock            /* Navigation an der Bildschirmunterkante */
+.wo-row             /* Listeneintrag, als <a> die ganze Zeile tappbar */
+.wo-row__main       /* Titel + Meta links   .wo-row__value: Wert/Chevron rechts */
+.wo-row--button     /* dieselbe Zeile, wenn sie per HTMX abschickt */
+.wo-empty           /* Leerzustand: zentriert, mit Luft, ohne Fläche */
+.wo-note / .wo-prose /* Nutzernotiz (kursiv, Linie links) / Fließtext */
+.wo-divider-top     /* Trenner über einem Nachtrag */
+.wo-sheet           /* <dialog> als Bottom-Sheet */
+.wo-icon            /* 20px, stroke: currentColor */
+.wo-tap             /* freistehender Link, trotzdem 44px hoch */
+.wo-label .wo-meta .wo-title .wo-num  /* Typo */
+.wo-btn .wo-btn-primary .wo-btn-inline .wo-input .wo-alert .wo-dock
 ```
 
 ### Component Guidelines
-- **Flächen:** Es gibt keine Karten. Trennung über Typo-Größe, Schriftgewicht
-  und `--wo-line`-Haarlinien. `--wo-raised` nur für Dock und Modal.
-- **Farben:** Ausschließlich über die `--wo-*`-Tokens. Genau ein Akzent
-  (`--wo-accent`); `--wo-ok`/`--wo-pr` nur für Daten, nie als Dekoration.
-- **Buttons:** Mindesthöhe 48px (`.wo-btn`), inline 44px.
-- **Icons:** Emoji-basiert (🏋️💪📊🔥📈).
+- **Neue Klassennamen** vor der Verwendung gegen `bulma.min.css` und
+  `style.css` prüfen — erfundene Namen sind der häufigste Fehler hier, und
+  `./scripts/check-classes.sh` findet sie in beide Richtungen.
 - **Spacing:** Nur die sechs Tokens `--wo-s1` … `--wo-s6`.
 - **Bewegung:** Nur Opazität beim Drücken. Keine Blur-, Schatten- oder
   Verlaufseffekte.
-- **Neue Klassennamen** vor der Verwendung gegen `bulma.min.css` und
-  `style.css` prüfen — erfundene Namen sind der häufigste Fehler hier.
 
 ## Mobile-First PWA Considerations
 

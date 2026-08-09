@@ -19,7 +19,7 @@ A Progressive Web App (PWA) for tracking workouts and monitoring strength progre
 
 ### User Experience
 - **Mobile-First Design** - Optimized for iOS and Android PWA
-- **Glassmorphism UI** - Modern, dark theme
+- **OLED-Dark-UI** - schwarz, monochrom, ein Akzent
 - **Single Exercise Focus** - Guided flow through exercises and sets
 - **Real-time Progress** - See your workout completion percentage
 - **Touch-Friendly** - Large tap targets and smooth animations
