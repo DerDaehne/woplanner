@@ -152,7 +152,6 @@ body {
 .wo-tap {
   display: inline-flex;
   align-items: center;
-  gap: var(--wo-s2);
   min-height: 44px;
 }
 
@@ -246,6 +245,22 @@ body {
   font-size: var(--wo-fs-body);
   color: var(--wo-text);
 }
+
+/* Sheet: das Anlege-Formular fährt von unten ein, statt dauerhaft unter der
+   Liste zu stehen. Natives <dialog>, keine Bibliothek. */
+.wo-sheet {
+  width: 100%;
+  max-width: 34rem;
+  max-height: 90dvh;
+  margin: auto auto 0;
+  padding: var(--wo-s5) var(--wo-s5) calc(var(--wo-s5) + env(safe-area-inset-bottom));
+  border: 0;
+  border-radius: var(--wo-radius) var(--wo-radius) 0 0;
+  background: var(--wo-raised);
+  color: var(--wo-text);
+  overflow-y: auto;
+}
+.wo-sheet::backdrop { background: rgb(0 0 0 / .6); }
 
 /* Dock: Bildschirmunterkante */
 .wo-dock {

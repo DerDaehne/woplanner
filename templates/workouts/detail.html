@@ -46,14 +46,33 @@
 
   <!-- Schedule Settings -->
   <div class="wo-section">
-    <h3 class="wo-title wo-mb-s3">
-      Schedule Settings
-    </h3>
-    
-    <form hx-post="/workouts/{{ workout.id }}/schedule" 
+    <button class="wo-row wo-row--button wo-text-left"
+            onclick="document.getElementById('sheet-schedule').showModal()">
+      <span class="wo-row__main wo-color-text-bold-body">Schedule</span>
+      <span class="wo-row__value">
+        {% match workout.schedule_type.as_str() %}
+          {% when "weekly" %}{{ workout.day_name().unwrap_or("Weekly".to_string()) }}
+          {% when "rotation" %}Rotation
+          {% when "disabled" %}Disabled
+          {% when _ %}Manual
+        {% endmatch %}
+      </span>
+      <svg class="wo-icon wo-row__value" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+    </button>
+  </div>
+
+  <dialog id="sheet-schedule" class="wo-sheet">
+    <div class="wo-flex-between wo-mb-s4">
+      <h2 class="wo-title">Schedule</h2>
+      <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Close"
+              onclick="this.closest('dialog').close()">&times;</button>
+    </div>
+
+    <form hx-post="/workouts/{{ workout.id }}/schedule"
           hx-swap="none"
-          class="is-flex is-flex-wrap-wrap is-gap-2">
-      <div class="is-flex-grow-1 wo-w-12rem">
+          hx-on::after-request="this.closest('dialog').close()">
+      <div class="field wo-mb-s4">
+        <label class="wo-label wo-block wo-mb-s2">Repeat</label>
         <select name="schedule_type" class="wo-input wo-min-h-44px">
           <option value="manual" {% if workout.schedule_type == "manual" %}selected{% endif %}>Manual</option>
           <option value="rotation" {% if workout.schedule_type == "rotation" %}selected{% endif %}>In Rotation</option>
@@ -61,8 +80,9 @@
           <option value="disabled" {% if workout.schedule_type == "disabled" %}selected{% endif %}>Disabled</option>
         </select>
       </div>
-      
-      <div class="wo-w-10rem">
+
+      <div class="field wo-mb-s4">
+        <label class="wo-label wo-block wo-mb-s2">Day</label>
         <select name="schedule_day" class="wo-input wo-min-h-44px">
           <option value="">No specific day</option>
           <option value="0" {% if workout.schedule_day == Some(0) %}selected{% endif %}>Sunday</option>
@@ -74,18 +94,22 @@
           <option value="6" {% if workout.schedule_day == Some(6) %}selected{% endif %}>Saturday</option>
         </select>
       </div>
-      
-      <button type="submit" class="wo-btn wo-btn-inline">
+
+      <button type="submit" class="wo-btn wo-btn-primary">
         Update Schedule
       </button>
     </form>
-  </div>
+  </dialog>
 
   <!-- Exercises in Workout -->
   <div class="wo-section">
-    <h2 class="wo-title wo-mb-s4">
-      Exercises ({{ exercises.len() }})
-    </h2>
+    <div class="wo-flex-between wo-mb-s4">
+      <h2 class="wo-title">Exercises ({{ exercises.len() }})</h2>
+      <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Add exercise to workout"
+              onclick="document.getElementById('sheet-add-exercise').showModal()">
+        <svg class="wo-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+      </button>
+    </div>
 
     {% if exercises.len() == 0 %}
       <div class="has-text-centered wo-center-pad">
@@ -154,15 +178,18 @@
     {% endif %}
   </div>
 
-  <!-- Add Exercise Form -->
-  <div class="wo-section">
-    <h3 class="wo-title wo-mb-s4">
-      Add Exercise
-    </h3>
-    
+  <!-- Add Exercise Sheet -->
+  <dialog id="sheet-add-exercise" class="wo-sheet">
+    <div class="wo-flex-between wo-mb-s4">
+      <h2 class="wo-title">Add Exercise</h2>
+      <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Close"
+              onclick="this.closest('dialog').close()">&times;</button>
+    </div>
+
     <form hx-post="/workouts/{{ workout.id }}/exercises"
-          hx-swap="none">
-      
+          hx-swap="none"
+          hx-on::after-request="this.reset(); this.closest('dialog').close()">
+
       <div>
         <div>
           <div class="field">
@@ -223,6 +250,6 @@
         Add to Workout
       </button>
     </form>
-  </div>
+  </dialog>
 </div>
 {% endblock %}

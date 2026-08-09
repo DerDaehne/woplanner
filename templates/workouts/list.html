@@ -4,54 +4,64 @@
 
 {% block content %}
 <div>
-  
-  <!-- Workouts List Container -->
-  <div id="workout-list" class="wo-section">
-    <h1 class="wo-title wo-mb-s4">Workouts</h1>
-    {% include "workouts/workout_list_partial.html" %}
-  </div>
 
-  <!-- Create New Workout -->
   <div class="wo-section">
-    <h2 class="wo-title wo-mb-s4">
-      Create New Workout
-    </h2>
-
-    <form hx-post="/workouts"
-          hx-target="#workout-list"
-          hx-swap="innerHTML"
-          hx-on::after-request="this.reset()">
-      
-      <div class="field wo-mb-s4">
-        <label for="name" class="wo-label wo-mb-s2 wo-block">
-          Workout Name
-        </label>
-        <input type="text"
-               id="name"
-               name="name"
-               placeholder="e.g. Push Day, Leg Day, Upper Body"
-               required
-               maxlength="100"
-               class="wo-input">
-      </div>
-      
-      <div class="field wo-mb-s4">
-        <label for="description" class="wo-label wo-mb-s2 wo-block">
-          Description (optional)
-        </label>
-        <textarea 
-               id="description"
-               name="description"
-               rows="3"
-               placeholder="What muscle groups does this workout target?"
-               class="wo-input wo-resize-none"></textarea>
-      </div>
-      
-      <button type="submit"
-              class="wo-btn wo-btn-primary">
-        Create Workout
+    <div class="wo-flex-between wo-mb-s4">
+      <h1 class="wo-title">Workouts</h1>
+      <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Create workout"
+              onclick="document.getElementById('sheet-workout').showModal()">
+        <svg class="wo-icon" aria-hidden="true"><use href="#i-plus"/></svg>
       </button>
-    </form>
+    </div>
+
+    <!-- Ziel des HTMX-Swaps: enthält NUR die Liste, sonst würde die
+         Überschrift beim Anlegen mit weggetauscht. -->
+    <div id="workout-list">
+      {% include "workouts/workout_list_partial.html" %}
+    </div>
   </div>
 </div>
+
+<dialog id="sheet-workout" class="wo-sheet">
+  <div class="wo-flex-between wo-mb-s4">
+    <h2 class="wo-title">New Workout</h2>
+    <button class="wo-btn wo-btn-inline wo-p-s2" aria-label="Close"
+            onclick="this.closest('dialog').close()">&times;</button>
+  </div>
+
+  <form hx-post="/workouts"
+        hx-target="#workout-list"
+        hx-swap="innerHTML"
+        hx-on::after-request="this.reset(); this.closest('dialog').close()">
+
+    <div class="field wo-mb-s4">
+      <label for="name" class="wo-label wo-mb-s2 wo-block">
+        Workout Name
+      </label>
+      <input type="text"
+             id="name"
+             name="name"
+             placeholder="e.g. Push Day, Leg Day, Upper Body"
+             required
+             maxlength="100"
+             class="wo-input">
+    </div>
+
+    <div class="field wo-mb-s4">
+      <label for="description" class="wo-label wo-mb-s2 wo-block">
+        Description (optional)
+      </label>
+      <textarea
+             id="description"
+             name="description"
+             rows="3"
+             placeholder="What muscle groups does this workout target?"
+             class="wo-input wo-resize-none"></textarea>
+    </div>
+
+    <button type="submit" class="wo-btn wo-btn-primary">
+      Create Workout
+    </button>
+  </form>
+</dialog>
 {% endblock %}
